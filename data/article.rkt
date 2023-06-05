@@ -9,7 +9,7 @@
 
 (struct article
   ([id : Id]
-   [header : (Option Inline)]
+   [header : Inline]
    [title : (Option Inline)]
    [contents : Block]
    [proof : (Option Proof)])
