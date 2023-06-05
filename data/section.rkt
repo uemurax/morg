@@ -6,7 +6,8 @@
          "article.rkt")
 
 (provide (struct-out section) Section
-         (struct-out section-element) SectionElement)
+         SectionElement
+         section-articles)
 
 (struct section
   ([id : Id]
@@ -16,7 +17,8 @@
   #:transparent
   #:type-name Section)
 
-(struct section-element
-  ([contents : (U Article Block)])
-  #:transparent
-  #:type-name SectionElement)
+(define-type SectionElement
+  (U Article Block))
+
+(define (section-articles [s : Section]) : (Listof Article)
+  (filter article? (section-contents s)))
