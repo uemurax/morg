@@ -2,11 +2,13 @@
 
 (require "../data/inline.rkt"
          "../data/id.rkt"
-         "../data/splice.rkt")
+         "../data/splice.rkt"
+         "tex.rkt")
 
 (provide InlineLike
          inline-like->inline
          ref~
+         math~
          inline~)
 
 (define-type InlineLike
@@ -14,6 +16,7 @@
             (Splice X)
             Text
             Ref
+            Math
             String)))
 
 (define (inline-like->inline [x : InlineLike]) : Inline
@@ -29,3 +32,6 @@
 
 (define (ref~ [maybe-id : String]) : Ref
   (ref (id maybe-id)))
+
+(define (math~ . [xs : MathTeXLike *]) : Math
+  (math (math-tex-like->math-tex (apply group~ xs))))

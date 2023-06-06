@@ -13,5 +13,6 @@
              [paragraph~ paragraph]
              [document~ document]
              [ref~ ref]
+             [math~ math]
              [section~ section])
  (all-from-out "markup/splice.rkt"))

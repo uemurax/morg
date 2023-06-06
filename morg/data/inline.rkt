@@ -17,6 +17,7 @@
 (define-type (InlineElement X)
   (U (Splice X)
      Ref
+     Math
      Text))
 
 (struct text
