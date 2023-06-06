@@ -2,6 +2,8 @@
 
 (require morg/markup)
 
+(provide part:0005)
+
 (define part:0005
   @section[
     #:id "0005"

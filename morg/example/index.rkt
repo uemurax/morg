@@ -3,7 +3,8 @@
 (require morg/markup)
 
 (require "0000.rkt"
-         "0003.rkt")
+         "0003.rkt"
+         "0005.rkt")
 
 (provide part:index)
 
@@ -12,6 +13,9 @@
     #:id "index"
     #:title @~{Test document}
     #:author @list[@~{Test Author}]
+    #:front @list[
+      part:0005
+    ]
     part:0000
     part:0003
   ])
