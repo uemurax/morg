@@ -12,3 +12,7 @@
       This document is about nothing.
     }
   ])
+
+(module+ main
+  (require morg/text)
+  (display (->text part:0002)))

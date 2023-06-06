@@ -12,3 +12,7 @@
       Don't read this document. Probably it is not good to refer to @ref["0005"].
     }
   ])
+
+(module+ main
+  (require morg/text)
+  (display (->text part:0001)))

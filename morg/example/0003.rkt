@@ -17,3 +17,7 @@
     part:0004
     part:0006
   ])
+
+(module+ main
+  (require morg/text)
+  (display (->text part:0003)))

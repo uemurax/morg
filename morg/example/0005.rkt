@@ -12,3 +12,7 @@
       Some nice text.
     }
   ])
+
+(module+ main
+  (require morg/text)
+  (display (->text part:0005)))

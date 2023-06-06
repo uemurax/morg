@@ -19,3 +19,7 @@
       part:0001
     ]
   ])
+
+(module+ main
+  (require morg/text)
+  (display (->text part:0000)))
