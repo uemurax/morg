@@ -3,7 +3,8 @@
 (require "../data/node.rkt")
 
 (provide (struct-out config) Config
-         (struct-out user-config) UserConfig)
+         (struct-out user-config) UserConfig
+         default-config)
 
 (struct config
   ([user-config : UserConfig]
@@ -15,3 +16,6 @@
   ()
   #:transparent
   #:type-name UserConfig)
+
+(define default-config
+  (user-config))
