@@ -1,5 +1,7 @@
 #lang typed/racket
 
+(require "splice.rkt")
+
 (provide (struct-out text) Text
          (struct-out macro) Macro
          (struct-out group) Group
@@ -46,6 +48,7 @@
 
 (struct text-tex
   ([contents : (U (TeXCommon TextTeX)
+                  (Splice TextTeX)
                   Math)])
   #:transparent
   #:type-name TextTeX)

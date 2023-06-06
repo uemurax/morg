@@ -2,6 +2,8 @@
 
 (require "../data/tex.rkt"
          "../markup/string.rkt"
+         "../data/splice.rkt"
+         "splice.rkt"
          "../util/escape.rkt")
 
 (provide text-tex->text
@@ -74,6 +76,7 @@
    [(text? y) (text-tex->text:text y)]
    [(macro? y) (macro->text y)]
    [(group? y) ((group->text text-tex->text) y)]
+   [(splice? y) ((splice->text text-tex->text) y)]
    [(math? (math->text y))]
    [else (error "Unimplemented.")]))
 
