@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang at-exp typed/racket
 
 (require "article.rkt"
          "section.rkt"
@@ -13,6 +13,9 @@
          NodeTable
          node-table-has-key? node-table-ref
          make-node-table)
+
+(module+ test
+  (require typed/rackunit))
 
 (struct root
   ([contents : (Listof Section)])
@@ -129,3 +132,69 @@
 
 (define (make-node-table [ss : (Listof Section)]) : NodeTable
   (node-table-traverse-root (node-table (hash)) (root ss)))
+
+(module+ test
+  (require "../markup/article.rkt"
+           "../markup/section.rkt"
+           "../markup/block.rkt"
+           "../markup/splice.rkt")
+  (define a1
+    @article~[#:id "a1" #:header @~{Definition}])
+  (define a2
+    @article~[#:id "a2" #:header @~{Proposition}])
+  (define s1
+    @section~[
+      #:id "s1" #:title @~{Title 1}
+      #:contents @list[
+        a1
+        @paragraph~{
+          Hello, world!
+        }
+        a2
+      ]])
+  (define s2
+    @section~[
+      #:id "s2" #:title @~{Title 2}
+      #:contents @list[
+        @paragraph~{
+          By, world!
+        }
+      ]
+    ])
+  (define a3
+    @article~[#:id "a3" #:header @~{Theorem}])
+  (define s3
+    @section~[
+      #:id "s3" #:title @~{Title 3}
+      #:contents @list[a3]
+    ])
+  (define s4
+    @section~[
+      #:id "s4" #:title @~{Title 4}
+      s1 s2 s3
+    ])
+  (define tbl
+    (make-node-table (list s4)))
+  (define ns4
+    (section-node s4 (root (list s4)) 0 (list) (list)))
+  (define ns1
+    (section-node s1 ns4 0 (list) (list s2 s3)))
+  (define ns2
+    (section-node s2 ns4 1 (list s1) (list s3)))
+  (define ns3
+    (section-node s3 ns4 2 (list s2 s1) (list)))
+  (define na1
+    (article-node a1 ns1 0))
+  (define na2
+    (article-node a2 ns1 1))
+  (define na3
+    (article-node a3 ns3 0))
+  (check-equal?
+   (node-table-contents tbl)
+   (hash (id "a1") na1
+         (id "a2") na2
+         (id "a3") na3
+         (id "s1") ns1
+         (id "s2") ns2
+         (id "s3") ns3
+         (id "s4") ns4)))
