@@ -12,5 +12,6 @@
              [proof~ proof]
              [paragraph~ paragraph]
              [document~ document]
+             [ref~ ref]
              [section~ section])
  (all-from-out "markup/splice.rkt"))

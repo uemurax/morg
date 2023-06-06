@@ -11,7 +11,7 @@
     #:id "0003"
     #:title @~{Test section}
     @paragraph{
-      This is a test section.
+      This is a test section. See also @ref["0002"]
     }
     part:0004
   ])
