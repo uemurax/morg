@@ -138,6 +138,7 @@
            "../markup/section.rkt"
            "../markup/block.rkt"
            "../markup/splice.rkt")
+
   (define a1
     @article~[#:id "a1" #:header @~{Definition}])
   (define a2
@@ -163,10 +164,15 @@
     ])
   (define a3
     @article~[#:id "a3" #:header @~{Theorem}])
+  (define s5
+    @section~[
+      #:id "s5" #:title @~{Title 5}
+    ])
   (define s3
     @section~[
       #:id "s3" #:title @~{Title 3}
       #:contents @list[a3]
+      s5
     ])
   (define s4
     @section~[
@@ -189,6 +195,9 @@
     (article-node a2 ns1 1))
   (define na3
     (article-node a3 ns3 0))
+  (define ns5
+    (section-node s5 ns3 0 (list) (list)))
+
   (check-equal?
    (node-table-contents tbl)
    (hash (id "a1") na1
@@ -196,5 +205,13 @@
          (id "a3") na3
          (id "s1") ns1
          (id "s2") ns2
+         (id "s5") ns5
          (id "s3") ns3
-         (id "s4") ns4)))
+         (id "s4") ns4))
+  
+  (check-equal?
+   (node-trace ns5)
+   (list ns4 ns3 ns5))
+  (check-equal?
+   (node-trace na2)
+   (list ns4 ns1 na2)))
