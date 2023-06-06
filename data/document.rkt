@@ -12,7 +12,6 @@
    [title : Inline]
    [front : (Listof Section)]
    [main : (Listof Section)]
-   [appendix : (Listof Section)]
    [back : (Listof Section)])
   #:transparent
   #:type-name Document)
