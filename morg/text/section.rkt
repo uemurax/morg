@@ -10,6 +10,7 @@
          "inline.rkt"
          "block.rkt"
          "article.rkt"
+         "id.rkt"
          "numbering.rkt")
 
 (provide section->text)
@@ -31,8 +32,10 @@
   (define title ((inline->text cfg) (section-title s)))
   (define num
     @string~{@when~[in?]{@(section-node-format-index (cast (node-table-ref tbl id) SectionNode)) }})
+  (define i
+    (id->text id))
   @string~{
-    @|num|@|title|
+    @|num|@|i| @|title|
     ----------------------------------------
   })
 

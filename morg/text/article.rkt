@@ -6,6 +6,7 @@
          "../markup/splice.rkt"
          "block.rkt"
          "inline.rkt"
+         "id.rkt"
          "numbering.rkt"
          "config.rkt")
 
@@ -28,8 +29,10 @@
     @string~{@when~[in?]{@(article-node-format-index (cast (node-table-ref tbl id) ArticleNode)) }})
   (define tt
     @string~{@when~[title]{ (@((inline->text cfg) title))}})
+  (define i
+    (id->text id))
   @string~{
-    @|num|@|h|@|tt|
+    @|num|@|i| @|h|@|tt|
   })
 
 (define (body [a : Article] [cfg : Config]) : StringTree
