@@ -146,21 +146,18 @@
   (define s1
     @section~[
       #:id "s1" #:title @~{Title 1}
-      #:contents @list[
-        a1
-        @paragraph~{
-          Hello, world!
-        }
-        a2
-      ]])
+      a1
+      @paragraph~{
+        Hello, world!
+      }
+      a2
+    ])
   (define s2
     @section~[
       #:id "s2" #:title @~{Title 2}
-      #:contents @list[
-        @paragraph~{
-          By, world!
-        }
-      ]
+      @paragraph~{
+        By, world!
+      }
     ])
   (define a3
     @article~[#:id "a3" #:header @~{Theorem}])
@@ -171,13 +168,17 @@
   (define s3
     @section~[
       #:id "s3" #:title @~{Title 3}
-      #:contents @list[a3]
-      s5
+      a3
+      #:subsections @list[
+        s5
+      ]
     ])
   (define s4
     @section~[
       #:id "s4" #:title @~{Title 4}
-      s1 s2 s3
+      #:subsections @list[
+        s1 s2 s3
+      ]
     ])
   (define tbl
     (make-node-table (list s4)))
