@@ -1,11 +1,13 @@
 #lang typed/racket
 
 (require "splice.rkt"
-         "id.rkt")
+         "id.rkt"
+         (only-in "tex.rkt" MathTeX))
 
 (provide (struct-out inline) Inline
          (struct-out ref) Ref
-         (struct-out text) Text)
+         (struct-out text) Text
+         (struct-out math) Math)
 
 (struct inline
   ([contents : (InlineElement Inline)])
@@ -26,3 +28,8 @@
   ([id : Id])
   #:transparent
   #:type-name Ref)
+
+(struct math
+  ([contents : MathTeX])
+  #:transparent
+  #:type-name Math)

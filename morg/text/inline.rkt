@@ -9,6 +9,7 @@
          "splice.rkt"
          "numbering.rkt"
          "id.rkt"
+         "tex.rkt"
          "config.rkt")
 
 (provide inline->text)
@@ -16,6 +17,7 @@
 (: inline->text : (Config . -> . (Inline . -> . StringTree)))
 (: text->text : (Config . -> . (Text . -> . StringTree)))
 (: ref->text : (Config . -> . (Ref . -> . StringTree)))
+(: math->text : (Config . -> . (Math . -> . StringTree)))
 
 (define ((inline->text cfg) i)
   (define x (inline-contents i))
@@ -23,6 +25,7 @@
    [(text? x) ((text->text cfg) x)]
    [(splice? x) ((splice->text (inline->text cfg)) x)]
    [(ref? x) ((ref->text cfg) x)]
+   [(math? x) ((math->text cfg) x)]
    [else (error "Unimplemented.")]))
 
 (define ((text->text _cfg) t)
@@ -48,3 +51,6 @@
       @string~{@|s1| }]
      [else @string~{}]))
   @string~{@|s|@(id->text id)})
+
+(define ((math->text _cfg) m)
+  @string~{\(@(math-tex->text (math-contents m))\)})
