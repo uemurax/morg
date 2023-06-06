@@ -2,8 +2,14 @@
 
 (require "../data/splice.rkt")
 
-(provide ~)
+(provide ~
+         when~)
 
 (define #:forall (A)
         (~ . [xs : A *]) : (Splice A)
   (splice xs))
+
+(define-syntax-rule (when~ cond body ...)
+  (if cond
+      (~ body ...)
+      (~)))
