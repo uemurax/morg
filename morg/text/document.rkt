@@ -8,6 +8,8 @@
          "inline.rkt"
          "config.rkt")
 
+(provide document->text)
+
 (define ((document->text [user-cfg : UserConfig]) [doc : Document]) : StringTree
   (define front (document-front doc))
   (define main (document-main doc))
