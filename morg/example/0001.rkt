@@ -8,9 +8,7 @@
   @section[
     #:id "0001"
     #:title @~{How to read this document}
-    #:contents @list[
-      @paragraph{
-        Don't read this document.
-      }
-    ]
+    @paragraph{
+      Don't read this document.
+    }
   ])

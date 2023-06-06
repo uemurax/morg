@@ -11,9 +11,9 @@
     @paragraph{
       True is true.
     }
-    #:proof @proof{
+    #:proof @proof[
       @paragraph{
         Left as an exercise.
       }
-    }
+    ]
   ])

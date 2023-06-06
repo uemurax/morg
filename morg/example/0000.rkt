@@ -11,11 +11,11 @@
   @section[
     #:id "0000"
     #:title @~{Introduction}
-    #:contents @list[
-      @paragraph{
-        This is a test document.
-      }
+    @paragraph{
+      This is a test document.
+    }
+    #:subsections @list[
+      part:0002
+      part:0001
     ]
-    part:0002
-    part:0001
   ])

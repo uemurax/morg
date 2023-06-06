@@ -10,10 +10,8 @@
   @section[
     #:id "0003"
     #:title @~{Test section}
-    #:contents @list[
-      @paragraph{
-        This is a test section.
-      }
-      part:0004
-    ]
+    @paragraph{
+      This is a test section.
+    }
+    part:0004
   ])

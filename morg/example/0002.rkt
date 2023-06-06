@@ -8,9 +8,7 @@
   @section[
     #:id "0002"
     #:title @~{What is this document about}
-    #:contents @list[
-      @paragraph{
-        This document is about nothing.
-      }
-    ]
+    @paragraph{
+      This document is about nothing.
+    }
   ])

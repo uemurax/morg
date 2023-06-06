@@ -19,8 +19,8 @@
 
 (define (section~ #:id [maybe-id : String]
                   #:title [title : InlineLike]
-                  #:contents [contents : (Listof SectionElementLike) (list)]
-                  . [subsections : Section *]) : Section
+                  #:subsections [subsections : (Listof Section) (list)]
+                  . [contents : SectionElementLike *]) : Section
   (section (id maybe-id)
            (inline~ title)
            (map section-element-like->section-element contents)
