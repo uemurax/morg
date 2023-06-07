@@ -1,6 +1,7 @@
 #lang typed/racket
 
 (require "../data/tex.rkt"
+         "../data/splice.rkt"
          "string.rkt"
          "../util/option.rkt")
 
@@ -8,7 +9,10 @@
          math-tex-like->math-tex
          math-tex~
          group~ 
-         sub-sup~)
+         sub-sup~
+         TextTeXLike
+         text-tex-like->text-tex
+         text-tex~)
 
 (define-type MathTeXLike
   (Rec X (U MathTeX
@@ -42,3 +46,25 @@
   (sub-sup (math-tex-like->math-tex base)
            (option-map math-tex-like->math-tex sub)
            (option-map math-tex-like->math-tex sup)))
+
+(define-type TextTeXLike
+  (Rec X (U TextTeX
+            Text
+            (Macro X)
+            (Group X)
+            (Splice X)
+            Math
+            StringTreeLike)))
+  
+(define (text-tex-like->text-tex [x : TextTeXLike]) : TextTeX
+  (cond
+   [(text-tex? x) x]
+   [((make-predicate StringTreeLike) x)
+    (text-tex (text (string-tree-like->string x)))]
+   [(group? x) (text-tex ((group-map text-tex-like->text-tex) x))]
+   [(macro? x) (text-tex ((macro-map text-tex-like->text-tex) x))]
+   [(splice? x) (text-tex (splice-map text-tex-like->text-tex x))]
+   [else (text-tex x)]))
+
+(define (text-tex~ . [xs : TextTeXLike *]) : TextTeX
+  (text-tex-like->text-tex (splice xs)))
