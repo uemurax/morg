@@ -10,7 +10,10 @@
          (except-out (struct-out sub-sup) sub-sup) SubSup
          (rename-out [make-sub-sup sub-sup])
          (struct-out text-tex) TextTeX
-         (struct-out math-tex) MathTeX)
+         (struct-out math-tex) MathTeX
+         group-map
+         argument-map
+         macro-map)
 
 (module+ test
   (require typed/rackunit))
@@ -76,3 +79,17 @@
       (if (or sub sup)
           (sub-sup base sub sup)
           (error "Either sub or sup must be given."))))
+
+(define #:forall (X Y)
+        ((group-map [f : (X . -> . Y)]) [x : (Group X)]) : (Group Y)
+  (group (map f (group-contents x))))
+
+(define #:forall (X Y)
+        ((argument-map [f : (X . -> . Y)]) [x : (Argument X)]) : (Argument Y)
+  (argument (f (argument-contents x))
+            (argument-parentheses x)))
+
+(define #:forall (X Y)
+        ((macro-map [f : (X . -> . Y)]) [x : (Macro X)]) : (Macro Y)
+  (macro (macro-head x)
+         (map (argument-map f) (macro-arguments x))))

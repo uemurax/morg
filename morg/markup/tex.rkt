@@ -24,13 +24,9 @@
    [((make-predicate StringTreeLike) x)
     (math-tex (text (string-tree-like->string x)))]
    [(group? x)
-    (math-tex (group (map math-tex-like->math-tex (group-contents x))))]
+    (math-tex ((group-map math-tex-like->math-tex) x))]
    [(macro? x)
-    (math-tex (macro (macro-head x)
-     (map (lambda ([y : (Argument MathTeXLike)])
-            (argument (math-tex-like->math-tex (argument-contents y))
-                      (argument-parentheses y)))
-          (macro-arguments x))))]
+    (math-tex ((macro-map math-tex-like->math-tex) x))]
    [else (math-tex x)]))
 
 (define (math-tex~ [x : MathTeXLike]) : MathTeX
