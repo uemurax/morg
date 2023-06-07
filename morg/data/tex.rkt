@@ -3,6 +3,7 @@
 (require "splice.rkt")
 
 (provide (struct-out text) Text
+         (struct-out argument) Argument
          (struct-out macro) Macro
          (struct-out group) Group
          (struct-out math) Math
@@ -19,8 +20,15 @@
   #:transparent
   #:type-name Text)
 
-(struct macro
-  ([contents : String])
+(struct (X) argument
+  ([contents : X]
+   [parentheses : (Pairof String String)])
+  #:transparent
+  #:type-name Argument)
+
+(struct (X) macro
+  ([head : String]
+   [arguments : (Listof (Argument X))])
   #:transparent
   #:type-name Macro)
 
@@ -43,7 +51,7 @@
 
 (define-type (TeXCommon X)
   (U Text
-     Macro
+     (Macro X)
      (Group X)))
 
 (struct text-tex

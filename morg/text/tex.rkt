@@ -2,6 +2,7 @@
 
 (require "../data/tex.rkt"
          "../markup/string.rkt"
+         "../markup/splice.rkt"
          "../data/splice.rkt"
          "splice.rkt"
          "../util/escape.rkt")
@@ -39,14 +40,28 @@
 (define (math-tex->text:text [x : Text]) : StringTree
   @string~{@(escape escape-math-tex (text-contents x))})
 
-(define (macro->text [x : Macro]) : StringTree
-  (define y (macro-contents x))
-  (cond
-   [(or (regexp-match-exact? #px"[[:alpha:]]+" y)
-        (eq? (string-length y) 1))
-    @string~{\@|y| }]
-   [else
-    @string~{\csname @|y|\endcsname }]))
+(define #:forall (X)
+        ((argument->text [f : (X . -> . StringTree)])
+         [x : (Argument X)]) : StringTree
+  (define body (argument-contents x))
+  (define parens (argument-parentheses x))
+  (define left (car parens))
+  (define right (cdr parens))
+  @string~{@|left|{@(f body)}@|right|})
+
+(define #:forall (X)
+        ((macro->text [f : (X . -> . StringTree)])
+         [x : (Macro X)]) : StringTree
+  (define y (macro-head x))
+  (define args (macro-arguments x))
+  (define head
+    (cond
+     [(or (regexp-match-exact? #px"[[:alpha:]]+" y)
+          (eq? (string-length y) 1))
+      @string~{\@|y|}]
+     [else
+      @string~{\csname @|y|\endcsname}]))
+  @string~{@|head| @(apply ~ (map ((inst argument->text X) f) args))})
 
 (define #:forall (X)
         ((group->text [f : (X . -> . StringTree)])
@@ -74,7 +89,7 @@
   (define y (text-tex-contents x))
   (cond
    [(text? y) (text-tex->text:text y)]
-   [(macro? y) (macro->text y)]
+   [(macro? y) ((macro->text text-tex->text) y)]
    [(group? y) ((group->text text-tex->text) y)]
    [(splice? y) ((splice->text text-tex->text) y)]
    [(math? (math->text y))]
@@ -84,7 +99,7 @@
   (define y (math-tex-contents x))
   (cond
    [(text? y) (math-tex->text:text y)]
-   [(macro? y) (macro->text y)]
+   [(macro? y) ((macro->text math-tex->text) y)]
    [(group? y) ((group->text math-tex->text) y)]
    [(sub-sup? y) (sub-sup->text y)]
    [else (error "Unimplemented.")]))
