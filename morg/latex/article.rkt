@@ -51,7 +51,7 @@
   @text-tex%{
     @environment%["trivlist"]{
       @macro%["item" arg]
-      @(id->latex/margin id)
+      @(id->hypertarget id)@(id->latex/margin id)
       @((block->latex cfg) (article-contents a))
     }
     @when%[pf]{@((proof->latex cfg) pf)}
