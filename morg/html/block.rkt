@@ -8,15 +8,16 @@
          "splice.rkt"
          "config.rkt")
 
+(provide block->xexprs
+         paragraph-class-name)
+
 (define paragraph-class-name (class-name "paragraph"))
 
 (define ((paragraph->xexprs [cfg : Config])
          [x : Paragraph]) : XExprs
-  (xexprs%
-   (apply tagged%
-          'p
-          `((class ,paragraph-class-name))
-          ((inline->xexprs cfg) (paragraph-contents x)))))
+  (tagged% 'p
+           `((class ,paragraph-class-name))
+           ((inline->xexprs cfg) (paragraph-contents x))))
 
 (: block->xexprs : (Config . -> . (Block . -> . XExprs)))
 
