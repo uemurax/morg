@@ -79,9 +79,9 @@
 
 (define (check-unique [tbl : NodeTable] [id : Id] [n : Node]) : Void
   (when (node-table-has-key? tbl id)
-    (error (format "Duplicated id:\none: ~a\nanother: ~a")
-           (map node-id (node-trace (node-table-ref tbl id)))
-           (map node-id (node-trace n))))
+    (error (format "Duplicated id:\none: ~a\nanother: ~a"
+                   (map node-id (node-trace (node-table-ref tbl id)))
+                   (map node-id (node-trace n)))))
   (void))
 
 (define (node-table-traverse-article [tbl : NodeTable] [a : Article] [s : SectionNode] [i : Natural]) : NodeTable
