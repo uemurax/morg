@@ -26,7 +26,7 @@
   (xexprs-like->xexprs (splice xs)))
 
 (define (tagged% [tag : Symbol]
-                 #:attrs [attrs : (Listof (List Symbol String)) (list)]
+                 [attrs : (Listof (List Symbol String))]
                  . [xs : XExprsLike *]) : XExprs
   (xexprs%
    `(,tag ,attrs

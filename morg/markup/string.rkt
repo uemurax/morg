@@ -5,6 +5,7 @@
 
 (provide StringTree StringTreeLike
          string-tree-like->string-tree
+         string-tree->string
          string-tree-like->string
          string%)
 
