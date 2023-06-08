@@ -2,8 +2,10 @@
 
 (require "../data/block.rkt"
          (prefix-in tex: "../data/tex.rkt")
+         "../data/splice.rkt"
          "../markup/tex.rkt"
          "inline.rkt"
+         "splice.rkt"
          "config.rkt")
 
 (provide block->latex)
@@ -21,4 +23,5 @@
   (define x (block-contents b))
   (cond
    [(paragraph? b) ((paragraph->latex cfg) b)]
+   [(splice? b) ((splice->latex (block->latex cfg)) b)]
    [else (error "Unimplemented.")]))

@@ -4,10 +4,12 @@
          (prefix-in tex: "../data/tex.rkt")
          "../data/node.rkt"
          "../data/article.rkt"
+         "../data/splice.rkt"
          "../markup/tex.rkt"
          "../markup/splice.rkt"
          "../text/numbering.rkt"
          "id.rkt"
+         "splice.rkt"
          "config.rkt")
 
 (provide inline->latex)
@@ -48,4 +50,5 @@
    [(text? x) ((text->latex cfg) x)]
    [(math? x) ((math->latex cfg) x)]
    [(ref? x) ((ref->latex cfg) x)]
+   [(splice? x) ((splice->latex (inline->latex cfg)) x)]
    [else (error "Unimplemented.")]))
