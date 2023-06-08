@@ -16,6 +16,7 @@
          argument%
          optional-argument%
          macro%
+         group%
          environment%)
 
 (define-type TextLike
@@ -96,19 +97,22 @@
   (text-tex-like->text-tex (splice xs)))
 
 (define #:forall (X)
-        (argument% [x : X]
-                   #:parentheses [parens : (Pairof String String) '("" . "")])
-        : (Argument X)
-  (argument x parens))
+        (argument% #:parentheses [parens : (Pairof String String) '("" . "")]
+                  . [xs : X *])
+  (argument (splice xs) parens))
 
 (define #:forall (X)
-        (optional-argument% [x : X]) : (Argument X)
-  (argument% x #:parentheses '("[" . "]")))
+        (optional-argument% . [xs : X *])
+  (argument (splice xs) '("[" . "]")))
 
 (define #:forall (X)
         (macro% [head : StringTreeLike]
                 . [args : (Argument X) *]) : (Macro X)
   (macro (string-tree-like->string head) args))
+
+(define #:forall (X)
+        (group% . [xs : X *]) : (Group (Splice X))
+  (group (splice xs)))
 
 (define #:forall (X)
         (environment% [name : StringTreeLike]
