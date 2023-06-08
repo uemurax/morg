@@ -130,8 +130,9 @@
 (define (node-table-traverse-root [tbl : NodeTable] [r : Root]) : NodeTable
   (node-table-traverse-sections tbl (root-contents r) r))
 
-(define (make-node-table [ss : (Listof Section)]) : NodeTable
-  (node-table-traverse-root (node-table (hash)) (root ss)))
+(define (make-node-table [ss : (Listof Section)]
+                         #:init [init : NodeTable (node-table (hash))]) : NodeTable
+  (node-table-traverse-root init (root ss)))
 
 (module+ test
   (require "../markup/article.rkt"
