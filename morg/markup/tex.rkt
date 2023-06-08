@@ -15,6 +15,7 @@
          text-tex%
          argument%
          optional-argument%
+         star-argument%
          macro%
          group%
          environment%)
@@ -97,13 +98,16 @@
   (text-tex-like->text-tex (splice xs)))
 
 (define #:forall (X)
-        (argument% #:parentheses [parens : (Pairof String String) '("" . "")]
+        (argument% #:parentheses [parens : (Pairof String String) '("{" . "}")]
                   . [xs : X *])
   (argument (splice xs) parens))
 
 (define #:forall (X)
         (optional-argument% . [xs : X *])
   (argument (splice xs) '("[" . "]")))
+
+(define star-argument%
+  (argument "*" '("" . "")))
 
 (define #:forall (X)
         (macro% [head : StringTreeLike]

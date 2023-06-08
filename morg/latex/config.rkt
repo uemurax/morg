@@ -7,11 +7,13 @@
 
 (struct config
   ([user-config : UserConfig]
-   [node-table : NodeTable])
+   [node-table : NodeTable]
+   [unnumbered-node-table : NodeTable])
   #:transparent
   #:type-name Config)
 
 (struct user-config
-  ()
+  ([section-macros : (Listof String)]
+   [section-macro-fallback : String])
   #:transparent
   #:type-name UserConfig)

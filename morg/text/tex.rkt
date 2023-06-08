@@ -47,7 +47,7 @@
   (define parens (argument-parentheses x))
   (define left (car parens))
   (define right (cdr parens))
-  @string%{@|left|{@(f body)}@|right|})
+  @string%{@|left|@(f body)@|right|})
 
 (define #:forall (X)
         ((macro->text [f : (X . -> . StringTree)])
