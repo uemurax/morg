@@ -16,6 +16,8 @@
 (struct user-config
   ([section-macros : (Listof String)]
    [section-macro-fallback : String]
+   [class : String]
+   [class-options : (Listof (U String (Pairof String TextTeX)))]
    [make-section-ref : (Natural TextTeX . -> . TextTeX)])
   #:transparent
   #:type-name UserConfig)

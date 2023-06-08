@@ -1,11 +1,55 @@
-#lang typed/racket
+#lang at-exp typed/racket
 
 (require "../data/document.rkt"
          (prefix-in tex: "../data/tex.rkt")
+         "../data/node.rkt"
+         "../markup/tex.rkt"
+         "../markup/splice.rkt"
+         "../util/list.rkt"
+         "section.rkt"
+         "inline.rkt"
          "config.rkt")
 
 (provide document->latex)
 
-(define ((document->latex [cfg : UserConfig])
+(define (use-package [pkg : String]) : tex:TextTeX
+  @text-tex%{@macro%["usepackage" @argument%{@|pkg|}]})
+
+(define ((document->latex [user-cfg : UserConfig])
          [doc : Document]) : tex:TextTeX
-  (error "Unimplemented"))
+  (define front (document-front doc))
+  (define main (document-main doc))
+  (define back (document-back doc))
+  (define tbl (make-node-table main))
+  (define untbl-1 (make-node-table front))
+  (define untbl (make-node-table back #:init untbl-1))
+  (define cfg
+    (config user-cfg
+            tbl untbl))
+  (define cls @argument%{@(user-config-class user-cfg)})
+  (define cls-opt @optional-argument%{@(apply options% (user-config-class-options user-cfg))})
+  (define f (section->latex cfg))
+  (define g (inline->latex cfg))
+  @text-tex%{
+    @macro%["PassOptionsToPackage"
+      @argument%{@options%["pdfusetitle" '("pdfencoding" . "auto") "psdextra"]}
+      @argument%{hyperref}]
+    @macro%["documentclass" cls-opt cls]
+
+    @(use-package "hyperref")
+    @(use-package "xcolor")
+
+    @macro%["title" @argument%{@(g (document-title doc))}]
+    @macro%["author" (apply argument% (list-join-1 (map g (document-author doc)) @macro%["and"]))]
+
+    @environment%["document"]{
+      @macro%["maketitle"]
+
+      @macro%["frontmatter"]
+      @(apply % (map f front))
+      @macro%["mainmatter"]
+      @(apply % (map f main))
+      @macro%["backmatter"]
+      @(apply % (map f back))
+    }
+  })

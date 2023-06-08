@@ -4,6 +4,7 @@
          "../data/splice.rkt"
          "splice.rkt"
          "string.rkt"
+         "../util/list.rkt"
          "../util/option.rkt")
 
 (provide MathTeXLike
@@ -18,6 +19,7 @@
          star-argument%
          macro%
          group%
+         options%
          environment%)
 
 (define-type TextLike
@@ -128,3 +130,13 @@
     @(apply % body)
     @((inst macro% (U X StringTreeLike)) "end" arg-1)
   })
+
+(define #:forall (X)
+        (option% [x : (U String (Pairof String X))])
+  (cond
+   [(string? x) @%{@|x|}]
+   [(pair? x) @%{@(car x)=@(cdr x)}]))
+
+(define #:forall (X)
+        (options% . [xs : (U String (Pairof String X)) *])
+  (apply % (list-join-1 (map (inst option% X) xs) ",")))
