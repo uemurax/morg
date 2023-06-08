@@ -10,59 +10,76 @@
          math-tex~
          group~ 
          sub-sup~
-         TextTeXLike
+          TextTeXLike
          text-tex-like->text-tex
          text-tex~)
 
+(define-type TextLike
+  (U Text StringTreeLike))
+
+(define-type (AtomLike X)
+  (U (Atom X)
+     TextLike
+     (Macro X)
+     (Group X)))
+
+(define-type MathTeXAtomLike
+  (AtomLike MathTeX))
+
 (define-type MathTeXLike
-  (Rec X (U MathTeX
-            Text
-            (Macro X)
-            (Group X)
-            SubSup
-            StringTreeLike)))
+  (U MathTeX
+     (AtomLike MathTeX)
+     (Splice MathTeXLike)
+     SubSup))
+
+(define (text-like->text [x : TextLike]) : Text
+  (cond
+   [(text? x) x]
+   [((make-predicate StringTreeLike) x)
+    (text (string-tree-like->string x))]))
+
+(define #:forall (X)
+        (atom-like->atom [x : (AtomLike X)]) : (Atom X)
+  (cond
+   [(atom? x) x]
+   [((make-predicate TextLike) x)
+    (atom (text-like->text x))]
+   [else (atom x)]))
 
 (define (math-tex-like->math-tex [x : MathTeXLike]) : MathTeX
   (cond
    [(math-tex? x) x]
-   [((make-predicate StringTreeLike) x)
-    (math-tex (text (string-tree-like->string x)))]
-   [(group? x)
-    (math-tex ((group-map math-tex-like->math-tex) x))]
-   [(macro? x)
-    (math-tex ((macro-map math-tex-like->math-tex) x))]
+   [((make-predicate (AtomLike MathTeX)) x)
+    (math-tex (atom-like->atom x))]
+   [(splice? x)
+    (math-tex (splice-map math-tex-like->math-tex x))]
    [else (math-tex x)]))
 
-(define (math-tex~ [x : MathTeXLike]) : MathTeX
-  (math-tex-like->math-tex x))
+(define (math-tex~ . [xs : MathTeXLike *]) : MathTeX
+  (math-tex-like->math-tex (splice xs)))
 
 (define #:forall (X)
         (group~ . [xs : X *]) : (Group X)
   (group xs))
 
-(define (sub-sup~ [base : MathTeXLike]
+(define (sub-sup~ [base : (AtomLike MathTeX)]
                   #:sub [sub : (Option MathTeXLike)]
                   #:sup [sup : (Option MathTeXLike)]) : SubSup
-  (sub-sup (math-tex-like->math-tex base)
+  (sub-sup (atom-like->atom base)
            (option-map math-tex-like->math-tex sub)
            (option-map math-tex-like->math-tex sup)))
 
 (define-type TextTeXLike
-  (Rec X (U TextTeX
-            Text
-            (Macro X)
-            (Group X)
-            (Splice X)
-            Math
-            StringTreeLike)))
-  
+  (U TextTeX
+     (AtomLike TextTeX)
+     (Splice TextTeXLike)
+     Math))
+
 (define (text-tex-like->text-tex [x : TextTeXLike]) : TextTeX
   (cond
    [(text-tex? x) x]
-   [((make-predicate StringTreeLike) x)
-    (text-tex (text (string-tree-like->string x)))]
-   [(group? x) (text-tex ((group-map text-tex-like->text-tex) x))]
-   [(macro? x) (text-tex ((macro-map text-tex-like->text-tex) x))]
+   [((make-predicate (AtomLike TextTeX)) x)
+    (text-tex (atom-like->atom x))]
    [(splice? x) (text-tex (splice-map text-tex-like->text-tex x))]
    [else (text-tex x)]))
 

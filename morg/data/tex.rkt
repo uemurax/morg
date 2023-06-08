@@ -6,6 +6,7 @@
          (struct-out argument) Argument
          (struct-out macro) Macro
          (struct-out group) Group
+         (struct-out atom) Atom
          (struct-out math) Math
          (except-out (struct-out sub-sup) sub-sup) SubSup
          (rename-out [make-sub-sup sub-sup])
@@ -13,6 +14,7 @@
          (struct-out math-tex) MathTeX
          group-map
          argument-map
+         atom-map
          macro-map)
 
 (module+ test
@@ -40,45 +42,41 @@
   #:transparent
   #:type-name Group)
 
+(struct (X) atom
+  ([contents : (U Text (Macro X) (Group X))])
+  #:transparent
+  #:type-name Atom)
+
 (struct math
   ([contents : MathTeX])
   #:transparent
   #:type-name Math)
 
 (struct sub-sup
-  ([base : MathTeX]
+  ([base : (Atom MathTeX)]
    [sub : (Option MathTeX)]
    [sup : (Option MathTeX)])
   #:transparent
   #:type-name SubSup)
 
-(define-type (TeXCommon X)
-  (U Text
-     (Macro X)
-     (Group X)))
-
 (struct text-tex
-  ([contents : (U (TeXCommon TextTeX)
+  ([contents : (U (Atom TextTeX)
                   (Splice TextTeX)
                   Math)])
   #:transparent
   #:type-name TextTeX)
 
 (struct math-tex
-  ([contents : (U (TeXCommon MathTeX)
+  ([contents : (U (Atom MathTeX)
+                  (Splice MathTeX)
                   SubSup)])
   #:transparent
   #:type-name MathTeX)
 
-(define (make-sub-sup [base : MathTeX] [sub : (Option MathTeX)] [sup : (Option MathTeX)]) : SubSup
-  (define x (math-tex-contents base))
-  (if (sub-sup? x)
-      (if (or sub sup)
-          (error "Double script.")
-          x)
-      (if (or sub sup)
-          (sub-sup base sub sup)
-          (error "Either sub or sup must be given."))))
+(define (make-sub-sup [base : (Atom MathTeX)] [sub : (Option MathTeX)] [sup : (Option MathTeX)]) : SubSup
+  (if (or sub sup)
+      (sub-sup base sub sup)
+      (error "Either sub or sup must be given.")))
 
 (define #:forall (X Y)
         ((group-map [f : (X . -> . Y)]) [x : (Group X)]) : (Group Y)
@@ -93,3 +91,13 @@
         ((macro-map [f : (X . -> . Y)]) [x : (Macro X)]) : (Macro Y)
   (macro (macro-head x)
          (map (argument-map f) (macro-arguments x))))
+
+(define #:forall (X Y)
+        ((atom-map [f : (X . -> . Y)]) [x : (Atom X)]) : (Atom Y)
+  (define a (atom-contents x))
+  (define b
+    (cond
+     [(text? a) a]
+     [(macro? a) ((macro-map f) a)]
+     [(group? a) ((group-map f) a)]))
+  (atom b))
