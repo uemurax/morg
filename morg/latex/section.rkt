@@ -47,13 +47,14 @@
     (if (< depth (length sms))
         (list-ref sms depth)
         fbk))
-  (define title (section-title s))
+  (define title ((inline->latex cfg) (section-title s)))
   (define n : TextTeXLike
     @when%[(eq? place 'numbered)]{@(section-node-format-index nd)@macro%["enskip"]})
   (define t
-    @%{@|n|@((inline->latex cfg) title)})
+    @%{@|n|@|title|})
   @text-tex%{
     @macro%[sec-macro star-argument% @argument%{@|t|}]
+    @macro%["addcontentsline" @argument%{toc} @argument%{@|sec-macro|} @argument%{@|title|}]
     @(id->hypertarget id)@(id->latex/margin id)
     @(apply % (map (section-element->latex cfg) (section-contents s)))
     @(apply % (map (section->latex cfg) (section-subsections s)))
