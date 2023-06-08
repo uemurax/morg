@@ -45,11 +45,8 @@
     @environment%["document"]{
       @macro%["maketitle"]
 
-      @macro%["frontmatter"]
       @(apply % (map f front))
-      @macro%["mainmatter"]
       @(apply % (map f main))
-      @macro%["backmatter"]
       @(apply % (map f back))
     }
   })

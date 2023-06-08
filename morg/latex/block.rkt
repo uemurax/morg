@@ -22,6 +22,6 @@
 (define ((block->latex cfg) b)
   (define x (block-contents b))
   (cond
-   [(paragraph? b) ((paragraph->latex cfg) b)]
-   [(splice? b) ((splice->latex (block->latex cfg)) b)]
+   [(paragraph? x) ((paragraph->latex cfg) x)]
+   [(splice? x) ((splice->latex (block->latex cfg)) x)]
    [else (error "Unimplemented.")]))

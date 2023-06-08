@@ -33,7 +33,7 @@
        [(section-node? nd)
         (define mk (user-config-make-section-ref (config-user-config cfg)))
         @(mk (length (node-trace nd))
-             @text-tex%{@(section-node-format-index nd)})]
+             (section-node-format-index nd))]
        [(article-node? nd)
         (define a (article-node-contents nd))
         @%{@((inline->latex cfg) (article-header a)) @(article-node-format-index nd)}])]

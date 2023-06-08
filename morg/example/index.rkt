@@ -21,5 +21,11 @@
   ])
 
 (module+ main
-  (require morg/text)
-  (display (->text part:index)))
+  (require morg/text
+           morg/latex)
+  (display "TEXT OUTPUT==============================")
+  (display (->text part:index))
+  (display "==============================TEXT OUTPUT")
+  (display "LATEX OUTPUT==============================")
+  (display (->latex part:index))
+  (display "==============================LATEX OUTPUT"))

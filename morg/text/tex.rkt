@@ -99,18 +99,17 @@
 (define (text-tex->text [x : TextTeX]) : StringTree
   (define y (text-tex-contents x))
   (cond
-   [(text? y) (text-tex->text:text y)]
-   [((make-predicate (Atom TextTeX)) y)
+   [(atom? y)
     ((atom->text text-tex->text text-tex->text:text) y)]
    [(splice? y) ((splice->text text-tex->text) y)]
-   [(math? (math->text y))]
+   [(math? y) (math->text y)]
    [else (error "Unimplemented.")]))
 
 (define (math-tex->text [x : MathTeX]) : StringTree
   (define y (math-tex-contents x))
   (cond
-   [(text? y) (math-tex->text:text y)]
-   [((make-predicate (Atom MathTeX)) y)
+   [(atom? y)
     ((atom->text math-tex->text math-tex->text:text) y)]
+   [(splice? y) ((splice->text math-tex->text) y)]
    [(sub-sup? y) (sub-sup->text y)]
    [else (error "Unimplemented.")]))
