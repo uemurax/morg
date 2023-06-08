@@ -8,11 +8,11 @@
          "markup/splice.rkt")
 
 (provide
- (rename-out [article~ article]
-             [proof~ proof]
-             [paragraph~ paragraph]
-             [document~ document]
-             [ref~ ref]
-             [math~ math]
-             [section~ section])
+ (rename-out [article% article]
+             [proof% proof]
+             [paragraph% paragraph]
+             [document% document]
+             [ref% ref]
+             [math% math]
+             [section% section])
  (all-from-out "markup/splice.rkt"))

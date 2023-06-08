@@ -16,7 +16,7 @@
 (provide section->text)
 
 (define ((section->text [cfg : Config]) [s : Section]) : StringTree
-  @string~{
+  @string%{
 
     @(header s cfg)
 
@@ -31,10 +31,10 @@
   (define in? (node-table-has-key? tbl id))
   (define title ((inline->text cfg) (section-title s)))
   (define num
-    @string~{@when~[in?]{@(section-node-format-index (cast (node-table-ref tbl id) SectionNode)) }})
+    @string%{@when%[in?]{@(section-node-format-index (cast (node-table-ref tbl id) SectionNode)) }})
   (define i
     (id->text id))
-  @string~{
+  @string%{
     @|num|@|i| @|title|
     ----------------------------------------
   })
@@ -45,9 +45,9 @@
    [(block? e) ((block->text cfg) e)]))
 
 (define (body [s : Section] [cfg : Config]) : StringTree
-  (apply string~
+  (apply string%
          (map (section-element->text cfg) (section-contents s))))
 
 (define (sub [s : Section] [cfg : Config]) : StringTree
-  (apply string~
+  (apply string%
          (map (section->text cfg) (section-subsections s))))

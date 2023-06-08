@@ -35,10 +35,10 @@
         "\\" "\\backslash "))
 
 (define (text-tex->text:text [x : Text]) : StringTree
-  @string~{@(escape escape-text-tex (text-contents x))})
+  @string%{@(escape escape-text-tex (text-contents x))})
 
 (define (math-tex->text:text [x : Text]) : StringTree
-  @string~{@(escape escape-math-tex (text-contents x))})
+  @string%{@(escape escape-math-tex (text-contents x))})
 
 (define #:forall (X)
         ((argument->text [f : (X . -> . StringTree)])
@@ -47,7 +47,7 @@
   (define parens (argument-parentheses x))
   (define left (car parens))
   (define right (cdr parens))
-  @string~{@|left|{@(f body)}@|right|})
+  @string%{@|left|{@(f body)}@|right|})
 
 (define #:forall (X)
         ((macro->text [f : (X . -> . StringTree)])
@@ -58,15 +58,15 @@
     (cond
      [(or (regexp-match-exact? #px"[[:alpha:]]+" y)
           (eq? (string-length y) 1))
-      @string~{\@|y|}]
+      @string%{\@|y|}]
      [else
-      @string~{\csname @|y|\endcsname}]))
-  @string~{@|head| @(apply ~ (map ((inst argument->text X) f) args))})
+      @string%{\csname @|y|\endcsname}]))
+  @string%{@|head| @(apply % (map ((inst argument->text X) f) args))})
 
 (define #:forall (X)
         ((group->text [f : (X . -> . StringTree)])
          [x : (Group X)]) : StringTree
-  @string~{{@(f (group-contents x))}})
+  @string%{{@(f (group-contents x))}})
 
 (define #:forall (X)
         ((atom->text [f : (X . -> . StringTree)]
@@ -79,7 +79,7 @@
    [(group? y) ((group->text f) y)]))
 
 (define (math->text [x : Math]) : StringTree
-  @string~{\(@(math-tex->text (math-contents x))\)})
+  @string%{\(@(math-tex->text (math-contents x))\)})
 
 (define (sub-sup->text [x : SubSup]) : StringTree
   (define f math-tex->text)
@@ -89,11 +89,11 @@
   (define b ((atom->text f math-tex->text:text) base))
   (cond
    [(and sub sup)
-    @string~{@|b|_{@(f sub)}^{@(f sup)}}]
+    @string%{@|b|_{@(f sub)}^{@(f sup)}}]
    [sub
-    @string~{@|b|_{@(f sub)}}]
+    @string%{@|b|_{@(f sub)}}]
    [sup
-    @string~{@|b|^{@(f sup)}}]
+    @string%{@|b|^{@(f sup)}}]
    [else (error "This must not happen.")]))
 
 (define (text-tex->text [x : TextTeX]) : StringTree

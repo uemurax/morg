@@ -6,7 +6,7 @@
 (provide StringTree StringTreeLike
          string-tree-like->string-tree
          string-tree-like->string
-         string~)
+         string%)
 
 (define-type StringTree
   (Tree String))
@@ -21,7 +21,7 @@
    [(splice? x)
     (node (map string-tree-like->string-tree (splice-contents x)))]))
 
-(define (string~ . [xs : StringTreeLike *]) : StringTree
+(define (string% . [xs : StringTreeLike *]) : StringTree
   (string-tree-like->string-tree (splice xs)))
 
 (define (string-tree->string [x : StringTree]) : String

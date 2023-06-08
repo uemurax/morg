@@ -7,7 +7,7 @@
 (define part:0006
   @article[
     #:id "0006"
-    #:header @~{Proposition}
+    #:header @%{Proposition}
     @paragraph{
       False is false.
     }

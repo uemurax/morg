@@ -6,4 +6,4 @@
 (provide id->text)
 
 (define (id->text [i : Id]) : StringTree
-  @string~{[@(id-contents i)]})
+  @string%{[@(id-contents i)]})

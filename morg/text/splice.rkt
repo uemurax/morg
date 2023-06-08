@@ -8,4 +8,4 @@
 (define #:forall (X)
         ((splice->text [f : (X . -> . StringTree)])
          [x : (Splice X)]) : StringTree
-  (string~ (splice-map f x)))
+  (string% (splice-map f x)))

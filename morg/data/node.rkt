@@ -140,42 +140,42 @@
            "../markup/splice.rkt")
 
   (define a1
-    @article~[#:id "a1" #:header @~{Definition}])
+    @article%[#:id "a1" #:header @%{Definition}])
   (define a2
-    @article~[#:id "a2" #:header @~{Proposition}])
+    @article%[#:id "a2" #:header @%{Proposition}])
   (define s1
-    @section~[
-      #:id "s1" #:title @~{Title 1}
+    @section%[
+      #:id "s1" #:title @%{Title 1}
       a1
-      @paragraph~{
+      @paragraph%{
         Hello, world!
       }
       a2
     ])
   (define s2
-    @section~[
-      #:id "s2" #:title @~{Title 2}
-      @paragraph~{
+    @section%[
+      #:id "s2" #:title @%{Title 2}
+      @paragraph%{
         By, world!
       }
     ])
   (define a3
-    @article~[#:id "a3" #:header @~{Theorem}])
+    @article%[#:id "a3" #:header @%{Theorem}])
   (define s5
-    @section~[
-      #:id "s5" #:title @~{Title 5}
+    @section%[
+      #:id "s5" #:title @%{Title 5}
     ])
   (define s3
-    @section~[
-      #:id "s3" #:title @~{Title 3}
+    @section%[
+      #:id "s3" #:title @%{Title 3}
       a3
       #:subsections @list[
         s5
       ]
     ])
   (define s4
-    @section~[
-      #:id "s4" #:title @~{Title 4}
+    @section%[
+      #:id "s4" #:title @%{Title 4}
       #:subsections @list[
         s1 s2 s3
       ]

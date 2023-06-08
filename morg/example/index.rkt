@@ -11,8 +11,8 @@
 (define part:index
   @document[
     #:id "index"
-    #:title @~{Test document}
-    #:author @list[@~{Test Author}]
+    #:title @%{Test document}
+    #:author @list[@%{Test Author}]
     #:front @list[
       part:0005
     ]

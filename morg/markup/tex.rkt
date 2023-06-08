@@ -8,15 +8,15 @@
 
 (provide MathTeXLike
          math-tex-like->math-tex
-         math-tex~
-         sub-sup~
+         math-tex%
+         sub-sup%
          TextTeXLike
          text-tex-like->text-tex
-         text-tex~
-         argument~
-         optional-argument~
-         macro~
-         environment~)
+         text-tex%
+         argument%
+         optional-argument%
+         macro%
+         environment%)
 
 (define-type TextLike
   (U Text StringTreeLike))
@@ -62,10 +62,10 @@
     (math-tex (splice-map math-tex-like->math-tex x))]
    [else (math-tex x)]))
 
-(define (math-tex~ . [xs : MathTeXLike *]) : MathTeX
+(define (math-tex% . [xs : MathTeXLike *]) : MathTeX
   (math-tex-like->math-tex (splice xs)))
 
-(define (sub-sup~ [base : MathTeXAtomLike]
+(define (sub-sup% [base : MathTeXAtomLike]
                   #:sub [sub : (Option MathTeXLike)]
                   #:sup [sup : (Option MathTeXLike)]) : SubSup
   (sub-sup (math-tex-atom-like->math-tex-atom base)
@@ -92,31 +92,31 @@
    [(splice? x) (text-tex (splice-map text-tex-like->text-tex x))]
    [else (text-tex x)]))
 
-(define (text-tex~ . [xs : TextTeXLike *]) : TextTeX
+(define (text-tex% . [xs : TextTeXLike *]) : TextTeX
   (text-tex-like->text-tex (splice xs)))
 
 (define #:forall (X)
-        (argument~ [x : X]
+        (argument% [x : X]
                    #:parentheses [parens : (Pairof String String) '("" . "")])
         : (Argument X)
   (argument x parens))
 
 (define #:forall (X)
-        (optional-argument~ [x : X]) : (Argument X)
-  (argument~ x #:parentheses '("[" . "]")))
+        (optional-argument% [x : X]) : (Argument X)
+  (argument% x #:parentheses '("[" . "]")))
 
 (define #:forall (X)
-        (macro~ [head : StringTreeLike]
+        (macro% [head : StringTreeLike]
                 . [args : (Argument X) *]) : (Macro X)
   (macro (string-tree-like->string head) args))
 
 (define #:forall (X)
-        (environment~ [name : StringTreeLike]
+        (environment% [name : StringTreeLike]
                       #:arguments [args : (Listof (Argument X)) (list)]
                       . [body : X *])
-  (define arg-1 (argument~ name))
-  @~{
-    @(apply (inst macro~ (U X StringTreeLike)) "begin" arg-1 args)
-    @(apply ~ body)
-    @((inst macro~ (U X StringTreeLike)) "end" arg-1)
+  (define arg-1 (argument% name))
+  @%{
+    @(apply (inst macro% (U X StringTreeLike)) "begin" arg-1 args)
+    @(apply % body)
+    @((inst macro% (U X StringTreeLike)) "end" arg-1)
   })

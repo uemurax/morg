@@ -7,7 +7,7 @@
 (define part:0004
   @article[
     #:id "0004"
-    #:header @~{Theorem}
+    #:header @%{Theorem}
     @paragraph{
       True is true.
     }

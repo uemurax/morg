@@ -22,7 +22,7 @@
    [else (error "Unimplemented.")]))
 
 (define ((paragraph->text cfg) p)
-  @string~{
+  @string%{
 
     @((inline->text cfg) (paragraph-contents p))
 

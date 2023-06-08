@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang at-exp typed/racket
 
 (require "../data/node.rkt"
          "../markup/string.rkt"
@@ -11,14 +11,12 @@
   (define is (map node-index (node-trace n)))
   (define ns (map number-format is))
   (define xs (list-join-1 ns "."))
-  (apply string~ xs))
+  (apply string% xs))
 
 (define (article-node-format-index [n : ArticleNode]) : StringTree
   (define i (article-node-index n))
   (define p (article-node-parent n))
-  (string~ (section-node-format-index p)
-           "*"
-           (number-format i)))
+  @string%{@(section-node-format-index p)*@(number-format i)})
 
 (define (number-format [n : Natural]) : String
   (number->string (+ n 1)))

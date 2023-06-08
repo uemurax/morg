@@ -7,7 +7,7 @@
 (define part:0007
   @article[
     #:id "0007"
-    #:header @~{Fact}
+    #:header @%{Fact}
     @paragraph{
       @math{1 + 1 = 3}.
     }

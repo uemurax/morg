@@ -10,7 +10,7 @@
 (define part:0000
   @section[
     #:id "0000"
-    #:title @~{Introduction}
+    #:title @%{Introduction}
     @paragraph{
       This is a test document.
     }

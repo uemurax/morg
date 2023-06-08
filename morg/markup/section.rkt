@@ -6,7 +6,7 @@
          "inline.rkt"
          "block.rkt")
 
-(provide section~)
+(provide section%)
 
 (define-type SectionElementLike
   (U Article BlockLike))
@@ -15,13 +15,13 @@
   (cond
    [(article? x) x]
    [((make-predicate BlockLike) x)
-    (block~ x)]))
+    (block% x)]))
 
-(define (section~ #:id [maybe-id : String]
+(define (section% #:id [maybe-id : String]
                   #:title [title : InlineLike]
                   #:subsections [subsections : (Listof Section) (list)]
                   . [contents : SectionElementLike *]) : Section
   (section (id maybe-id)
-           (inline~ title)
+           (inline% title)
            (map section-element-like->section-element contents)
            subsections))

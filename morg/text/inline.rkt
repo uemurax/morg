@@ -29,7 +29,7 @@
    [else (error "Unimplemented.")]))
 
 (define ((text->text _cfg) t)
-  (string~ (text-contents t)))
+  (string% (text-contents t)))
 
 (define ((ref->text cfg) r)
   (define tbl (config-node-table cfg))
@@ -47,10 +47,10 @@
           (mk (length (node-trace nd))
               (section-node-format-index nd))]
          [(article-node? nd)
-          @string~{@((inline->text cfg) (article-header (article-node-contents nd))) @(article-node-format-index nd)}]))
-      @string~{@|s1| }]
-     [else @string~{}]))
-  @string~{@|s|@(id->text id)})
+          @string%{@((inline->text cfg) (article-header (article-node-contents nd))) @(article-node-format-index nd)}]))
+      @string%{@|s1| }]
+     [else @string%{}]))
+  @string%{@|s|@(id->text id)})
 
 (define ((math->text _cfg) m)
-  @string~{\(@(math-tex->text (math-contents m))\)})
+  @string%{\(@(math-tex->text (math-contents m))\)})

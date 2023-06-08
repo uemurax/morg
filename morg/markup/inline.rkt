@@ -7,9 +7,9 @@
 
 (provide InlineLike
          inline-like->inline
-         ref~
-         math~
-         inline~)
+         ref%
+         math%
+         inline%)
 
 (define-type InlineLike
   (Rec X (U Inline
@@ -27,11 +27,11 @@
    [(string? x) (inline (text x))]
    [else (inline x)]))
 
-(define (inline~ . [xs : InlineLike *]) : Inline
+(define (inline% . [xs : InlineLike *]) : Inline
   (inline-like->inline (splice xs)))
 
-(define (ref~ [maybe-id : String]) : Ref
+(define (ref% [maybe-id : String]) : Ref
   (ref (id maybe-id)))
 
-(define (math~ . [xs : MathTeXLike *]) : Math
-  (math (apply math-tex~ xs)))
+(define (math% . [xs : MathTeXLike *]) : Math
+  (math (apply math-tex% xs)))

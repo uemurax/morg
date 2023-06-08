@@ -19,7 +19,7 @@
   #:type-name UserConfig)
 
 (define (default-config:make-section-ref [_depth : Natural] [num : StringTree]) : StringTree
-  @string~{Section @|num|})
+  @string%{Section @|num|})
 
 (define default-config
   (user-config

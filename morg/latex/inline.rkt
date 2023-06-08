@@ -11,7 +11,7 @@
 
 (define ((text->latex [_cfg : Config])
           [x : Text]) : tex:TextTeX
-  @text-tex~{@(text-contents x)})
+  @text-tex%{@(text-contents x)})
 
 (define ((math->latex [_cfg : Config])
          [x : Math]) : tex:TextTeX

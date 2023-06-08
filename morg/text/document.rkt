@@ -19,16 +19,16 @@
             (make-node-table main)))
   (define f (inline->text cfg))
   (define g (section->text cfg))
-  @string~{
+  @string%{
     @(f (document-title doc))
     ========================================
 
-    @(apply string~
+    @(apply string%
             (list-join-1
              (map f (document-author doc))
              ", "))
 
-    @(apply string~ (map g front))
-    @(apply string~ (map g main))
-    @(apply string~ (map g back))
+    @(apply string% (map g front))
+    @(apply string% (map g main))
+    @(apply string% (map g back))
   })

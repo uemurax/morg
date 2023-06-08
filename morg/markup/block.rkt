@@ -6,8 +6,8 @@
 
 (provide BlockLike
          block-like->block
-         block~
-         paragraph~)
+         block%
+         paragraph%)
 
 (define-type BlockLike
   (Rec X (U Block
@@ -21,8 +21,8 @@
     (block (splice-map block-like->block x))]
    [else (block x)]))
 
-(define (block~ . [xs : BlockLike *]) : Block
+(define (block% . [xs : BlockLike *]) : Block
   (block-like->block (splice xs)))
 
-(define (paragraph~ . [xs : InlineLike *]) : Paragraph
-  (paragraph (apply inline~ xs)))
+(define (paragraph% . [xs : InlineLike *]) : Paragraph
+  (paragraph (apply inline% xs)))
