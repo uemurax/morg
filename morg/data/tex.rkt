@@ -38,7 +38,7 @@
   #:type-name Macro)
 
 (struct (X) group
-  ([contents : (Listof X)])
+  ([contents : X])
   #:transparent
   #:type-name Group)
 
@@ -80,7 +80,7 @@
 
 (define #:forall (X Y)
         ((group-map [f : (X . -> . Y)]) [x : (Group X)]) : (Group Y)
-  (group (map f (group-contents x))))
+  (group (f (group-contents x))))
 
 (define #:forall (X Y)
         ((argument-map [f : (X . -> . Y)]) [x : (Argument X)]) : (Argument Y)

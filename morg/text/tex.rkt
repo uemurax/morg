@@ -66,7 +66,17 @@
 (define #:forall (X)
         ((group->text [f : (X . -> . StringTree)])
          [x : (Group X)]) : StringTree
-  @string~{{@(apply string~ (map f (group-contents x)))}})
+  @string~{{@(f (group-contents x))}})
+
+(define #:forall (X)
+        ((atom->text [f : (X . -> . StringTree)]
+                     [t : (Text . -> . StringTree)])
+         [x : (Atom X)]) : StringTree
+  (define y (atom-contents x))
+  (cond
+   [(text? y) (t y)]
+   [(macro? y) ((macro->text f) y)]
+   [(group? y) ((group->text f) y)]))
 
 (define (math->text [x : Math]) : StringTree
   @string~{\(@(math-tex->text (math-contents x))\)})
@@ -76,21 +86,22 @@
   (define base (sub-sup-base x))
   (define sub (sub-sup-sub x))
   (define sup (sub-sup-sup x))
+  (define b ((atom->text f math-tex->text:text) base))
   (cond
    [(and sub sup)
-    @string~{@(f base)_{@(f sub)}^{@(f sup)}}]
+    @string~{@|b|_{@(f sub)}^{@(f sup)}}]
    [sub
-    @string~{@(f base)_{@(f sub)}}]
+    @string~{@|b|_{@(f sub)}}]
    [sup
-    @string~{@(f base)^{@(f sup)}}]
+    @string~{@|b|^{@(f sup)}}]
    [else (error "This must not happen.")]))
 
 (define (text-tex->text [x : TextTeX]) : StringTree
   (define y (text-tex-contents x))
   (cond
    [(text? y) (text-tex->text:text y)]
-   [(macro? y) ((macro->text text-tex->text) y)]
-   [(group? y) ((group->text text-tex->text) y)]
+   [((make-predicate (Atom TextTeX)) y)
+    ((atom->text text-tex->text text-tex->text:text) y)]
    [(splice? y) ((splice->text text-tex->text) y)]
    [(math? (math->text y))]
    [else (error "Unimplemented.")]))
@@ -99,7 +110,7 @@
   (define y (math-tex-contents x))
   (cond
    [(text? y) (math-tex->text:text y)]
-   [(macro? y) ((macro->text math-tex->text) y)]
-   [(group? y) ((group->text math-tex->text) y)]
+   [((make-predicate (Atom MathTeX)) y)
+    ((atom->text math-tex->text math-tex->text:text) y)]
    [(sub-sup? y) (sub-sup->text y)]
    [else (error "Unimplemented.")]))

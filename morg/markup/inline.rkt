@@ -34,4 +34,4 @@
   (ref (id maybe-id)))
 
 (define (math~ . [xs : MathTeXLike *]) : Math
-  (math (math-tex-like->math-tex (apply group~ xs))))
+  (math (apply math-tex~ xs)))

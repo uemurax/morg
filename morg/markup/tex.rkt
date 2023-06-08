@@ -8,7 +8,6 @@
 (provide MathTeXLike
          math-tex-like->math-tex
          math-tex~
-         group~ 
          sub-sup~
           TextTeXLike
          text-tex-like->text-tex
@@ -57,10 +56,6 @@
 
 (define (math-tex~ . [xs : MathTeXLike *]) : MathTeX
   (math-tex-like->math-tex (splice xs)))
-
-(define #:forall (X)
-        (group~ . [xs : X *]) : (Group X)
-  (group xs))
 
 (define (sub-sup~ [base : (AtomLike MathTeX)]
                   #:sub [sub : (Option MathTeXLike)]
