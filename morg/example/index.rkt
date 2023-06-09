@@ -31,5 +31,5 @@
   (display (->latex part:index))
   (display "\n==============================LATEX OUTPUT\n")
   (display "\nHTML OUTPUT==============================\n")
-  (write (->html part:index))
+  (display (->html part:index))
   (display "\n==============================HTML OUTPUT\n"))

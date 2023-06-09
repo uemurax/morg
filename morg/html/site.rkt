@@ -10,6 +10,7 @@
          "../markup/string.rkt"
          "../markup/inline.rkt"
          "../text/id.rkt"
+         "../util/escape.rkt"
          "inline.rkt"
          "id.rkt"
          "document.rkt"
@@ -66,7 +67,7 @@
   (define usr-cfg (config-user-config cfg))
   (define n (node-tables-ref (config-root cfg) tbls i))
   (define head
-    (((user-config-head-template usr-cfg) cfg n) x))
+    (((user-config-head-template usr-cfg) cfg n) '()))
   (define body
     (((user-config-body-template usr-cfg) cfg n)
      (tagged% 'main '() x)))
@@ -106,6 +107,9 @@
          [x : XExprs]) : XExprs
   x)
 
+(define (js-escape [x : String])
+  (escape (hash "\\" "\\\\") x))
+
 (define ((default-config:head-template [cfg : Config] [n : (U Node Document)])
          [x : XExprs]) : XExprs
   (define doc (config-root cfg))
@@ -127,6 +131,36 @@
    (tagged% 'link
             `((rel "stylesheet")
               (href ,default-config:css-name)))
+   (tagged% 'link
+            '((rel "stylesheet")
+              (href "https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css")
+              (integrity "sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI")
+              (crossorigin "anonymous")))
+   (tagged% 'script
+            '((defer "true")
+              (src "https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js")
+              (integrity "sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t")
+              (crossorigin "anonymous")))
+   (tagged% 'script
+            '((defer "true")
+              (src "https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js")
+              (integrity "sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05")
+              (crossorigin "anonymous")))
+   (tagged% 'script '()
+    @string%{
+      document.addEventListener("DOMContentLoaded", function() {
+        const elems = document.getElementsByClassName('@|katex-class-name|');
+        for(let i = 0; i < elems.length; i++) {
+          renderMathInElement(elems[i], {
+            delimiters: [
+              {left: '@(js-escape katex-delimiter-left)',
+               right: '@(js-escape katex-delimiter-right)',
+               display: false}
+            ]
+          });
+        }
+      });
+    })
    x))
 
 (define default-config:css

@@ -1,7 +1,8 @@
 #lang typed/racket
 
 (require typed/xml
-         "../data/splice.rkt")
+         "../data/splice.rkt"
+         "string.rkt")
 
 (provide XExprs XExprsLike
          xexprs-like->xexprs
@@ -13,12 +14,15 @@
 (define-type XExprsLike
   (U XExprs
      XExpr
+     StringTreeLike
      (Splice XExprsLike)))
 
 (define (xexprs-like->xexprs [x : XExprsLike]) : XExprs
   (cond
    [((make-predicate XExprs) x) x]
    [((make-predicate XExpr) x) (list x)]
+   [((make-predicate StringTreeLike) x)
+    (list (string-tree-like->string x))]
    [(splice? x) 
     (apply append (map xexprs-like->xexprs (splice-contents x)))]))
 
