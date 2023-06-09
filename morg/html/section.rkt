@@ -9,8 +9,16 @@
          "class.rkt"
          "inline.rkt"
          "block.rkt"
+         "toc.rkt"
          "id.rkt"
          "config.rkt")
+
+(provide section->xexprs
+         section-class-name
+         section-title-class-name
+         section-body-class-name
+         section-toc-class-name
+         XExprTable)
 
 (define-type XExprTable (HashTable Id XExprs))
 
@@ -29,6 +37,7 @@
 (define section-class-name (class-name "section"))
 (define section-title-class-name (class-name "section-title"))
 (define section-body-class-name (class-name "section-body"))
+(define section-toc-class-name (class-name "section-toc"))
 
 (define ((section->xexprs cfg) s xtbl)
   (define xtbl-1
@@ -47,5 +56,8 @@
                     'div
                     `((class ,section-body-class-name))
                     (map (section-element->xexprs cfg xtbl-2)
-                         (section-contents s)))))
+                         (section-contents s)))
+             (tagged% 'nav
+                      `((class ,section-toc-class-name))
+                      ((make-toc cfg) (section-subsections s)))))
   (hash-set xtbl-2 i this-xexpr))
