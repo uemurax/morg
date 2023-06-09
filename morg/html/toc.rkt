@@ -11,12 +11,16 @@
          toc-class-name
          toc-node-class-name
          toc-edge-class-name
-         toc-entry-class-name)
+         toc-edge-details-class-name
+         toc-edge-summary-class-name
+         toc-edge-title-class-name)
 
 (define toc-class-name (class-name "toc"))
 (define toc-node-class-name (class-name "toc-node"))
 (define toc-edge-class-name (class-name "toc-edge"))
-(define toc-entry-class-name (class-name "toc-entry"))
+(define toc-edge-details-class-name (class-name "toc-edge-details"))
+(define toc-edge-summary-class-name (class-name "toc-edge-summary"))
+(define toc-edge-title-class-name (class-name "toc-edge-title"))
 
 (define ((make-toc [cfg : Config])
          [ss : (Listof Section)]) : XExprs
@@ -37,8 +41,12 @@
   (define title (section-title s))
   (tagged% 'li
            `((class ,toc-edge-class-name))
-           (tagged% 'a
-                    `((class ,toc-entry-class-name)
-                      (href ,(id->url i)))
-                    ((inline->xexprs cfg) title))
-           ((make-toc:aux cfg) (section-subsections s))))
+           (tagged% 'details
+                    `((class ,toc-edge-details-class-name))
+                    (tagged% 'summary
+                             `((class ,toc-edge-summary-class-name))
+                             (tagged% 'a
+                                      `((class ,toc-edge-title-class-name)
+                                        (href ,(id->url i)))
+                                      ((inline->xexprs cfg) title)))
+                    ((make-toc:aux cfg) (section-subsections s)))))
