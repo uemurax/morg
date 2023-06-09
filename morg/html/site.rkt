@@ -1,6 +1,7 @@
 #lang at-exp typed/racket
 
-(require "../data/document.rkt"
+(require (prefix-in xml: typed/xml)
+         "../data/document.rkt"
          "../data/node.rkt"
          "../data/id.rkt"
          "../data/section.rkt"
@@ -10,13 +11,17 @@
          "../markup/inline.rkt"
          "../text/id.rkt"
          "inline.rkt"
+         "id.rkt"
          "document.rkt"
          "xexpr-table.rkt")
+
+(require/typed racket/hash
+  [hash-union (All (K V) ((HashTable K V) (HashTable K V) . -> . (HashTable K V)))])
 
 (provide (struct-out config) Config
          (struct-out user-config) UserConfig
          Assets
-         (struct-out site) Site
+         Site
          make-site
          default-config)
 
@@ -36,11 +41,8 @@
   #:transparent
   #:type-name UserConfig)
 
-(struct site
-  ([pages : XExprTable]
-   [assets : Assets])
-  #:transparent
-  #:type-name Site)
+(define-type Site
+  (HashTable String String))
 
 (struct node-tables
   ([front : NodeTable]
@@ -60,7 +62,7 @@
      [else doc])]))
 
 (define ((apply-template [cfg : Config] [tbls : NodeTables])
-         [i : Id] [x : XExprs]) : (Values Id XExprs)
+         [i : Id] [x : XExprs]) : (Values String String)
   (define usr-cfg (config-user-config cfg))
   (define n (node-tables-ref (config-root cfg) tbls i))
   (define head
@@ -68,13 +70,20 @@
   (define body
     (((user-config-body-template usr-cfg) cfg n)
      (tagged% 'main '() x)))
-  (values i
-          (tagged% 'html '()
-                   (tagged% 'head '() head)
-                   (tagged% 'body '() body))))
+  (define html
+    (car 
+     (tagged% 'html '()
+              (tagged% 'head '() head)
+              (tagged% 'body '() body))))
+  (values (id->url i)
+          (parameterize ([xml:current-unescaped-tags xml:html-unescaped-tags]
+                         [xml:empty-tag-shorthand xml:html-empty-tags])
+            (string-append
+             "<!DOCTYPE html>\n"
+             (xml:xexpr->string html)))))
 
 (define (make-site [usr-cfg : UserConfig] [doc : Document]) : Site
-  (define pages-1
+  (define pages
     (document->xexprs doc))
   (define tbls
     (node-tables
@@ -83,10 +92,13 @@
      (make-node-table (document-back doc))))
   (define cfg
     (config usr-cfg doc))
-  (define pages
-    (hash-map/copy pages-1 (apply-template cfg tbls)))
-  (define assets (user-config-assets usr-cfg))
-  (site pages assets))
+  (define site
+    (hash-map/copy pages (apply-template cfg tbls)))
+  (define assets
+    (hash-map/copy (user-config-assets usr-cfg)
+      (lambda ([k : String] [x : StringTree])
+        (values k (string-tree->string x)))))
+  (hash-union site assets))
 
 (define default-config:css-name "default.css")
 
