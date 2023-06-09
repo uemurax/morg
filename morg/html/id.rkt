@@ -11,7 +11,7 @@
          id-class-name)
 
 (define (id->url [i : Id]) : String
-  (id-contents i))
+  (format "~a.html" (id-contents i)))
 
 (define id-class-name (class-name "id"))
 
