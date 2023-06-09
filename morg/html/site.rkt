@@ -67,7 +67,8 @@
   (define usr-cfg (config-user-config cfg))
   (define n (node-tables-ref (config-root cfg) tbls i))
   (define head
-    (((user-config-head-template usr-cfg) cfg n) '()))
+    (((user-config-head-template usr-cfg) cfg n) 
+     (head-init cfg n)))
   (define body
     (((user-config-body-template usr-cfg) cfg n)
      (tagged% 'main '() x)))
@@ -110,8 +111,7 @@
 (define (js-escape [x : String])
   (escape (hash "\\" "\\\\") x))
 
-(define ((default-config:head-template [cfg : Config] [n : (U Node Document)])
-         [x : XExprs]) : XExprs
+(define (head-init [cfg : Config] [n : (U Node Document)]) : XExprs
   (define doc (config-root cfg))
   (define doc-title (document-title doc))
   (define title
@@ -128,9 +128,6 @@
   (xexprs%
    (tagged% 'title '()
             (inline->xexprs title))
-   (tagged% 'link
-            `((rel "stylesheet")
-              (href ,default-config:css-name)))
    (tagged% 'link
             '((rel "stylesheet")
               (href "https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css")
@@ -160,7 +157,14 @@
           });
         }
       });
-    })
+    })))
+
+(define ((default-config:head-template [_cfg : Config] [_n : (U Node Document)])
+         [x : XExprs]) : XExprs
+  (xexprs%
+   (tagged% 'link
+            `((rel "stylesheet")
+              (href ,default-config:css-name)))
    x))
 
 (define default-config:css
