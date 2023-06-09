@@ -11,16 +11,14 @@
          "block.rkt"
          "toc.rkt"
          "id.rkt"
+         "xexpr-table.rkt"
          "config.rkt")
 
 (provide section->xexprs
          section-class-name
          section-title-class-name
          section-body-class-name
-         section-toc-class-name
-         XExprTable)
-
-(define-type XExprTable (HashTable Id XExprs))
+         section-toc-class-name)
 
 (define ((article->xexprs* [cfg : Config])
          [a : Article] [xtbl : XExprTable]) : XExprTable
