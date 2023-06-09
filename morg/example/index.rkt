@@ -22,10 +22,14 @@
 
 (module+ main
   (require morg/text
-           morg/latex)
-  (display "TEXT OUTPUT==============================")
+           morg/latex
+           morg/html)
+  (display "\nTEXT OUTPUT==============================\n")
   (display (->text part:index))
-  (display "==============================TEXT OUTPUT")
-  (display "LATEX OUTPUT==============================")
+  (display "\n==============================TEXT OUTPUT\n")
+  (display "\nLATEX OUTPUT==============================\n")
   (display (->latex part:index))
-  (display "==============================LATEX OUTPUT"))
+  (display "\n==============================LATEX OUTPUT\n")
+  (display "\nHTML OUTPUT==============================\n")
+  (write (->html part:index))
+  (display "\n==============================HTML OUTPUT\n"))

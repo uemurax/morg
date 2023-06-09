@@ -16,7 +16,7 @@
          "xexpr-table.rkt")
 
 (require/typed racket/hash
-  [hash-union (All (K V) ((HashTable K V) (HashTable K V) . -> . (HashTable K V)))])
+  [hash-union ((HashTable String String) (HashTable String String) . -> . (HashTable String String))])
 
 (provide (struct-out config) Config
          (struct-out user-config) UserConfig
