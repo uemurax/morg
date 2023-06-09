@@ -28,9 +28,9 @@
 (define ((math->xexprs [_cfg : Config]) [x : Math]) : XExprs
   (tagged% 'span
            `((class ,katex-class-name))
-           (string-append
+           (string-tree-like->string*
             katex-delimiter-left
-            (string-tree->string (math-tex->text (math-contents x)))
+            (math-tex->text (math-contents x))
             katex-delimiter-right)))
 
 (define ref-class-name (class-name "ref"))

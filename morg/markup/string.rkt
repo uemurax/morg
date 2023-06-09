@@ -7,6 +7,7 @@
          string-tree-like->string-tree
          string-tree->string
          string-tree-like->string
+         string-tree-like->string*
          string%)
 
 (define-type StringTree
@@ -30,3 +31,6 @@
 
 (define (string-tree-like->string [x : StringTreeLike]) : String
   (string-tree->string (string-tree-like->string-tree x)))
+
+(define (string-tree-like->string* . [xs : StringTreeLike *]) : String
+  (string-tree-like->string (splice xs)))
