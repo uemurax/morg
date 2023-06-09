@@ -7,8 +7,7 @@
          "class.rkt"
          "inline.rkt"
          "block.rkt"
-         "id.rkt"
-         "config.rkt")
+         "id.rkt")
 
 (provide article->xexprs
          statement-class-name
@@ -26,15 +25,14 @@
 (define statement-header-title-class-name (class-name "statement-header-title"))
 (define statement-body-class-name (class-name "statement-body"))
 
-(define ((article->xexprs:statement [cfg : Config])
-         [a : Article]) : XExprs
-  (define f (inline->xexprs cfg))
+(define (article->xexprs:statement [a : Article]) : XExprs
+  (define f inline->xexprs)
   (define title (article-title a))
   (tagged% 'div
            `((class ,statement-class-name))
            (tagged% 'header
                     `((class ,statement-header-class-name))
-                    ((id->xexprs/a cfg) (article-id a))
+                    (id->xexprs/a (article-id a))
                     (tagged% 'span
                              `((class ,statement-header-header-class-name))
                              (f (article-header a)))
@@ -44,31 +42,29 @@
                                (f title))))
            (tagged% 'div
                     `((class ,statement-body-class-name))
-                    ((block->xexprs cfg) (article-contents a)))))
+                    (block->xexprs (article-contents a)))))
 
 (define proof-class-name (class-name "proof"))
 (define proof-header-class-name (class-name "proof-header"))
 (define proof-body-class-name (class-name "proof-body"))
 
-(define ((proof->xexprs [cfg : Config])
-         [pf : Proof]) : XExprs
+(define (proof->xexprs [pf : Proof]) : XExprs
   (tagged% 'div
            `((class ,proof-class-name))
            (tagged% 'header
                     `((class ,proof-header-class-name))
-                    ((inline->xexprs cfg) (proof-header pf)))
+                    (inline->xexprs (proof-header pf)))
            (tagged% 'div
                     `((class ,proof-body-class-name))
-                    ((block->xexprs cfg) (proof-contents pf)))))
+                    (block->xexprs (proof-contents pf)))))
 
 (define article-class-name (class-name "article"))
 
-(define ((article->xexprs [cfg : Config])
-         [a : Article]) : XExprs
+(define (article->xexprs [a : Article]) : XExprs
   (define pf (article-proof a))
   (tagged% 'article
            `((class ,article-class-name)
              (id ,(id-contents (article-id a))))
-           ((article->xexprs:statement cfg) a)
+           (article->xexprs:statement a)
            (when% pf
-             ((proof->xexprs cfg) pf))))
+             (proof->xexprs pf))))

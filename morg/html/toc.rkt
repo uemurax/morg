@@ -4,8 +4,7 @@
          "../markup/xexpr.rkt"
          "class.rkt"
          "inline.rkt"
-         "id.rkt"
-         "config.rkt")
+         "id.rkt")
 
 (provide make-toc
          toc-class-name
@@ -22,21 +21,17 @@
 (define toc-edge-summary-class-name (class-name "toc-edge-summary"))
 (define toc-edge-title-class-name (class-name "toc-edge-title"))
 
-(define ((make-toc [cfg : Config])
-         [ss : (Listof Section)]) : XExprs
+(define (make-toc [ss : (Listof Section)]) : XExprs
   (tagged% 'div
            `((class ,toc-class-name))
-           ((make-toc:aux cfg) ss)))
+           (make-toc:aux ss)))
 
-(: make-toc:aux : (Config . -> . ((Listof Section) . -> . XExprs)))
-(: make-toc:aux-1 : (Config . -> . (Section . -> . XExprs)))
-
-(define ((make-toc:aux cfg) ss)
+(define (make-toc:aux [ss : (Listof Section)]) : XExprs
   (apply tagged% 'ul
          `((class ,toc-node-class-name))
-         (map (make-toc:aux-1 cfg) ss)))
+         (map make-toc:aux-1 ss)))
 
-(define ((make-toc:aux-1 cfg) s)
+(define (make-toc:aux-1 [s : Section]) : XExprs
   (define i (section-id s))
   (define title (section-title s))
   (tagged% 'li
@@ -48,5 +43,5 @@
                              (tagged% 'a
                                       `((class ,toc-edge-title-class-name)
                                         (href ,(id->url i)))
-                                      ((inline->xexprs cfg) title)))
-                    ((make-toc:aux cfg) (section-subsections s)))))
+                                      (inline->xexprs title)))
+                    (make-toc:aux (section-subsections s)))))

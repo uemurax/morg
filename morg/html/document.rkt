@@ -7,7 +7,6 @@
          "toc.rkt"
          "section.rkt"
          "xexpr-table.rkt"
-         "config.rkt"
          "class.rkt")
 
 (provide document->xexprs
@@ -29,17 +28,15 @@
 (define document-main-toc-class-name (class-name "document-main-toc"))
 (define document-back-toc-class-name (class-name "document-back-toc"))
 
-(define ((document->xexprs [cfg : Config])
-         [doc : Document]) : XExprTable
+(define (document->xexprs [doc : Document]) : XExprTable
   (define title (document-title doc))
   (define author (document-author doc))
   (define front (document-front doc))
   (define main (document-main doc))
   (define back (document-back doc))
-  (define toc (make-toc cfg))
   (define tbl : XExprTable (hash))
   (define (f [x : XExprTable] [ss : (Listof Section)])
-    (foldl (section->xexprs cfg) x ss))
+    (foldl section->xexprs x ss))
   (define tbl-1 (f tbl front))
   (define tbl-2 (f tbl-1 main))
   (define tbl-3 (f tbl-2 back))
@@ -48,22 +45,22 @@
              `((class ,document-class-name))
              (tagged% 'h1
                       `((class ,document-title-class-name))
-                      ((inline->xexprs cfg) title))
+                      (inline->xexprs title))
              (tagged% 'address
                       `((class ,document-address-class-name))
                       (tagged% 'ul
                                `((class ,document-author-list-class-name))
                                (apply tagged% 'li
                                       `((class ,document-author-class-name))
-                                      (map (inline->xexprs cfg)
+                                      (map inline->xexprs
                                            author))))
              (tagged% 'div
                       `((class ,document-front-toc-class-name))
-                      (toc front))
+                      (make-toc front))
              (tagged% 'div
                       `((class ,document-main-toc-class-name))
-                      (toc main))
+                      (make-toc main))
              (tagged% 'div
                       `((class ,document-back-toc-class-name))
-                      (toc back))))
+                      (make-toc back))))
   (hash-set tbl-3 (document-id doc) this-xexpr))

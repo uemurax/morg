@@ -4,8 +4,7 @@
          "../markup/xexpr.rkt"
          "../markup/string.rkt"
          "../text/id.rkt"
-         "class.rkt"
-         "config.rkt")
+         "class.rkt")
 
 (provide id->url
          id->xexprs/a
@@ -16,8 +15,7 @@
 
 (define id-class-name (class-name "id"))
 
-(define ((id->xexprs/a [_cfg : Config])
-         [i : Id]) : XExprs
+(define (id->xexprs/a [i : Id]) : XExprs
   (tagged% 'a
             `((class ,id-class-name)
               (href ,(id->url i)))
