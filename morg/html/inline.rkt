@@ -5,6 +5,7 @@
          "../text/tex.rkt"
          "../data/splice.rkt"
          "../markup/string.rkt"
+         "../markup/splice.rkt"
          "class.rkt"
          "id.rkt"
          "splice.rkt")
@@ -13,6 +14,8 @@
          katex-class-name
          katex-delimiter-left
          katex-delimiter-right
+         list-item-class-name
+         unordered-list-class-name
          ref-class-name)
 
 (define (text->xexprs [x : Text]) : XExprs
@@ -37,11 +40,26 @@
   (define i (ref-id x))
   (id->xexprs/a i))
 
+(define list-item-class-name (class-name "list-item"))
+
+(define (list-item->xexprs [i : ListItem]) : XExprs
+  (tagged% 'li
+           `((class ,list-item-class-name))
+           (inline->xexprs (list-item-contents i))))
+
+(define unordered-list-class-name (class-name "unordered-list"))
+
+(define (unordered-list->xexprs [ul : UnorderedList]) : XExprs
+  (tagged% 'ul
+           `((class ,unordered-list-class-name))
+           (apply % (map list-item->xexprs (unordered-list-contents ul)))))
+
 (define (inline->xexprs [i : Inline]) : XExprs
   (define x (inline-contents i))
   (cond
    [(text? x) (text->xexprs x)]
    [(math? x) (math->xexprs x)]
    [(ref? x) (ref->xexprs x)]
+   [(unordered-list? x) (unordered-list->xexprs x)]
    [(splice? x) ((splice->xexprs inline->xexprs) x)]
    [else (error "Unimplemented.")]))
