@@ -24,6 +24,7 @@
    [(ref? x) ((ref->text cfg) x)]
    [(math? x) ((math->text cfg) x)]
    [(unordered-list? x) ((unordered-list->text cfg) x)]
+   [(href? x) ((href->text cfg) x)]
    [else (error "Unimplemented.")]))
 
 (define ((text->text [_cfg : Config]) [t : Text]) : StringTree
@@ -60,5 +61,13 @@
 (define ((unordered-list->text [cfg : Config])
          [ul : UnorderedList]) : StringTree
   @string%{
-    [@(apply % (map (list-item->text cfg) (unordered-list-contents ul)))]
+    {@(apply % (map (list-item->text cfg) (unordered-list-contents ul)))}
   })
+
+(define ((href->text [cfg : Config])
+         [h : HRef]) : StringTree
+  (define url (href-url h))
+  (define contents (href-contents h))
+  (if contents
+      @string%{[@((inline->text cfg) contents)](@|url|)}
+      @string%{<@|url|>}))
