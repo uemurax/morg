@@ -9,6 +9,7 @@
          (struct-out text) Text
          (struct-out list-item) ListItem
          (struct-out unordered-list) UnorderedList
+         (struct-out href) HRef
          (struct-out math) Math)
 
 (struct inline
@@ -21,6 +22,7 @@
      Ref
      Math
      UnorderedList
+     HRef
      Text))
 
 (struct text
@@ -47,3 +49,9 @@
   ([contents : (Listof ListItem)])
   #:transparent
   #:type-name UnorderedList)
+
+(struct href
+  ([url : String]
+   [contents : (Option Inline)])
+  #:transparent
+  #:type-name HRef)
