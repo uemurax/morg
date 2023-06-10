@@ -2,6 +2,7 @@
 
 (require "id.rkt"
          "inline.rkt"
+         "block.rkt"
          "section.rkt")
 
 (provide (struct-out document) Document)
@@ -10,6 +11,7 @@
   ([id : Id]
    [author : (Listof Inline)]
    [title : Inline]
+   [contents : Block]
    [front : (Listof Section)]
    [main : (Listof Section)]
    [back : (Listof Section)])
