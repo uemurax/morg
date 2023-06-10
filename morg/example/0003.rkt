@@ -4,6 +4,7 @@
 
 (require "0004.rkt"
          "0006.rkt"
+         "0008.rkt"
          "0007.rkt")
 
 (provide part:0003)
@@ -17,6 +18,7 @@
     }
     part:0004
     part:0006
+    part:0008
     part:0007
   ])
 

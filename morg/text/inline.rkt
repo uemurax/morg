@@ -55,7 +55,7 @@
 
 (define ((list-item->text [cfg : Config])
          [i : ListItem]) : StringTree
-  @string%{* @((inline->text cfg) (list-item-contents i))})
+  @string%{ * @((inline->text cfg) (list-item-contents i))})
 
 (define ((unordered-list->text [cfg : Config])
          [ul : UnorderedList]) : StringTree

@@ -20,6 +20,7 @@
             Text
             Ref
             Math
+            UnorderedList
             StringTreeLike)))
 
 (define (inline-like->inline [x : InlineLike]) : Inline
