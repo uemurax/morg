@@ -12,6 +12,7 @@
          math%
          list-item%
          unordered-list%
+         href%
          inline%)
 
 (define-type InlineLike
@@ -21,6 +22,7 @@
             Ref
             Math
             UnorderedList
+            HRef
             StringTreeLike)))
 
 (define (inline-like->inline [x : InlineLike]) : Inline
@@ -46,3 +48,10 @@
 
 (define (unordered-list% . [xs : ListItem *]) : UnorderedList
   (unordered-list xs))
+
+(define (href% [url : String] . [xs : InlineLike *]) : HRef
+  (define contents
+    (if (null? xs)
+        #f
+        (apply inline% xs)))
+  (href url contents))
