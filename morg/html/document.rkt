@@ -3,6 +3,7 @@
 (require "../data/document.rkt"
          "../data/section.rkt"
          "../markup/xexpr.rkt"
+         "../text/date.rkt"
          "inline.rkt"
          "toc.rkt"
          "section.rkt"
@@ -16,6 +17,7 @@
          document-address-class-name
          document-author-list-class-name
          document-author-class-name
+         document-date-class-name
          document-front-toc-class-name
          document-main-toc-class-name
          document-back-toc-class-name)
@@ -28,6 +30,7 @@
 (define document-front-toc-class-name (class-name "document-front-toc"))
 (define document-main-toc-class-name (class-name "document-main-toc"))
 (define document-back-toc-class-name (class-name "document-back-toc"))
+(define document-date-class-name (class-name "document-date"))
 
 (define (document->xexprs [doc : Document]) : XExprTable
   (define title (document-title doc))
@@ -55,6 +58,9 @@
                                       `((class ,document-author-class-name))
                                       (map inline->xexprs
                                            author))))
+             (tagged% 'div
+                      `((class ,document-date-class-name))
+                      (date->text (document-date doc)))
              (block->xexprs (document-contents doc))
              (tagged% 'div
                       `((class ,document-front-toc-class-name))
