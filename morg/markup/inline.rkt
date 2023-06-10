@@ -10,6 +10,8 @@
          inline-like->inline
          ref%
          math%
+         list-item%
+         unordered-list%
          inline%)
 
 (define-type InlineLike
@@ -37,3 +39,9 @@
 
 (define (math% . [xs : MathTeXLike *]) : Math
   (math (apply math-tex% xs)))
+
+(define (list-item% . [xs : InlineLike *]) : ListItem
+  (list-item (apply inline% xs)))
+
+(define (unordered-list% . [xs : ListItem *]) : UnorderedList
+  (unordered-list xs))
