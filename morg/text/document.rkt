@@ -6,6 +6,7 @@
          "../util/list.rkt"
          "section.rkt"
          "inline.rkt"
+         "block.rkt"
          "config.rkt")
 
 (provide document->text)
@@ -19,6 +20,7 @@
             (make-node-table main)))
   (define f (inline->text cfg))
   (define g (section->text cfg))
+  (define h (block->text cfg))
   @string%{
     @(f (document-title doc))
     ========================================
@@ -27,7 +29,7 @@
             (list-join-1
              (map f (document-author doc))
              ", "))
-
+    @(h (document-contents doc))
     @(apply string% (map g front))
     @(apply string% (map g main))
     @(apply string% (map g back))

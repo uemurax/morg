@@ -13,6 +13,11 @@
     #:id "index"
     #:title @%{Test document}
     #:author @list[@%{Test Author}]
+    #:contents @%[
+      @paragraph{
+        Abstract: This is a document.
+      }
+    ]
     #:front @list[
       part:0005
     ]
