@@ -50,4 +50,4 @@
   (define eprint-1 (book-eprint b))
   (define eprint : InlineLike
     @when%[eprint-1]{ @(format-eprint eprint-1)})
-  @inline%{@|author|. @|title|. @|publisher|@|address|@|date|.@|doi|@|url|@|eprint|})
+  @inline%{@|author|. @emph%{@|title|}. @|publisher|@|address|@|date|.@|doi|@|url|@|eprint|})
