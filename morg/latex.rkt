@@ -4,7 +4,7 @@
          "latex/document.rkt"
          "latex/config.rkt"
          "text/tex.rkt"
-         (only-in "data/tree.rkt" tree-flatten))
+         "markup/string.rkt")
 
 (provide ->latex)
 
@@ -14,4 +14,4 @@
     (cond
      [(document? doc) ((document->latex cfg) doc)]))
   (define y (text-tex->text x))
-  (apply string-append (tree-flatten y)))
+  (string-tree->string y))
