@@ -2,6 +2,7 @@
 
 (require "bib-item.rkt"
          "../markup/inline.rkt"
+         "../data/date.rkt"
          "../util/option.rkt")
 
 (provide eprint%
@@ -13,7 +14,7 @@
 
 (define (book% #:author [author : (Listof InlineLike)]
                #:title [title : InlineLike]
-               #:date [d : date]
+               #:date [d : Date]
                #:publisher [publisher : (Option InlineLike) #f]
                #:address [address : (Option InlineLike) #f]
                #:doi [doi : (Option String) #f]

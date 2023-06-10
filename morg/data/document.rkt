@@ -3,6 +3,7 @@
 (require "id.rkt"
          "inline.rkt"
          "block.rkt"
+         "date.rkt"
          "section.rkt")
 
 (provide (struct-out document) Document)
@@ -11,7 +12,7 @@
   ([id : Id]
    [author : (Listof Inline)]
    [title : Inline]
-   [date : date]
+   [date : Date]
    [contents : Block]
    [front : (Listof Section)]
    [main : (Listof Section)]

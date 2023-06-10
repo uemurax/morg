@@ -2,8 +2,10 @@
 
 (require "bib-item.rkt"
          "../data/inline.rkt"
+         "../data/date.rkt"
          "../markup/inline.rkt"
          "../markup/splice.rkt"
+         "../text/date.rkt"
          "../util/list.rkt")
 
 (provide format-bib-item)
@@ -38,7 +40,7 @@
   (define address-1 (book-address b))
   (define address : InlineLike
     @when%[address-1]{@|address-1|, })
-  (define year (number->string (date-year (book-date b))))
+  (define date (date->text (book-date b)))
   (define doi-1 (book-doi b))
   (define doi : InlineLike
     @when%[doi-1]{ @(format-doi doi-1)})
@@ -48,4 +50,4 @@
   (define eprint-1 (book-eprint b))
   (define eprint : InlineLike
     @when%[eprint-1]{ @(format-eprint eprint-1)})
-  @inline%{@|author|. @|title|. @|publisher|@|address|@|year|.@|doi|@|url|@|eprint|})
+  @inline%{@|author|. @|title|. @|publisher|@|address|@|date|.@|doi|@|url|@|eprint|})

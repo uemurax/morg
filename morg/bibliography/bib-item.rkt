@@ -1,6 +1,7 @@
 #lang typed/racket
 
-(require "../data/inline.rkt")
+(require "../data/inline.rkt"
+         "../data/date.rkt")
 
 (provide BibItem
          EPrintType
@@ -22,7 +23,7 @@
 (struct book
   ([author : (Listof Inline)]
    [title : Inline]
-   [date : date]
+   [date : Date]
    [publisher : (Option Inline)]
    [address : (Option Inline)]
    [doi : (Option String)]

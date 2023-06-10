@@ -1,9 +1,9 @@
 #lang typed/racket
 
-(require typed/racket/date
-         "../data/document.rkt"
+(require "../data/document.rkt"
          "../data/id.rkt"
          "../data/section.rkt"
+         "../data/date.rkt"
          "block.rkt"
          "inline.rkt")
 
@@ -12,7 +12,7 @@
 (define (document% #:id [maybe-id : String]
                    #:author [author : (Listof InlineLike)]
                    #:title [title : InlineLike]
-                   #:date [d : date (current-date)]
+                   #:date [d : Date (current-date)]
                    #:contents [contents : BlockLike (block%)]
                    #:front [front : (Listof Section) (list)]
                    #:back [back : (Listof Section) (list)]
