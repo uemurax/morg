@@ -6,6 +6,7 @@
          "inline.rkt"
          "toc.rkt"
          "section.rkt"
+         "block.rkt"
          "xexpr-table.rkt"
          "class.rkt")
 
@@ -54,6 +55,7 @@
                                       `((class ,document-author-class-name))
                                       (map inline->xexprs
                                            author))))
+             (block->xexprs (document-contents doc))
              (tagged% 'div
                       `((class ,document-front-toc-class-name))
                       (make-toc front))
