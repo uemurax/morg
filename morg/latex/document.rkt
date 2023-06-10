@@ -8,6 +8,7 @@
          "../util/list.rkt"
          "section.rkt"
          "inline.rkt"
+         "block.rkt"
          "config.rkt")
 
 (provide document->latex)
@@ -30,6 +31,7 @@
   (define cls-opt @optional-argument%{@(apply options% (user-config-class-options user-cfg))})
   (define f (section->latex cfg))
   (define g (inline->latex cfg))
+  (define h (block->latex cfg))
   @text-tex%{
     @macro%["PassOptionsToPackage"
       @argument%{@options%["pdfusetitle" '("pdfencoding" . "auto") "psdextra"]}
@@ -44,7 +46,7 @@
 
     @environment%["document"]{
       @macro%["maketitle"]
-
+      @(h (document-contents doc))
       @(apply % (map f front))
       @(apply % (map f main))
       @(apply % (map f back))
