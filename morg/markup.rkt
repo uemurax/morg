@@ -16,5 +16,6 @@
              [math% math]
              [list-item% list-item]
              [unordered-list% unordered-list]
+             [href% href]
              [section% section])
  (all-from-out "markup/splice.rkt"))

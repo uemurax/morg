@@ -20,6 +20,10 @@
     part:0006
     part:0008
     part:0007
+    @paragraph{
+      Please visit @href["https://example.com"]{this page}.
+      Also check out @href["https://example.com"]
+    }
   ])
 
 (module+ main
