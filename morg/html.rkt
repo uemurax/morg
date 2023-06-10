@@ -27,6 +27,7 @@
 (define (site-publish [dst-dir : Path] [s : Site]) : Void
   (define tmp-dir (make-temporary-directory))
   (hash-for-each s (write-page tmp-dir))
+  (make-directory* dst-dir)
   (for-each
    (lambda ([f : Path])
      (copy-file (build-path tmp-dir f)
