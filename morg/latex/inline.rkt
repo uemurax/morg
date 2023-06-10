@@ -44,11 +44,24 @@
          [x : Math]) : tex:TextTeX
   (tex:text-tex (tex:math (math-contents x))))
 
+(define ((list-item->latex [cfg : Config])
+         [i : ListItem]) : tex:TextTeX
+  @text-tex%{@macro%["item"]@((inline->latex cfg) (list-item-contents i))})
+
+(define ((unordered-list->latex [cfg : Config])
+         [ul : UnorderedList]) : tex:TextTeX
+  @text-tex%{
+    @environment%["itemize"]{
+      @(apply % (map (list-item->latex cfg) (unordered-list-contents ul)))
+    }
+  })
+
 (define ((inline->latex cfg) i)
   (define x (inline-contents i))
   (cond
    [(text? x) ((text->latex cfg) x)]
    [(math? x) ((math->latex cfg) x)]
    [(ref? x) ((ref->latex cfg) x)]
+   [(unordered-list? x) ((unordered-list->latex cfg) x)]
    [(splice? x) ((splice->latex (inline->latex cfg)) x)]
    [else (error "Unimplemented.")]))
