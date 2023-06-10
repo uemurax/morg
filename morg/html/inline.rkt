@@ -16,6 +16,7 @@
          katex-delimiter-right
          list-item-class-name
          unordered-list-class-name
+         emph-class-name
          ref-class-name)
 
 (define (text->xexprs [x : Text]) : XExprs
@@ -66,6 +67,13 @@
                (inline->xexprs contents)
                url)))
 
+(define emph-class-name (class-name "emph"))
+
+(define (emph->xexprs [e : Emph]) : XExprs
+  (tagged% 'em
+           `((class ,emph-class-name))
+           (inline->xexprs (emph-contents e))))
+
 (define (inline->xexprs [i : Inline]) : XExprs
   (define x (inline-contents i))
   (cond
@@ -74,5 +82,6 @@
    [(ref? x) (ref->xexprs x)]
    [(unordered-list? x) (unordered-list->xexprs x)]
    [(href? x) (href->xexprs x)]
+   [(emph? x) (emph->xexprs x)]
    [(splice? x) ((splice->xexprs inline->xexprs) x)]
    [else (error "Unimplemented.")]))
