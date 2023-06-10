@@ -2,9 +2,13 @@
 
 (require "../data/inline.rkt")
 
-(provide EPrintType
+(provide BibItem
+         EPrintType
          (struct-out eprint) EPrint
          (struct-out book) Book)
+
+(define-type BibItem
+  (U Book))
 
 (define-type EPrintType
   (U 'arXiv))
