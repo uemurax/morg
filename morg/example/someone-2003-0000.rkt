@@ -11,7 +11,7 @@
     @book[
       #:author @list[@%{Some One}]
       #:title @%{An introduction to something}
-      #:date (date #:year 2003)
+      #:date (date 2003)
       #:publisher @%{Some Publisher}
       #:url "https://example.com"
     ]

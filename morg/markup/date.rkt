@@ -4,7 +4,7 @@
 
 (provide date%)
 
-(define (date% #:year [year : Integer]
-               #:month [month : (Option Exact-Positive-Integer) #f]
-               #:day [day : (Option Exact-Positive-Integer) #f])
+(define (date% [year : Integer]
+               [month : (Option Exact-Positive-Integer) #f]
+               [day : (Option Exact-Positive-Integer) #f])
   (date year month day))
