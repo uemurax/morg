@@ -6,6 +6,7 @@
          "../markup/tex.rkt"
          "../markup/splice.rkt"
          "../util/list.rkt"
+         "../text/date.rkt"
          "section.rkt"
          "inline.rkt"
          "block.rkt"
@@ -43,6 +44,7 @@
 
     @macro%["title" @argument%{@(g (document-title doc))}]
     @macro%["author" (apply argument% (list-join-1 (map g (document-author doc)) @macro%["and"]))]
+    @macro%["date" @argument%{@(date->text (document-date doc))}]
 
     @environment%["document"]{
       @macro%["maketitle"]
