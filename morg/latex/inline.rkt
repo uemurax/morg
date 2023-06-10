@@ -65,6 +65,10 @@
       @text-tex%{@((inline->latex cfg) contents)@macro%["footnote" @argument%{@|x|}]}
       x))
 
+(define ((emph->latex [cfg : Config])
+         [e : Emph]) : tex:TextTeX
+  @text-tex%{@macro%["emph" @argument%{@((inline->latex cfg) (emph-contents e))}]})
+
 (define ((inline->latex cfg) i)
   (define x (inline-contents i))
   (cond
@@ -73,5 +77,6 @@
    [(ref? x) ((ref->latex cfg) x)]
    [(unordered-list? x) ((unordered-list->latex cfg) x)]
    [(href? x) ((href->latex cfg) x)]
+   [(emph? x) ((emph->latex cfg) x)]
    [(splice? x) ((splice->latex (inline->latex cfg)) x)]
    [else (error "Unimplemented.")]))
