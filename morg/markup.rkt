@@ -19,5 +19,6 @@
              [unordered-list% unordered-list]
              [href% href]
              [date% date]
+             [emph% emph]
              [section% section])
  (all-from-out "markup/splice.rkt"))
