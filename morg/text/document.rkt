@@ -7,6 +7,7 @@
          "section.rkt"
          "inline.rkt"
          "block.rkt"
+         "date.rkt"
          "config.rkt")
 
 (provide document->text)
@@ -29,6 +30,8 @@
             (list-join-1
              (map f (document-author doc))
              ", "))
+
+    @((date->text cfg) (document-date doc))
     @(h (document-contents doc))
     @(apply string% (map g front))
     @(apply string% (map g main))
