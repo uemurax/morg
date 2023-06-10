@@ -54,6 +54,18 @@
            `((class ,unordered-list-class-name))
            (apply % (map list-item->xexprs (unordered-list-contents ul)))))
 
+(define href-class-name (class-name "href"))
+
+(define (href->xexprs [h : HRef]) : XExprs
+  (define url (href-url h))
+  (define contents (href-contents h))
+  (tagged% 'a
+           `((class ,href-class-name)
+             (href ,url))
+           (if contents
+               (inline->xexprs contents)
+               url)))
+
 (define (inline->xexprs [i : Inline]) : XExprs
   (define x (inline-contents i))
   (cond
@@ -61,5 +73,6 @@
    [(math? x) (math->xexprs x)]
    [(ref? x) (ref->xexprs x)]
    [(unordered-list? x) (unordered-list->xexprs x)]
+   [(href? x) (href->xexprs x)]
    [(splice? x) ((splice->xexprs inline->xexprs) x)]
    [else (error "Unimplemented.")]))
