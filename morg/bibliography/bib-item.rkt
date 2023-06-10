@@ -2,11 +2,15 @@
 
 (require "../data/inline.rkt")
 
-(provide (struct-out eprint) EPrint
+(provide EPrintType
+         (struct-out eprint) EPrint
          (struct-out book) Book)
 
+(define-type EPrintType
+  (U 'arXiv))
+
 (struct eprint
-  ([type : (U 'arXIv)]
+  ([type : EPrintType]
    [id : String])
   #:transparent
   #:type-name EPrint)
