@@ -7,6 +7,8 @@
 (provide (struct-out inline) Inline
          (struct-out ref) Ref
          (struct-out text) Text
+         (struct-out list-item) ListItem
+         (struct-out unordered-list) UnorderedList
          (struct-out math) Math)
 
 (struct inline
@@ -18,6 +20,7 @@
   (U (Splice X)
      Ref
      Math
+     UnorderedList
      Text))
 
 (struct text
@@ -34,3 +37,13 @@
   ([contents : MathTeX])
   #:transparent
   #:type-name Math)
+
+(struct list-item
+  ([contents : Inline])
+  #:transparent
+  #:type-name ListItem)
+
+(struct unordered-list
+  ([contents : (Listof ListItem)])
+  #:transparent
+  #:type-name UnorderedList)
