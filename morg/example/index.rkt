@@ -4,7 +4,8 @@
 
 (require "0000.rkt"
          "0003.rkt"
-         "0005.rkt")
+         "0005.rkt"
+         "0009.rkt")
 
 (provide part:index)
 
@@ -23,6 +24,9 @@
     ]
     part:0000
     part:0003
+    #:back @list[
+      part:0009
+    ]
   ])
 
 (module+ main

@@ -13,6 +13,7 @@
     #:title @%{Introduction}
     @paragraph{
       This is a test document.
+      See @ref["someone-2003-0000"] for more details.
     }
     #:subsections @list[
       part:0002
