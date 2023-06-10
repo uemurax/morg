@@ -56,6 +56,15 @@
     }
   })
 
+(define ((href->latex [cfg : Config])
+         [h : HRef]) : tex:TextTeX
+  (define url (href-url h))
+  (define contents (href-contents h))
+  (define x @text-tex%{@macro%["url" @argument%{@|url|}]})
+  (if contents
+      @text-tex%{@((inline->latex cfg) contents)@macro%["footnote" @argument%{@|x|}]}
+      x))
+
 (define ((inline->latex cfg) i)
   (define x (inline-contents i))
   (cond
@@ -63,5 +72,6 @@
    [(math? x) ((math->latex cfg) x)]
    [(ref? x) ((ref->latex cfg) x)]
    [(unordered-list? x) ((unordered-list->latex cfg) x)]
+   [(href? x) ((href->latex cfg) x)]
    [(splice? x) ((splice->latex (inline->latex cfg)) x)]
    [else (error "Unimplemented.")]))
