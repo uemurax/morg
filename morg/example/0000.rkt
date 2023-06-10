@@ -12,7 +12,7 @@
     #:id "0000"
     #:title @%{Introduction}
     @paragraph{
-      This is a test document.
+      This is a @emph{test} document.
       See @ref["someone-2003-0000"] for more details.
     }
     #:subsections @list[

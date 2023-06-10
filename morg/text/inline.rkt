@@ -25,6 +25,7 @@
    [(math? x) ((math->text cfg) x)]
    [(unordered-list? x) ((unordered-list->text cfg) x)]
    [(href? x) ((href->text cfg) x)]
+   [(emph? x) ((emph->text cfg) x)]
    [else (error "Unimplemented.")]))
 
 (define ((text->text [_cfg : Config]) [t : Text]) : StringTree
@@ -71,3 +72,7 @@
   (if contents
       @string%{[@((inline->text cfg) contents)](@|url|)}
       @string%{<@|url|>}))
+
+(define ((emph->text [cfg : Config])
+         [e : Emph]) : StringTree
+  @string%{*@((inline->text cfg) (emph-contents e))*})
