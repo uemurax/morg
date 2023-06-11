@@ -1,0 +1,72 @@
+#lang at-exp typed/racket
+
+(require "tex-plus.rkt"
+         "../data/tex.rkt"
+         "../data/splice.rkt"
+         "../markup/tex.rkt")
+
+(provide (struct-out user-config) UserConfig
+         (struct-out config) Config
+         default-config
+         format-math-tex+)
+
+(struct user-config
+  ([levels : (Listof Symbol)]
+   [left : MathTeX]
+   [right : MathTeX])
+  #:transparent
+  #:type-name UserConfig)
+
+(struct config
+  ([user-config : UserConfig]
+   [level : Level])
+  #:transparent
+  #:type-name Config)
+
+(define default-config
+  (user-config
+   '(+ * generic-bin generic-rel comma)
+   @math-tex%{(}
+   @math-tex%{)}))
+
+(: format-math-tex+ : (Config . -> . (MathTeX+ . -> . MathTeX)))
+
+(define ((format-paren [cfg : Config])
+         [p : (Paren MathTeX+)]) : (Group MathTeX)
+  (define f (format-math-tex+ cfg))
+  (define usr-cfg (config-user-config cfg))
+  (define ss (user-config-levels usr-cfg))
+  (define cur-lv (config-level cfg))
+  (define lv (paren-level p))
+  (define contents (group (f (paren-contents p))))
+  (define comp (lv . (level-compare ss) . cur-lv))
+  (case comp
+   [(<) contents]
+   [else
+    (define l (user-config-left usr-cfg))
+    (define r (user-config-right usr-cfg))
+    (group (math-tex% l contents r))]))
+
+(define ((format-atom+ [cfg : Config])
+         [a : (Atom+ MathTeX+)]) : (Atom MathTeX)
+  (define x (atom+-contents a))
+  (define f (format-math-tex+ cfg))
+  (cond
+   [(text? x) (atom x)]
+   [(macro? x) (atom ((macro-map f) x))]
+   [(group? x) (atom ((group-map f) x))]
+   [(paren? x) (atom ((format-paren cfg) x))]))
+
+(define ((format-sub-sup [cfg : Config])
+         [s : (SubSup MathTeX+)]) : (SubSup MathTeX)
+  (define cfg-1
+    (struct-copy config cfg
+     [level (level #f 0)]))
+  ((sub-sup-map (format-math-tex+ cfg-1)) s))
+
+(define ((format-math-tex+ cfg) m)
+  (define x (math-tex+-contents m))
+  (cond
+   [(atom+? x) (math-tex ((format-atom+ cfg) x))]
+   [(splice? x) (math-tex (splice-map (format-math-tex+ cfg) x))]
+   [(sub-sup? x) (math-tex ((format-sub-sup cfg) x))]))
