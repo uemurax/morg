@@ -16,6 +16,7 @@
           [x : Paragraph]) : tex:TextTeX
   @text-tex%{
     
+    
     @((inline->latex cfg) (paragraph-contents x))
   })
 
