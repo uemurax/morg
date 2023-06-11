@@ -9,6 +9,7 @@
          (struct-out math-tex+) MathTeX+
          paren-map
          atom+-map
+         math-tex+-dec-degree
          ComparisonResult
          level-compare)
 
@@ -51,6 +52,32 @@
   (cond
    [(paren? x) (atom+ ((paren-map f) x))]
    [(atom? x) (atom+ ((atom-map f) x))]))
+
+(define (level-dec-degree [lv : Level]) : Level
+  (level (level-symbol lv) (- (level-degree lv) 1)))
+
+(define #:forall (X)
+        ((paren-dec-degree [f : (X . -> . X)])
+         [p : (Paren X)]) : (Paren X)
+  (paren (level-dec-degree (paren-level p))
+         (f (paren-contents p))))
+
+(define #:forall (X)
+        ((atom+-dec-degree [f : (X . -> . X)])
+         [a : (Atom+ X)]) : (Atom+ X)
+  (define x (atom+-contents a))
+  (cond
+   [(atom? x) (atom+ ((atom-map f) x))]
+   [(paren? x) (atom+ ((paren-dec-degree f) x))]))
+
+(define (math-tex+-dec-degree [m : MathTeX+]) : MathTeX+
+  (define f math-tex+-dec-degree)
+  (define g (atom+-dec-degree f))
+  (define x (math-tex+-contents m))
+  (cond
+   [(atom+? x) (math-tex+ (g x))]
+   [(splice? x) (math-tex+ (splice-map f x))]
+   [(sub-sup? x) (math-tex+ ((sub-sup-map g f) x))]))
 
 (define-type ComparisonResult
   (U '< '= '> '?))

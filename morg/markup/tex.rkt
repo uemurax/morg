@@ -76,8 +76,10 @@
 (define #:forall (A X)
         (sub-sup% [base : A]
                   #:_ [sub : (Option X)]
-                  #:^ [sup : (Option X)]) : (SubSup A X)
-  (sub-sup base sub sup))
+                  #:^ [sup : (Option X)]) : (U (SubSup A X) A)
+  (cond
+   [(or sub sup) (sub-sup base sub sup)]
+   [else base]))
 
 (define-type TextTeXAtomLike
   (AtomLike TextTeXLike))

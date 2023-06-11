@@ -3,6 +3,7 @@
 (require "tex-plus.rkt"
          "../data/tex.rkt"
          "../data/splice.rkt"
+         "../util/list.rkt"
          "../markup/tex.rkt")
 
 (provide Atom+Like
@@ -10,6 +11,11 @@
          MathTeX+Like
          atom+-like->atom+
          math-tex+-like->math-tex+
+         paren%
+         dec-degree%
+         binary%
+         monoid%
+         big-op%
          math-tex+%)
 
 (define-type (Atom+Like X)
@@ -50,3 +56,45 @@
 
 (define (math-tex+% . [xs : MathTeX+Like *]) : MathTeX+
   (math-tex+-like->math-tex+ (splice xs)))
+
+(define (paren%:aux [lv : (U Symbol #t)] [xs : (Listof MathTeX+Like)]) : (Paren MathTeX+Like)
+  (paren (level lv 0) (splice xs)))
+
+(define (paren% #:level [lv : (U Symbol #t) #t]
+                . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
+  (paren%:aux lv xs))
+
+(define (dec-degree% . [xs : MathTeX+Like *]) : MathTeX+
+  (math-tex+-dec-degree (apply math-tex+% xs)))
+
+(define ((binary% #:level [lv : Symbol '?]
+                  #:assoc [assoc : (U 'left 'right 'none) 'none]
+                  [op : MathTeX+Like])
+         [a : MathTeX+Like] [b : MathTeX+Like]) : (Paren MathTeX+Like)
+  (define-values (l r)
+    (case assoc
+     [(left) (values (dec-degree% a) b)]
+     [(right) (values a (dec-degree% b))]
+     [else (values a b)]))
+  (paren% #:level lv
+          l op r))
+
+(define ((monoid% #:level [lv : Symbol '?]
+                  [unit : MathTeX+Like]
+                  [bin : MathTeX+Like])
+         . [xs : MathTeX+Like *]) : MathTeX+Like
+  (define n (length xs))
+  (cond
+   [(eq? n 0) unit]
+   [(eq? n 1) (list-ref xs 0)]
+   [else
+    (paren%:aux lv (list-join-1 xs bin))]))
+
+(define ((big-op% #:level [lv : Symbol '?]
+                  [op : MathTeXAtom+Like])
+         #:_ [sub : (Option MathTeX+Like) #f]
+         #:^ [sup : (Option MathTeX+Like) #f]
+         . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
+  (paren% #:level lv
+          ((inst sub-sup% MathTeXAtom+Like MathTeX+Like) op #:_ sub #:^ sup)
+          (apply dec-degree% xs)))
