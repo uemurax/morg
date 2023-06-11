@@ -58,13 +58,17 @@
 (define (math-tex+% . [xs : MathTeX+Like *]) : MathTeX+
   (math-tex+-like->math-tex+ (splice xs)))
 
-(define ((paren%/curried #:level [lv : (U Symbol #f #t) #t])
+(define ((paren%/curried #:level [lv : (U Symbol #f #t) #t]
+                         #:left [left : MathTeX+Like "("]
+                         #:right [right : MathTeX+Like ")"])
          . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
-  (paren (level lv 0) (splice xs)))
+  (paren (level lv 0) left right (splice xs)))
 
 (define (paren% #:level [lv : (U Symbol #f #t) #t]
+                #:left [left : MathTeX+Like "("]
+                #:right [right : MathTeX+Like ")"]
                 . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
-  (apply (paren%/curried #:level lv) xs))
+  (apply (paren%/curried #:level lv #:left left #:right right) xs))
 
 (define (dec-degree% . [xs : MathTeX+Like *]) : MathTeX+
   (math-tex+-dec-degree (apply math-tex+% xs)))

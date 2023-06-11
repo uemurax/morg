@@ -24,6 +24,8 @@
 
 (struct (X) paren
   ([level : Level]
+   [left : X]
+   [right : X]
    [contents : X])
   #:transparent
   #:type-name Paren)
@@ -43,7 +45,10 @@
 (define #:forall (X Y)
         ((paren-map [f : (X . -> . Y)])
          [p : (Paren X)]) : (Paren Y)
-  (paren (paren-level p) (f (paren-contents p))))
+  (paren (paren-level p)
+         (f (paren-left p))
+         (f (paren-right p))
+         (f (paren-contents p))))
 
 (define #:forall (X Y)
         ((atom+-map [f : (X . -> . Y)])
@@ -60,6 +65,8 @@
         ((paren-dec-degree [f : (X . -> . X)])
          [p : (Paren X)]) : (Paren X)
   (paren (level-dec-degree (paren-level p))
+         (f (paren-left p))
+         (f (paren-right p))
          (f (paren-contents p))))
 
 (define #:forall (X)

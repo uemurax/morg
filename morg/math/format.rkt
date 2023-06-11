@@ -11,9 +11,7 @@
          format-math-tex+)
 
 (struct user-config
-  ([levels : (Listof Symbol)]
-   [left : MathTeX]
-   [right : MathTeX])
+  ([levels : (Listof Symbol)])
   #:transparent
   #:type-name UserConfig)
 
@@ -25,9 +23,7 @@
 
 (define default-config
   (user-config
-   '(+ * generic-bin generic-rel comma)
-   @math-tex%{(}
-   @math-tex%{)}))
+   '(+ * generic-bin generic-rel comma)))
 
 (: format-math-tex+ : (Config . -> . (MathTeX+ . -> . MathTeX)))
 
@@ -46,8 +42,8 @@
   (case comp
    [(<) contents]
    [else
-    (define l (user-config-left usr-cfg))
-    (define r (user-config-right usr-cfg))
+    (define l (f (paren-left p)))
+    (define r (f (paren-right p)))
     (group (math-tex% l contents r))]))
 
 (define ((format-atom+ [cfg : Config])
