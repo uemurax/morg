@@ -1,7 +1,7 @@
 #lang info
 
 (define collection 'multi)
-(define deps '("base" "typed-racket-lib"))
+(define deps '("base" "typed-racket-lib" "at-exp-lib"))
 (define build-deps '("scribble-lib" "racket-doc" "rackunit-lib"))
 (define pkg-desc "Organize your mathematical thoughts.")
 (define version "0.0")
