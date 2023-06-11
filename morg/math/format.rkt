@@ -33,11 +33,14 @@
 
 (define ((format-paren [cfg : Config])
          [p : (Paren MathTeX+)]) : (Group MathTeX)
-  (define f (format-math-tex+ cfg))
   (define usr-cfg (config-user-config cfg))
   (define ss (user-config-levels usr-cfg))
   (define cur-lv (config-level cfg))
   (define lv (paren-level p))
+  (define cfg-1
+    (struct-copy config cfg
+     [level lv]))
+  (define f (format-math-tex+ cfg-1))
   (define contents (group (f (paren-contents p))))
   (define comp (lv . (level-compare ss) . cur-lv))
   (case comp
