@@ -52,9 +52,7 @@
   (define x (atom+-contents a))
   (define f (format-math-tex+ cfg))
   (cond
-   [(text? x) (atom x)]
-   [(macro? x) (atom ((macro-map f) x))]
-   [(group? x) (atom ((group-map f) x))]
+   [(atom? x) ((atom-map f) x)]
    [(paren? x) (atom ((format-paren cfg) x))]))
 
 (define ((format-sub-sup [cfg : Config])

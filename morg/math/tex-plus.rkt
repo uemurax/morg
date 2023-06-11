@@ -26,7 +26,7 @@
   #:type-name Paren)
 
 (struct (X) atom+
-  ([contents : (U Text (Macro X) (Group X) (Paren X))])
+  ([contents : (U (Atom X) (Paren X))])
   #:transparent
   #:type-name Atom+)
 
