@@ -50,6 +50,7 @@
       @(user-config-front-matter user-cfg)
       @macro%["maketitle"]
       @(h (document-contents doc))
+      @macro%["tableofcontents"]
       @(apply % (map f front))
       @(user-config-main-matter user-cfg)
       @(apply % (map f main))
