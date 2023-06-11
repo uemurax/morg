@@ -75,8 +75,8 @@
 
 (define #:forall (A X)
         (sub-sup% [base : A]
-                  #:_ [sub : (Option X)]
-                  #:^ [sup : (Option X)]) : (U (SubSup A X) A)
+                  #:_ [sub : (Option X) #f]
+                  #:^ [sup : (Option X) #f]) : (U (SubSup A X) A)
   (cond
    [(or sub sup) (sub-sup base sub sup)]
    [else base]))

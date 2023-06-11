@@ -12,11 +12,13 @@
  MathTeXAtom+Like
  (rename-out [macro% macro]
              [group% group]
-             [sub-sup% sub-sup]
              [paren% paren]
              [paren%/curried paren/curried]
              [dec-degree% dec-degree]
              [binary% binary]
              [big-op% big-op]
              [monoid% monoid])
+ sub-sup
  make-math)
+
+(define sub-sup (inst sub-sup% MathTeXAtom+Like MathTeX+Like))

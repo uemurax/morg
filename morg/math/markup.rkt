@@ -58,11 +58,11 @@
 (define (math-tex+% . [xs : MathTeX+Like *]) : MathTeX+
   (math-tex+-like->math-tex+ (splice xs)))
 
-(define ((paren%/curried #:level [lv : (U Symbol #t) #t])
+(define ((paren%/curried #:level [lv : (U Symbol #f #t) #t])
          . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
   (paren (level lv 0) (splice xs)))
 
-(define (paren% #:level [lv : (U Symbol #t) #t]
+(define (paren% #:level [lv : (U Symbol #f #t) #t]
                 . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
   (apply (paren%/curried #:level lv) xs))
 
