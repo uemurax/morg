@@ -1,9 +1,6 @@
 #lang at-exp typed/racket
 
-(require morg/math/markup
-         morg/math/format
-         morg/math/inline
-         morg/markup/tex
+(require morg/math
          morg/markup/splice)
 
 (provide + * =
@@ -14,12 +11,12 @@
    [levels '(* + =)]))
 
 (define +
-  (monoid% #:level '+ @%{0} @%{+}))
+  (monoid #:level '+ @%{0} @%{+}))
 
 (define *
-  (monoid% #:level '* @%{1} @%{@macro%["times"]}))
+  (monoid #:level '* @%{1} @%{@macro["times"]}))
 
 (define =
-  (binary% #:level '= @%{=}))
+  (binary #:level '= @%{=}))
 
 (define math (make-math cfg))

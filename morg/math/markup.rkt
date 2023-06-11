@@ -12,6 +12,7 @@
          atom+-like->atom+
          math-tex+-like->math-tex+
          paren%
+         paren%/curried
          dec-degree%
          binary%
          monoid%
@@ -57,12 +58,13 @@
 (define (math-tex+% . [xs : MathTeX+Like *]) : MathTeX+
   (math-tex+-like->math-tex+ (splice xs)))
 
-(define (paren%:aux [lv : (U Symbol #t)] [xs : (Listof MathTeX+Like)]) : (Paren MathTeX+Like)
+(define ((paren%/curried #:level [lv : (U Symbol #t) #t])
+         . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
   (paren (level lv 0) (splice xs)))
 
 (define (paren% #:level [lv : (U Symbol #t) #t]
                 . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
-  (paren%:aux lv xs))
+  (apply (paren%/curried #:level lv) xs))
 
 (define (dec-degree% . [xs : MathTeX+Like *]) : MathTeX+
   (math-tex+-dec-degree (apply math-tex+% xs)))
@@ -88,7 +90,7 @@
    [(eq? n 0) unit]
    [(eq? n 1) (list-ref xs 0)]
    [else
-    (paren%:aux lv (list-join-1 xs bin))]))
+    (apply (paren%/curried #:level lv) (list-join-1 xs bin))]))
 
 (define ((big-op% #:level [lv : Symbol '?]
                   [op : MathTeXAtom+Like])
