@@ -33,7 +33,7 @@
 (struct math-tex+
   ([contents : (U (Atom+ MathTeX+)
                   (Splice MathTeX+)
-                  (SubSup MathTeX+))])
+                  (SubSup (Atom+ MathTeX+) MathTeX+))])
   #:transparent
   #:type-name MathTeX+)
 

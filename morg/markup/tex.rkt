@@ -4,8 +4,7 @@
          "../data/splice.rkt"
          "splice.rkt"
          "string.rkt"
-         "../util/list.rkt"
-         "../util/option.rkt")
+         "../util/list.rkt")
 
 (provide MathTeXLike
          math-tex-like->math-tex
@@ -37,6 +36,7 @@
 (define-type MathTeXLike
   (U MathTeX
      MathTeXAtomLike
+     (SubSup MathTeXAtomLike MathTeXLike)
      (Splice MathTeXLike)))
 
 (define (text-like->text [x : TextLike]) : Text
@@ -63,19 +63,19 @@
     (math-tex (math-tex-atom-like->math-tex-atom x))]
    [(splice? x)
     (math-tex (splice-map math-tex-like->math-tex x))]
-   [(sub-sup? x)
-    (error "Unimplemented.")]
+   [(sub-sup? x) 
+    (math-tex
+     ((sub-sup-map math-tex-atom-like->math-tex-atom math-tex-like->math-tex) x))]
    [else (math-tex x)]))
 
 (define (math-tex% . [xs : MathTeXLike *]) : MathTeX
   (math-tex-like->math-tex (splice xs)))
 
-(define (sub-sup% [base : MathTeXAtomLike]
-                  #:sub [sub : (Option MathTeXLike)]
-                  #:sup [sup : (Option MathTeXLike)]) : (SubSup MathTeX)
-  (sub-sup (math-tex-atom-like->math-tex-atom base)
-           (option-map math-tex-like->math-tex sub)
-           (option-map math-tex-like->math-tex sup)))
+(define #:forall (A X)
+        (sub-sup% [base : A]
+                  #:_ [sub : (Option X)]
+                  #:^ [sup : (Option X)]) : (SubSup A X)
+  (sub-sup base sub sup))
 
 (define-type TextTeXAtomLike
   (AtomLike TextTeXLike))

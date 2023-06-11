@@ -51,8 +51,8 @@
   #:transparent
   #:type-name Math)
 
-(struct (X) sub-sup
-  ([base : (Atom X)]
+(struct (A X) sub-sup
+  ([base : A]
    [sub : (Option X)]
    [sup : (Option X)])
   #:transparent
@@ -68,12 +68,12 @@
 (struct math-tex
   ([contents : (U (Atom MathTeX)
                   (Splice MathTeX)
-                  (SubSup MathTeX))])
+                  (SubSup (Atom MathTeX) MathTeX))])
   #:transparent
   #:type-name MathTeX)
 
-(define #:forall (X)
-        (make-sub-sup [base : (Atom X)] [sub : (Option X)] [sup : (Option X)]) : (SubSup X)
+(define #:forall (A X)
+        (make-sub-sup [base : A] [sub : (Option X)] [sup : (Option X)]) : (SubSup A X)
   (if (or sub sup)
       (sub-sup base sub sup)
       (error "Either sub or sup must be given.")))
@@ -102,9 +102,10 @@
      [(group? a) ((group-map f) a)]))
   (atom b))
 
-(define #:forall (X Y)
-        ((sub-sup-map [f : (X . -> . Y)]) [x : (SubSup X)]) : (SubSup Y)
+(define #:forall (A B X Y)
+        ((sub-sup-map [g : (A . -> . B)] [f : (X . -> . Y)])
+         [x : (SubSup A X)]) : (SubSup B Y)
   (sub-sup
-   ((atom-map f) (sub-sup-base x))
+   (g (sub-sup-base x))
    (option-map f (sub-sup-sub x))
    (option-map f (sub-sup-sup x))))

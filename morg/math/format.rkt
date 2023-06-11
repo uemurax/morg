@@ -58,11 +58,11 @@
    [(paren? x) (atom ((format-paren cfg) x))]))
 
 (define ((format-sub-sup [cfg : Config])
-         [s : (SubSup MathTeX+)]) : (SubSup MathTeX)
+         [s : (SubSup (Atom+ MathTeX+) MathTeX+)]) : (SubSup (Atom MathTeX) MathTeX)
   (define cfg-1
     (struct-copy config cfg
      [level (level #f 0)]))
-  ((sub-sup-map (format-math-tex+ cfg-1)) s))
+  ((sub-sup-map (format-atom+ cfg-1) (format-math-tex+ cfg)) s))
 
 (define ((format-math-tex+ cfg) m)
   (define x (math-tex+-contents m))
