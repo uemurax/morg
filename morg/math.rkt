@@ -18,7 +18,13 @@
              [binary% binary]
              [big-op% big-op]
              [monoid% monoid])
- sub-sup
+ sub-sup _ ^
  make-math)
 
 (define sub-sup (inst sub-sup% MathTeXAtom+Like MathTeX+Like))
+
+(define (_ [base : MathTeXAtom+Like] [sub : MathTeX+Like])
+  (sub-sup base #:_ sub))
+
+(define (^ [base : MathTeXAtom+Like] [sup : MathTeX+Like])
+  (sub-sup base #:^ sup))
