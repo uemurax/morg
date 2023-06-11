@@ -7,6 +7,8 @@
          "../util/list.rkt")
 
 (provide MathTeXLike
+         AtomLike
+         atom-like->atom
          math-tex-like->math-tex
          math-tex%
          sub-sup%

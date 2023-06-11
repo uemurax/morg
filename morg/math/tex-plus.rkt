@@ -7,6 +7,8 @@
          (struct-out paren) Paren
          (struct-out atom+) Atom+
          (struct-out math-tex+) MathTeX+
+         paren-map
+         atom+-map
          ComparisonResult
          level-compare)
 
@@ -36,6 +38,19 @@
                   (SubSup (Atom+ MathTeX+) MathTeX+))])
   #:transparent
   #:type-name MathTeX+)
+
+(define #:forall (X Y)
+        ((paren-map [f : (X . -> . Y)])
+         [p : (Paren X)]) : (Paren Y)
+  (paren (paren-level p) (f (paren-contents p))))
+
+(define #:forall (X Y)
+        ((atom+-map [f : (X . -> . Y)])
+         [a : (Atom+ X)]) : (Atom+ Y)
+  (define x (atom+-contents a))
+  (cond
+   [(paren? x) (atom+ ((paren-map f) x))]
+   [(atom? x) (atom+ ((atom-map f) x))]))
 
 (define-type ComparisonResult
   (U '< '= '> '?))
