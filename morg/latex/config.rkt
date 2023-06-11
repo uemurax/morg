@@ -22,7 +22,10 @@
    [section-macro-fallback : String]
    [class : String]
    [class-options : (Listof (U String (Pairof String TextTeX)))]
-   [make-section-ref : (Natural StringTree . -> . TextTeX)])
+   [make-section-ref : (Natural StringTree . -> . TextTeX)]
+   [front-matter : TextTeX]
+   [main-matter : TextTeX]
+   [back-matter : TextTeX])
   #:transparent
   #:type-name UserConfig)
 
@@ -35,4 +38,7 @@
    "subparagraph"
    "article"
    '()
-   default-config:make-section-ref))
+   default-config:make-section-ref
+   @text-tex%{}
+   @text-tex%{}
+   @text-tex%{}))

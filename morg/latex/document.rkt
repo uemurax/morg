@@ -47,10 +47,13 @@
     @macro%["date" @argument%{@(date->text (document-date doc))}]
 
     @environment%["document"]{
+      @(user-config-front-matter user-cfg)
       @macro%["maketitle"]
       @(h (document-contents doc))
       @(apply % (map f front))
+      @(user-config-main-matter user-cfg)
       @(apply % (map f main))
+      @(user-config-back-matter user-cfg)
       @(apply % (map f back))
     }
   })
