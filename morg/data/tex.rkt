@@ -1,6 +1,7 @@
 #lang typed/racket
 
-(require "splice.rkt")
+(require "splice.rkt"
+         "../util/option.rkt")
 
 (provide (struct-out text) Text
          (struct-out argument) Argument
@@ -15,10 +16,8 @@
          group-map
          argument-map
          atom-map
+         sub-sup-map
          macro-map)
-
-(module+ test
-  (require typed/rackunit))
 
 (struct text
   ([contents : String])
@@ -52,10 +51,10 @@
   #:transparent
   #:type-name Math)
 
-(struct sub-sup
-  ([base : (Atom MathTeX)]
-   [sub : (Option MathTeX)]
-   [sup : (Option MathTeX)])
+(struct (X) sub-sup
+  ([base : (Atom X)]
+   [sub : (Option X)]
+   [sup : (Option X)])
   #:transparent
   #:type-name SubSup)
 
@@ -69,11 +68,12 @@
 (struct math-tex
   ([contents : (U (Atom MathTeX)
                   (Splice MathTeX)
-                  SubSup)])
+                  (SubSup MathTeX))])
   #:transparent
   #:type-name MathTeX)
 
-(define (make-sub-sup [base : (Atom MathTeX)] [sub : (Option MathTeX)] [sup : (Option MathTeX)]) : SubSup
+(define #:forall (X)
+        (make-sub-sup [base : (Atom X)] [sub : (Option X)] [sup : (Option X)]) : (SubSup X)
   (if (or sub sup)
       (sub-sup base sub sup)
       (error "Either sub or sup must be given.")))
@@ -101,3 +101,10 @@
      [(macro? a) ((macro-map f) a)]
      [(group? a) ((group-map f) a)]))
   (atom b))
+
+(define #:forall (X Y)
+        ((sub-sup-map [f : (X . -> . Y)]) [x : (SubSup X)]) : (SubSup Y)
+  (sub-sup
+   ((atom-map f) (sub-sup-base x))
+   (option-map f (sub-sup-sub x))
+   (option-map f (sub-sup-sup x))))

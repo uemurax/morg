@@ -37,8 +37,7 @@
 (define-type MathTeXLike
   (U MathTeX
      MathTeXAtomLike
-     (Splice MathTeXLike)
-     SubSup))
+     (Splice MathTeXLike)))
 
 (define (text-like->text [x : TextLike]) : Text
   (cond
@@ -64,6 +63,8 @@
     (math-tex (math-tex-atom-like->math-tex-atom x))]
    [(splice? x)
     (math-tex (splice-map math-tex-like->math-tex x))]
+   [(sub-sup? x)
+    (error "Unimplemented.")]
    [else (math-tex x)]))
 
 (define (math-tex% . [xs : MathTeXLike *]) : MathTeX
@@ -71,7 +72,7 @@
 
 (define (sub-sup% [base : MathTeXAtomLike]
                   #:sub [sub : (Option MathTeXLike)]
-                  #:sup [sup : (Option MathTeXLike)]) : SubSup
+                  #:sup [sup : (Option MathTeXLike)]) : (SubSup MathTeX)
   (sub-sup (math-tex-atom-like->math-tex-atom base)
            (option-map math-tex-like->math-tex sub)
            (option-map math-tex-like->math-tex sup)))

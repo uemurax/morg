@@ -81,8 +81,9 @@
 (define (math->text [x : Math]) : StringTree
   @string%{\(@(math-tex->text (math-contents x))\)})
 
-(define (sub-sup->text [x : SubSup]) : StringTree
-  (define f math-tex->text)
+(define #:forall (X)
+        ((sub-sup->text [f : (X . -> . StringTree)])
+         [x : (SubSup X)]) : StringTree
   (define base (sub-sup-base x))
   (define sub (sub-sup-sub x))
   (define sup (sub-sup-sup x))
@@ -111,5 +112,5 @@
    [(atom? y)
     ((atom->text math-tex->text math-tex->text:text) y)]
    [(splice? y) ((splice->text math-tex->text) y)]
-   [(sub-sup? y) (sub-sup->text y)]
+   [(sub-sup? y) ((sub-sup->text math-tex->text) y)]
    [else (error "Unimplemented.")]))
