@@ -12,6 +12,8 @@
  MathTeXAtom+Like
  (rename-out [macro% macro]
              [group% group]
+             [argument% argument]
+             [optional-argument% optional-argument]
              [paren% paren]
              [paren%/curried paren/curried]
              [dec-degree% dec-degree]
