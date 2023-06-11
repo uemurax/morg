@@ -1,6 +1,7 @@
 #lang at-exp typed/racket
 
-(require morg/markup)
+(require morg/markup
+         "math.rkt")
 
 (provide part:0007)
 
@@ -9,7 +10,10 @@
     #:id "0007"
     #:header @%{Fact}
     @paragraph{
-      @math{1 + 1 = 3}.
+      @(math
+        (=
+         (+ @%{1} @%{1})
+         @%{3})).
     }
   ])
 

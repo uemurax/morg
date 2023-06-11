@@ -14,7 +14,6 @@
              [paragraph% paragraph]
              [document% document]
              [ref% ref]
-             [math% math]
              [list-item% list-item]
              [unordered-list% unordered-list]
              [href% href]
