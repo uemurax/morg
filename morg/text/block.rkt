@@ -3,6 +3,11 @@
 (require "../data/block.rkt"
          "../data/splice.rkt"
          "../markup/string.rkt"
+         "../markup/inline.rkt"
+         "../data/index-table.rkt"
+         "../data/index.rkt"
+         "../data/article.rkt"
+         "../data/inline.rkt"
          "splice.rkt"
          "inline.rkt"
          "config.rkt")
@@ -10,20 +15,39 @@
 (provide block->text)
 
 (: block->text : (Config . -> . (Block . -> . StringTree)))
-(: paragraph->text : (Config . -> . (Paragraph . -> . StringTree)))
+
+(define ((paragraph->text [cfg : Config]) [p : Paragraph]) : StringTree
+  @string%{
+
+    @((inline->text cfg) (paragraph-contents p))
+
+  })
+
+(define ((print-index->text [cfg : Config]) [p : PrintIndex]) : StringTree
+  (define type (print-index-type p))
+  (define tbl (config-index-table cfg))
+  (define in? (index-table-has-key? tbl type))
+  (cond
+   [in?
+    (apply string%
+           (map (lambda ([ii : IndexItem])
+                 (define i (index-item-index ii))
+                 (define a (index-item-article ii))
+                 @string%{
+                   
+                   @((inline->text cfg)
+                     @inline%{@(index-display i): @(ref (article-id a))})
+                 })
+                (index-list-sort (index-table-ref tbl type))))]
+   [else @string%{}]))
 
 (define ((block->text cfg) b)
   (define x (block-contents b))
   (cond
    [(paragraph? x)
     ((paragraph->text cfg) x)]
+   [(print-index? x)
+    ((print-index->text cfg) x)]
    [(splice? x)
     ((splice->text (block->text cfg)) x)]
    [else (error "Unimplemented.")]))
-
-(define ((paragraph->text cfg) p)
-  @string%{
-
-    @((inline->text cfg) (paragraph-contents p))
-
-  })

@@ -3,6 +3,7 @@
 (require "../data/document.rkt"
          "../markup/string.rkt"
          "../data/node.rkt"
+         "../data/index-table.rkt"
          "../util/list.rkt"
          "section.rkt"
          "inline.rkt"
@@ -18,6 +19,7 @@
   (define back (document-back doc))
   (define cfg
     (config user-cfg
+            (make-index-table doc)
             (make-node-table main)))
   (define f (inline->text cfg))
   (define g (section->text cfg))

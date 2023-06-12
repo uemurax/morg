@@ -8,6 +8,8 @@
 (provide (struct-out index-item) IndexItem
          IndexList
          IndexTable
+         index-table-has-key?
+         index-table-ref
          make-index-table
          index-item<?
          index-list-sort)
@@ -21,11 +23,18 @@
 (define-type IndexList
   (Listof IndexItem))
 
-(define-type IndexTable
-  (HashTable Symbol IndexList))
+(struct index-table
+  ([contents : (HashTable Symbol IndexList)])
+  #:type-name IndexTable)
+
+(define (index-table-has-key? [tbl : IndexTable] [type : Symbol]) : Boolean
+  (hash-has-key? (index-table-contents tbl) type))
+
+(define (index-table-ref [tbl : IndexTable] [type : Symbol]) : IndexList
+  (hash-ref (index-table-contents tbl) type))
 
 (define (make-index-table [doc : Document]) : IndexTable
-  (make-index-table:document doc (hash)))
+  (make-index-table:document doc (index-table (hash))))
 
 (define (make-index-table:document [doc : Document] [tbl : IndexTable]) : IndexTable
   (define front (document-front doc))
@@ -41,10 +50,11 @@
   (foldl (make-index-table:index art) tbl (article-indexes art)))
 
 (define ((make-index-table:index [art : Article]) [i : Index] [tbl : IndexTable]) : IndexTable
+  (define tbl-1 (index-table-contents tbl))
   (define type (index-type i))
   (define item (index-item i art))
-  (define ls (hash-ref tbl type (lambda () '())))
-  (hash-set tbl type (list* item ls)))
+  (define ls (hash-ref tbl-1 type (lambda () '())))
+  (index-table (hash-set tbl-1 type (list* item ls))))
 
 (define (index-item<? [i1 : IndexItem] [i2 : IndexItem]) : Boolean
   ((index-item-index i1) . index<? . (index-item-index i2)))
