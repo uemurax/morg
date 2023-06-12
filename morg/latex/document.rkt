@@ -14,8 +14,15 @@
 
 (provide document->latex)
 
-(define (use-package [pkg : String]) : tex:TextTeX
-  @text-tex%{@macro%["usepackage" @argument%{@|pkg|}]})
+(define (use-package [pkg : String])
+  @macro%["usepackage" @argument%{@|pkg|}])
+
+(define (pass-options-to-package [pkg : String]
+                                 . [xs : (U String (Pairof String String)) *])
+  @macro%["PassOptionsToPackage"
+    @argument%{@(apply options% xs)}
+    @argument%{@|pkg|}
+  ])
 
 (define ((document->latex [user-cfg : UserConfig])
          [doc : Document]) : tex:TextTeX
@@ -34,9 +41,14 @@
   (define g (inline->latex cfg))
   (define h (block->latex cfg))
   @text-tex%{
-    @macro%["PassOptionsToPackage"
-      @argument%{@options%["pdfusetitle" '("pdfencoding" . "auto") "psdextra"]}
-      @argument%{hyperref}]
+    @pass-options-to-package["hyperref"
+     "pdfusetitle"
+     '("pdfencoding" . "auto")
+     "psdextra"
+    ]
+    @pass-options-to-package["url"
+      "hyphens"
+    ]
     @macro%["documentclass" cls-opt cls]
 
     @(use-package "hyperref")
