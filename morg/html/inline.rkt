@@ -17,6 +17,7 @@
          list-item-class-name
          unordered-list-class-name
          emph-class-name
+         display-class-name
          ref-class-name)
 
 (define (text->xexprs [x : Text]) : XExprs
@@ -74,6 +75,13 @@
            `((class ,emph-class-name))
            (inline->xexprs (emph-contents e))))
 
+(define display-class-name (class-name "display"))
+
+(define (display->xexprs [d : Display]) : XExprs
+  (tagged% 'center
+           `((class ,display-class-name))
+           (inline->xexprs (display-contents d))))
+
 (define (inline->xexprs [i : Inline]) : XExprs
   (define x (inline-contents i))
   (cond
@@ -83,5 +91,6 @@
    [(unordered-list? x) (unordered-list->xexprs x)]
    [(href? x) (href->xexprs x)]
    [(emph? x) (emph->xexprs x)]
+   [(display? x) (display->xexprs x)]
    [(splice? x) ((splice->xexprs inline->xexprs) x)]
    [else (error "Unimplemented.")]))
