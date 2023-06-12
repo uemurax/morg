@@ -8,6 +8,9 @@
   @article[
     #:id "0008"
     #:header @%{Definition}
+    #:indexes @list[
+      @index[#:key "thing"]{Thing}
+    ]
     @paragraph{
       A thing consists of the following data.
       @unordered-list[

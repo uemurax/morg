@@ -7,11 +7,13 @@
 (provide BlockLike
          block-like->block
          block%
+         print-index%
          paragraph%)
 
 (define-type BlockLike
   (Rec X (U Block
             (Splice X)
+            PrintIndex
             Paragraph)))
 
 (define (block-like->block [x : BlockLike]) : Block
@@ -26,3 +28,6 @@
 
 (define (paragraph% . [xs : InlineLike *]) : Paragraph
   (paragraph (apply inline% xs)))
+
+(define (print-index% [type : Symbol 'index]) : PrintIndex
+  (print-index type))
