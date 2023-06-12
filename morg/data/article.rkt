@@ -2,6 +2,7 @@
 
 (require "inline.rkt"
          "block.rkt"
+         "index.rkt"
          "id.rkt")
 
 (provide (struct-out article) Article
@@ -11,6 +12,7 @@
   ([id : Id]
    [header : Inline]
    [title : (Option Inline)]
+   [indexes : (Listof Index)]
    [contents : Block]
    [proof : (Option Proof)])
   #:transparent
