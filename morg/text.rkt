@@ -4,6 +4,7 @@
          "data/section.rkt"
          "data/article.rkt"
          "data/node.rkt"
+         "data/index-table.rkt"
          "text/document.rkt"
          "text/section.rkt"
          "text/article.rkt"
@@ -18,10 +19,10 @@
      [(document? doc) ((document->text cfg) doc)]
      [(section? doc)
       (define cfg-1
-        (config cfg (make-node-table (list doc))))
+        (config cfg empty-index-table (make-node-table (list doc))))
       ((section->text cfg-1) doc)]
      [(article? doc)
       (define cfg-1
-        (config cfg (make-node-table (list))))
+        (config cfg empty-index-table (make-node-table (list))))
       ((article->text cfg-1) doc)]))
   (apply string-append (tree-flatten x)))

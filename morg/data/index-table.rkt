@@ -10,6 +10,7 @@
          IndexTable
          index-table-has-key?
          index-table-ref
+         empty-index-table
          make-index-table
          index-item<?
          index-list-sort)
@@ -32,6 +33,9 @@
 
 (define (index-table-ref [tbl : IndexTable] [type : Symbol]) : IndexList
   (hash-ref (index-table-contents tbl) type))
+
+(define empty-index-table
+  (index-table (hash)))
 
 (define (make-index-table [doc : Document]) : IndexTable
   (make-index-table:document doc (index-table (hash))))
