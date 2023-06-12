@@ -14,6 +14,7 @@
          unordered-list%
          href%
          emph%
+         display%
          inline%)
 
 (define-type InlineLike
@@ -25,6 +26,7 @@
             UnorderedList
             HRef
             Emph
+            Display
             StringTreeLike)))
 
 (define (inline-like->inline [x : InlineLike]) : Inline
@@ -60,3 +62,6 @@
 
 (define (emph% . [xs : InlineLike *]) : Emph
   (emph (apply inline% xs)))
+
+(define (display% . [xs : InlineLike *]) : Display
+  (display (apply inline% xs)))
