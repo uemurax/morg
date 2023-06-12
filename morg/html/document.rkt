@@ -4,6 +4,8 @@
          "../data/section.rkt"
          "../markup/xexpr.rkt"
          "../text/date.rkt"
+         "../data/index-table.rkt"
+         "config.rkt"
          "inline.rkt"
          "toc.rkt"
          "section.rkt"
@@ -38,9 +40,11 @@
   (define front (document-front doc))
   (define main (document-main doc))
   (define back (document-back doc))
+  (define itbl (make-index-table doc))
+  (define cfg (config itbl))
   (define tbl : XExprTable (hash))
   (define (f [x : XExprTable] [ss : (Listof Section)])
-    (foldl section->xexprs x ss))
+    (foldl (section->xexprs cfg) x ss))
   (define tbl-1 (f tbl front))
   (define tbl-2 (f tbl-1 main))
   (define tbl-3 (f tbl-2 back))
@@ -61,7 +65,7 @@
              (tagged% 'div
                       `((class ,document-date-class-name))
                       (date->text (document-date doc)))
-             (block->xexprs (document-contents doc))
+             ((block->xexprs cfg) (document-contents doc))
              (tagged% 'div
                       `((class ,document-front-toc-class-name))
                       (make-toc front))

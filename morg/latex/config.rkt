@@ -2,6 +2,7 @@
 
 (require "../data/node.rkt"
          "../data/tex.rkt"
+         "../data/index-table.rkt"
          "../markup/string.rkt"
          "../markup/tex.rkt"
          (prefix-in text: "../text/config.rkt"))
@@ -12,6 +13,7 @@
 
 (struct config
   ([user-config : UserConfig]
+   [index-table : IndexTable]
    [node-table : NodeTable]
    [unnumbered-node-table : NodeTable])
   #:transparent
@@ -23,6 +25,7 @@
    [class : String]
    [class-options : (Listof (U String (Pairof String TextTeX)))]
    [make-section-ref : (Natural StringTree . -> . TextTeX)]
+   [index-num-columns : Exact-Positive-Integer]
    [front-matter : TextTeX]
    [main-matter : TextTeX]
    [back-matter : TextTeX])
@@ -39,6 +42,7 @@
    "article"
    '()
    default-config:make-section-ref
+   1
    @text-tex%{}
    @text-tex%{}
    @text-tex%{}))

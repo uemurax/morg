@@ -1,6 +1,7 @@
 #lang at-exp typed/racket
 
 (require "../data/node.rkt"
+         "../data/index-table.rkt"
          "../markup/string.rkt")
 
 (provide (struct-out config) Config
@@ -9,6 +10,7 @@
 
 (struct config
   ([user-config : UserConfig]
+   [index-table : IndexTable]
    [node-table : NodeTable])
   #:transparent
   #:type-name Config)

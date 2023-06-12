@@ -3,6 +3,7 @@
 (require "../data/document.rkt"
          (prefix-in tex: "../data/tex.rkt")
          "../data/node.rkt"
+         "../data/index-table.rkt"
          "../markup/tex.rkt"
          "../markup/splice.rkt"
          "../util/list.rkt"
@@ -34,6 +35,7 @@
   (define untbl (make-node-table back #:init untbl-1))
   (define cfg
     (config user-cfg
+            (make-index-table doc)
             tbl untbl))
   (define cls @argument%{@(user-config-class user-cfg)})
   (define cls-opt @optional-argument%{@(apply options% (user-config-class-options user-cfg))})
@@ -53,6 +55,7 @@
 
     @(use-package "hyperref")
     @(use-package "xcolor")
+    @(use-package "multicol")
 
     @macro%["title" @argument%{@(g (document-title doc))}]
     @macro%["author" (apply argument% (list-join-1 (map g (document-author doc)) @macro%["and"]))]

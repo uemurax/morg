@@ -6,6 +6,7 @@
          "markup/inline.rkt"
          "markup/section.rkt"
          "markup/date.rkt"
+         "markup/index.rkt"
          "markup/splice.rkt")
 
 (provide
@@ -19,5 +20,7 @@
              [href% href]
              [date% date]
              [emph% emph]
+             [index% index]
+             [print-index% print-index]
              [section% section])
  (all-from-out "markup/splice.rkt"))
