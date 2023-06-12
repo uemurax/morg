@@ -3,11 +3,8 @@
 (require "../data/block.rkt"
          "../data/splice.rkt"
          "../markup/string.rkt"
-         "../markup/inline.rkt"
+         "../markup/index.rkt"
          "../data/index-table.rkt"
-         "../data/index.rkt"
-         "../data/article.rkt"
-         "../data/inline.rkt"
          "splice.rkt"
          "inline.rkt"
          "config.rkt")
@@ -29,16 +26,7 @@
   (define in? (index-table-has-key? tbl type))
   (cond
    [in?
-    (apply string%
-           (map (lambda ([ii : IndexItem])
-                 (define i (index-item-index ii))
-                 (define a (index-item-article ii))
-                 @string%{
-                   
-                   @((inline->text cfg)
-                     @inline%{@(index-display i): @(ref (article-id a))})
-                 })
-                (index-list-sort (index-table-ref tbl type))))]
+    ((inline->text cfg) (index-list->inline (index-table-ref tbl type)))]
    [else @string%{}]))
 
 (define ((block->text cfg) b)
