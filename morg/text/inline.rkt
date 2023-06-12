@@ -26,6 +26,7 @@
    [(unordered-list? x) ((unordered-list->text cfg) x)]
    [(href? x) ((href->text cfg) x)]
    [(emph? x) ((emph->text cfg) x)]
+   [(display? x) ((display->text cfg) x)]
    [else (error "Unimplemented.")]))
 
 (define ((text->text [_cfg : Config]) [t : Text]) : StringTree
@@ -76,3 +77,13 @@
 (define ((emph->text [cfg : Config])
          [e : Emph]) : StringTree
   @string%{*@((inline->text cfg) (emph-contents e))*})
+
+(define ((display->text [cfg : Config])
+         [d : Display]) : StringTree
+  @string%{
+    
+    
+    @((inline->text cfg) (display-contents d))
+    
+    
+  })
