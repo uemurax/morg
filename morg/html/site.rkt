@@ -163,10 +163,10 @@
 (define ((default-config:head-template [_cfg : Config] [_n : (U Node Document)])
          [x : XExprs]) : XExprs
   (xexprs%
+   x
    (tagged% 'link
             `((rel "stylesheet")
-              (href ,default-config:css-name)))
-   x))
+              (href ,default-config:css-name)))))
 
 (define default-config:css
   @string%{
