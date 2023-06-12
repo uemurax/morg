@@ -11,6 +11,7 @@
          "block.rkt"
          "toc.rkt"
          "id.rkt"
+         "config.rkt"
          "xexpr-table.rkt")
 
 (provide section->xexprs
@@ -19,25 +20,27 @@
          section-body-class-name
          section-toc-class-name)
 
-(define (article->xexprs* [a : Article] [xtbl : XExprTable]) : XExprTable
-  (hash-set xtbl (article-id a) (article->xexprs a)))
+(define ((article->xexprs* [cfg : Config]) [a : Article] [xtbl : XExprTable]) : XExprTable
+  (hash-set xtbl (article-id a) ((article->xexprs cfg) a)))
 
-(define ((section-element->xexprs [xtbl : XExprTable])
+(define ((section-element->xexprs [cfg : Config] [xtbl : XExprTable])
          [e : SectionElement]) : XExprs
   (cond
    [(article? e) (hash-ref xtbl (article-id e))]
-   [(block? e) (block->xexprs e)]))
+   [(block? e) ((block->xexprs cfg) e)]))
 
 (define section-class-name (class-name "section"))
 (define section-title-class-name (class-name "section-title"))
 (define section-body-class-name (class-name "section-body"))
 (define section-toc-class-name (class-name "section-toc"))
 
-(define (section->xexprs [s : Section] [xtbl : XExprTable]) : XExprTable
+(: section->xexprs : (Config . -> . (Section XExprTable . -> . XExprTable)))
+
+(define ((section->xexprs cfg) s xtbl)
   (define xtbl-1
-    (foldl article->xexprs* xtbl (section-articles s)))
+    (foldl (article->xexprs* cfg) xtbl (section-articles s)))
   (define xtbl-2
-    (foldl section->xexprs xtbl-1 (section-subsections s)))
+    (foldl (section->xexprs cfg) xtbl-1 (section-subsections s)))
   (define i (section-id s))
   (define this-xexpr
     (tagged% 'section
@@ -49,7 +52,7 @@
              (apply tagged%
                     'div
                     `((class ,section-body-class-name))
-                    (map (section-element->xexprs xtbl-2)
+                    (map (section-element->xexprs cfg xtbl-2)
                          (section-contents s)))
              (tagged% 'nav
                       `((class ,section-toc-class-name))
