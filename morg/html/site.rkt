@@ -126,6 +126,7 @@
         (if t t (id->text (article-id a))))
       @inline%{@|h| -- @|doc-title|}]))
   (xexprs%
+   (tagged% 'meta '((charset "UTF-8")))
    (tagged% 'title '()
             (inline->xexprs title))
    (tagged% 'link
