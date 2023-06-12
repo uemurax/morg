@@ -59,7 +59,10 @@
   (define cfg-1
     (struct-copy config cfg
      [level (level #f 0)]))
-  ((sub-sup-map (format-atom+ cfg-1) (format-math-tex+ cfg)) s))
+  (define cfg-2
+    (struct-copy config cfg
+     [level (level #t 0)]))
+  ((sub-sup-map (format-atom+ cfg-1) (format-math-tex+ cfg-2)) s))
 
 (define ((format-math-tex+ cfg) m)
   (define x (math-tex+-contents m))
