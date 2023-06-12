@@ -20,7 +20,7 @@
              [href% href]
              [date% date]
              [emph% emph]
-             [display% display]
+             [display% disp]
              [index% index]
              [print-index% print-index]
              [section% section])
