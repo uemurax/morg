@@ -11,6 +11,7 @@
          (struct-out unordered-list) UnorderedList
          (struct-out href) HRef
          (struct-out emph) Emph
+         (struct-out display) Display
          (struct-out math) Math)
 
 (struct inline
@@ -25,6 +26,7 @@
      UnorderedList
      HRef
      Emph
+     Display
      Text))
 
 (struct text
@@ -62,3 +64,8 @@
   ([contents : Inline])
   #:transparent
   #:type-name Emph)
+
+(struct display
+  ([contents : Inline])
+  #:transparent
+  #:type-name Display)

@@ -69,6 +69,12 @@
          [e : Emph]) : tex:TextTeX
   @text-tex%{@macro%["emph" @argument%{@((inline->latex cfg) (emph-contents e))}]})
 
+(define ((display->latex [cfg : Config])
+         [d : Display]) : tex:TextTeX
+  @text-tex%{@environment%["center"]{
+    @((inline->latex cfg) (display-contents d))
+  }})
+
 (define ((inline->latex cfg) i)
   (define x (inline-contents i))
   (cond
@@ -78,5 +84,6 @@
    [(unordered-list? x) ((unordered-list->latex cfg) x)]
    [(href? x) ((href->latex cfg) x)]
    [(emph? x) ((emph->latex cfg) x)]
+   [(display? x) ((display->latex cfg) x)]
    [(splice? x) ((splice->latex (inline->latex cfg)) x)]
    [else (error "Unimplemented.")]))
