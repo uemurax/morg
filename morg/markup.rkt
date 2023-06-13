@@ -11,6 +11,7 @@
 
 (provide
  (rename-out [article% article]
+             [article%/curried article/curried]
              [proof% proof]
              [paragraph% paragraph]
              [document% document]

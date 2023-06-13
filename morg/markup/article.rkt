@@ -5,9 +5,23 @@
          "../data/index.rkt"
          "inline.rkt"
          "block.rkt"
+         "splice.rkt"
          "../util/option.rkt")
 
-(provide article% proof%)
+(provide article%/curried article% proof%)
+
+(define ((article%/curried [header : InlineLike])
+         #:id [maybe-id : String]
+         #:title [title : (Option InlineLike) #f]
+         #:indexes [indexes : (Listof Index) '()]
+         #:proof [proof : (Option Proof) #f]
+         . [contents : BlockLike *]) : Article
+  (article (id maybe-id)
+           (inline% header)
+           (option-map inline% title)
+           indexes
+           (apply block% contents)
+           proof))
 
 (define (article% #:id [maybe-id : String]
                   #:header [header : InlineLike]
@@ -15,12 +29,12 @@
                   #:indexes [indexes : (Listof Index) '()]
                   #:proof [proof : (Option Proof) #f]
                   . [contents : BlockLike *]) : Article
-  (article (id maybe-id)
-           (inline% header)
-           (option-map inline% title)
-           indexes
-           (apply block% contents)
-           proof))
+  ((article%/curried header)
+   #:id maybe-id
+   #:title title
+   #:indexes indexes
+   #:proof proof
+   (apply % contents)))
 
 (define (proof% #:header [header : InlineLike @inline%{Proof}]
                 . [contents : BlockLike *]) : Proof
