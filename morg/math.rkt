@@ -10,17 +10,19 @@
  default-config
  MathTeX+Like
  MathTeXAtom+Like
- (rename-out [macro% macro]
-             [group% group]
-             [argument% argument]
-             [optional-argument% optional-argument]
-             [paren% paren]
+ (rename-out [paren% paren]
              [paren%/curried paren/curried]
              [dec-degree% dec-degree]
              [binary% binary]
              [big-op% big-op]
+             [apply-with-parens% apply-with-parens]
              [monoid% monoid])
  sub-sup _ ^
+ macro
+ macro-1
+ group
+ argument
+ optional-argument
  make-math)
 
 (define sub-sup (inst sub-sup% MathTeXAtom+Like MathTeX+Like))
@@ -30,3 +32,9 @@
 
 (define (^ [base : MathTeXAtom+Like] [sup : MathTeX+Like])
   (sub-sup base #:^ sup))
+
+(define macro (inst macro% MathTeX+Like))
+(define macro-1 (inst macro-1% MathTeX+Like))
+(define group (inst group% MathTeX+Like))
+(define argument (inst argument% MathTeX+Like))
+(define optional-argument (inst optional-argument% MathTeX+Like))

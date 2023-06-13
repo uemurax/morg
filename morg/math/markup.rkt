@@ -17,6 +17,7 @@
          binary%
          monoid%
          big-op%
+         apply-with-parens%
          math-tex+%)
 
 (define-type (Atom+Like X)
@@ -104,3 +105,10 @@
   (paren% #:level lv
           ((inst sub-sup% MathTeXAtom+Like MathTeX+Like) op #:_ sub #:^ sup)
           (apply dec-degree% xs)))
+
+(define ((apply-with-parens% #:left [left : MathTeX+Like "("]
+                             #:right [right : MathTeX+Like ")"])
+         [f : MathTeX+Like] [x : MathTeX+Like]) : (Paren MathTeX+Like)
+  (paren% #:level #f
+          (dec-degree% (group% f))
+          (paren% #:left left #:right right x)))

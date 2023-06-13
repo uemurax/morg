@@ -19,6 +19,7 @@
          optional-argument%
          star-argument%
          macro%
+         macro-1%
          group%
          options%
          environment%)
@@ -120,6 +121,11 @@
         (macro% [head : StringTreeLike]
                 . [args : (Argument X) *]) : (Macro X)
   (macro (string-tree-like->string head) args))
+
+(define #:forall (X)
+        ((macro-1% [head : StringTreeLike])
+         . [xs : X *]) : (Macro (Splice X))
+  (macro% head (apply argument% xs)))
 
 (define #:forall (X)
         (group% . [xs : X *]) : (Group (Splice X))
