@@ -9,7 +9,21 @@
 
 (provide (struct-out config) Config
          (struct-out user-config) UserConfig
+         Option OptionList
+         (struct-out package) Package
          default-config)
+
+(define-type Option
+  (U String (Pairof String TextTeXLike)))
+
+(define-type OptionList
+  (Listof Option))
+
+(struct package
+  ([name : String]
+   [options : OptionList])
+  #:transparent
+  #:type-name Package)
 
 (struct config
   ([user-config : UserConfig]
@@ -23,7 +37,8 @@
   ([section-macros : (Listof String)]
    [section-macro-fallback : String]
    [class : String]
-   [class-options : (Listof (U String (Pairof String TextTeX)))]
+   [class-options : OptionList]
+   [packages : (Listof Package)]
    [make-section-ref : (Natural StringTree . -> . TextTeX)]
    [index-num-columns : Exact-Positive-Integer]
    [front-matter : TextTeX]
@@ -40,6 +55,7 @@
    '("section" "subsection" "subsubsection" "paragraph")
    "subparagraph"
    "article"
+   '()
    '()
    default-config:make-section-ref
    1

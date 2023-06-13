@@ -19,7 +19,7 @@
   @macro%["usepackage" @argument%{@|pkg|}])
 
 (define (pass-options-to-package [pkg : String]
-                                 . [xs : (U String (Pairof String String)) *])
+                                 . [xs : Option *])
   @macro%["PassOptionsToPackage"
     @argument%{@(apply options% xs)}
     @argument%{@|pkg|}
@@ -42,6 +42,7 @@
   (define f (section->latex cfg))
   (define g (inline->latex cfg))
   (define h (block->latex cfg))
+  (define pkgs (user-config-packages user-cfg))
   @text-tex%{
     @pass-options-to-package["hyperref"
      "pdfusetitle"
@@ -51,11 +52,19 @@
     @pass-options-to-package["url"
       "hyphens"
     ]
+    @(apply %
+      (map (lambda ([p : Package])
+             (apply pass-options-to-package (package-name p) (package-options p)))
+           pkgs))
     @macro%["documentclass" cls-opt cls]
 
     @(use-package "hyperref")
     @(use-package "xcolor")
     @(use-package "multicol")
+    @(apply %
+      (map (lambda ([p : Package])
+             (use-package (package-name p)))
+           pkgs))
 
     @macro%["title" @argument%{@(g (document-title doc))}]
     @macro%["author" (apply argument% (list-join-1 (map g (document-author doc)) @macro%["and"]))]
