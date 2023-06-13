@@ -108,7 +108,7 @@
 
 (define ((apply-with-parens% #:left [left : MathTeX+Like "("]
                              #:right [right : MathTeX+Like ")"])
-         [f : MathTeX+Like] [x : MathTeX+Like]) : (Paren MathTeX+Like)
+         [f : MathTeX+Like] . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
   (paren% #:level #f
           (dec-degree% (group% f))
-          (paren% #:left left #:right right x)))
+          (paren% #:left left #:right right (splice xs))))
