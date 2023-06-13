@@ -9,14 +9,17 @@
 (provide index-list->inline
          index%)
 
-(define (index-list->inline [il : IndexList]) : Inline
+(define (index-list->inline
+         #:less-than? [less-than? : (IndexItem IndexItem . -> . Boolean)
+                                  index-item<?]
+         [il : IndexList]) : Inline
   @inline%{
     @(apply unordered-list%
             (map (lambda ([ii : IndexItem])
                    (define i (index-item-index ii))
                    (define a (index-item-article ii))
                    @list-item%{@(index-display i) → @(ref (article-id a))})
-                 il))
+                 (index-list-sort il #:less-than? less-than?)))
   })
 
 (define (index% #:key [key : String]
