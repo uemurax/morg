@@ -48,7 +48,9 @@
          (append front main back)))
 
 (define (make-index-table:section [sec : Section] [tbl : IndexTable]) : IndexTable
-  (foldl make-index-table:article tbl (section-articles sec)))
+  (define tbl-1
+    (foldl make-index-table:article tbl (section-articles sec)))
+  (foldl make-index-table:section tbl-1 (section-subsections sec)))
 
 (define (make-index-table:article [art : Article] [tbl : IndexTable]) : IndexTable
   (foldl (make-index-table:index art) tbl (article-indexes art)))
