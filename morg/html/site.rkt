@@ -15,6 +15,7 @@
          "id.rkt"
          "document.rkt"
          (submod "inline.rkt" style)
+         (submod "id.rkt" style)
          "xexpr-table.rkt")
 
 (require/typed racket/hash
@@ -179,6 +180,7 @@
       max-width: 800px;
       margin: 40px auto;
     }
+    @|id-css|
     @|inline-css|
   })
 
