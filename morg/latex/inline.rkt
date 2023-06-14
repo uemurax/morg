@@ -75,6 +75,10 @@
     @((inline->latex cfg) (display-contents d))
   }})
 
+(define ((code->latex [cfg : Config])
+         [c : Code]) : tex:TextTeX
+  @text-tex%{@macro%["texttt" @argument%{@((inline->latex cfg) (code-contents c))}]})
+
 (define ((inline->latex cfg) i)
   (define x (inline-contents i))
   (cond
@@ -85,5 +89,6 @@
    [(href? x) ((href->latex cfg) x)]
    [(emph? x) ((emph->latex cfg) x)]
    [(display? x) ((display->latex cfg) x)]
+   [(code? x) ((code->latex cfg) x)]
    [(splice? x) ((splice->latex (inline->latex cfg)) x)]
    [else (error "Unimplemented.")]))
