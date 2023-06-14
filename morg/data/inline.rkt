@@ -12,6 +12,7 @@
          (struct-out href) HRef
          (struct-out emph) Emph
          (struct-out display) Display
+         (struct-out code) Code
          (struct-out math) Math)
 
 (struct inline
@@ -27,6 +28,7 @@
      HRef
      Emph
      Display
+     Code
      Text))
 
 (struct text
@@ -69,3 +71,8 @@
   ([contents : Inline])
   #:transparent
   #:type-name Display)
+
+(struct code
+  ([contents : Inline])
+  #:transparent
+  #:type-name Code)

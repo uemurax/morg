@@ -27,6 +27,7 @@
    [(href? x) ((href->text cfg) x)]
    [(emph? x) ((emph->text cfg) x)]
    [(display? x) ((display->text cfg) x)]
+   [(code? x) ((code->text cfg) x)]
    [else (error "Unimplemented.")]))
 
 (define ((text->text [_cfg : Config]) [t : Text]) : StringTree
@@ -87,3 +88,7 @@
     
     
   })
+
+(define ((code->text [cfg : Config])
+         [c : Code]) : StringTree
+  @string%{`@((inline->text cfg) (code-contents c))`})

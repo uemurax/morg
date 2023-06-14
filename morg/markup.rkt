@@ -22,6 +22,7 @@
              [date% date]
              [emph% emph]
              [display% disp]
+             [code% code]
              [index% index]
              [print-index% print-index]
              [section% section])
