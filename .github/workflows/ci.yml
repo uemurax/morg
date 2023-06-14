@@ -1,7 +1,7 @@
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
   pull_request:
     branches:
       - main
@@ -35,7 +35,7 @@ jobs:
         with:
           path: |
             ~/.cache/racket
-            ~/.local/racket
+            ~/.local/share/racket
           key: ${{ runner.os }}-racket-${{ matrix.racket-variant }}-${{ matrix.racket-version }}-${{ hashFiles('.racket-version') }}
       - name: Installing morg and its dependencies
         run: raco pkg install --no-docs --auto --name morg
