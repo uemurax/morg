@@ -28,15 +28,6 @@ jobs:
           distribution: full
           variant: ${{ matrix.racket-variant }}
           version: ${{ matrix.racket-version }}
-      - name: Racket version
-        run: racket --version > .racket-version
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/racket
-            ~/.local/share/racket
-          key: ${{ runner.os }}-racket-${{ matrix.racket-variant }}-${{ matrix.racket-version }}-${{ hashFiles('.racket-version') }}
       - name: Installing morg and its dependencies
         run: raco pkg install --no-docs --auto --name morg
       - name: Compiling morg and building its docs
