@@ -15,6 +15,7 @@
          href%
          emph%
          display%
+         code%
          inline%)
 
 (define-type InlineLike
@@ -27,6 +28,7 @@
             HRef
             Emph
             Display
+            Code
             StringTreeLike)))
 
 (define (inline-like->inline [x : InlineLike]) : Inline
@@ -65,3 +67,6 @@
 
 (define (display% . [xs : InlineLike *]) : Display
   (display (apply inline% xs)))
+
+(define (code% . [xs : InlineLike *]) : Code
+  (code (apply inline% xs)))
