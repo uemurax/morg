@@ -5,6 +5,7 @@
 (require "0004.rkt"
          "0006.rkt"
          "0008.rkt"
+         "000B.rkt"
          "0007.rkt")
 
 (provide part:0003)
@@ -24,6 +25,7 @@
       Please visit @href["https://example.com"]{this page}.
       Also check out @href["https://example.com"].
     }
+    part:000B
   ])
 
 (module+ main
