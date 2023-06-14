@@ -17,9 +17,8 @@
 (define ((paragraph->latex [cfg : Config])
           [x : Paragraph]) : tex:TextTeX
   @text-tex%{
-    
-    
     @((inline->latex cfg) (paragraph-contents x))
+    @macro%["par"]
   })
 
 (define ((print-index->latex [cfg : Config])

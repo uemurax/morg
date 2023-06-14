@@ -16,10 +16,13 @@
 (define (header-style . [xs : TextTeXLike *])
   @macro%["textbf" (argument% (apply % xs))])
 
+(define label-skip
+  @macro%["hspace" @argument%{@macro%["labelsep"]}])
+
 (define ((proof->latex [cfg : Config])
          [p : Proof]) : tex:TextTeX
   (define arg
-    @optional-argument%{@((inline->latex cfg) (proof-header p))@macro%["quad"]})
+    @optional-argument%{@|label-skip|@header-style{@((inline->latex cfg) (proof-header p))}:})
   @text-tex%{
     @environment%["trivlist"]{
       @macro%["item" arg]
@@ -45,7 +48,7 @@
   (define t : TextTeXLike
     @when%[title]{ (@((inline->latex cfg) title))})
   (define arg
-    @optional-argument%{@|num|@|h|@|t|@macro%["quad"]})
+    @optional-argument%{@|label-skip|@|num|@|h|@|t|:})
   (define pf
     (article-proof a))
   @text-tex%{
