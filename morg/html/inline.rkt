@@ -18,6 +18,7 @@
          unordered-list-class-name
          emph-class-name
          display-class-name
+         code-class-name
          ref-class-name)
 
 (define (text->xexprs [x : Text]) : XExprs
@@ -82,6 +83,13 @@
            `((class ,display-class-name))
            (inline->xexprs (display-contents d))))
 
+(define code-class-name (class-name "code"))
+
+(define (code->xexprs [c : Code]) : XExprs
+  (tagged% 'code
+           `((class ,code-class-name))
+           (inline->xexprs (code-contents c))))
+
 (define (inline->xexprs [i : Inline]) : XExprs
   (define x (inline-contents i))
   (cond
@@ -92,5 +100,6 @@
    [(href? x) (href->xexprs x)]
    [(emph? x) (emph->xexprs x)]
    [(display? x) (display->xexprs x)]
+   [(code? x) (code->xexprs x)]
    [(splice? x) ((splice->xexprs inline->xexprs) x)]
    [else (error "Unimplemented.")]))
