@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang at-exp typed/racket
 
 (require "../data/inline.rkt"
          "../markup/xexpr.rkt"
@@ -11,20 +11,39 @@
          "splice.rkt")
 
 (provide inline->xexprs
-         katex-class-name
          katex-delimiter-left
-         katex-delimiter-right
-         list-item-class-name
-         unordered-list-class-name
-         emph-class-name
-         display-class-name
-         code-class-name
-         ref-class-name)
+         katex-delimiter-right)
+
+(module style typed/racket
+  (require "class.rkt"
+           "../markup/string.rkt")
+  (provide katex-class-name
+           ref-class-name
+           list-item-class-name
+           unordered-list-class-name
+           href-class-name
+           emph-class-name
+           display-class-name
+           code-class-name
+           inline-css)
+
+  (define katex-class-name (class-name "katex"))
+  (define ref-class-name (class-name "ref"))
+  (define list-item-class-name (class-name "list-item"))
+  (define unordered-list-class-name (class-name "unordered-list"))
+  (define href-class-name (class-name "href"))
+  (define emph-class-name (class-name "emph"))
+  (define display-class-name (class-name "display"))
+  (define code-class-name (class-name "code"))
+  
+  (define inline-css
+    @string%{
+    }))
+
+(require 'style)
 
 (define (text->xexprs [x : Text]) : XExprs
   (xexprs% (text-contents x)))
-
-(define katex-class-name (class-name "katex"))
 
 (define katex-delimiter-left "\\(")
 (define katex-delimiter-right "\\)")
@@ -37,27 +56,19 @@
             (math-tex->text (math-contents x))
             katex-delimiter-right)))
 
-(define ref-class-name (class-name "ref"))
-
 (define (ref->xexprs [x : Ref]) : XExprs
   (define i (ref-id x))
   (id->xexprs/a i))
-
-(define list-item-class-name (class-name "list-item"))
 
 (define (list-item->xexprs [i : ListItem]) : XExprs
   (tagged% 'li
            `((class ,list-item-class-name))
            (inline->xexprs (list-item-contents i))))
 
-(define unordered-list-class-name (class-name "unordered-list"))
-
 (define (unordered-list->xexprs [ul : UnorderedList]) : XExprs
   (tagged% 'ul
            `((class ,unordered-list-class-name))
            (apply % (map list-item->xexprs (unordered-list-contents ul)))))
-
-(define href-class-name (class-name "href"))
 
 (define (href->xexprs [h : HRef]) : XExprs
   (define url (href-url h))
@@ -69,21 +80,15 @@
                (inline->xexprs contents)
                url)))
 
-(define emph-class-name (class-name "emph"))
-
 (define (emph->xexprs [e : Emph]) : XExprs
   (tagged% 'em
            `((class ,emph-class-name))
            (inline->xexprs (emph-contents e))))
 
-(define display-class-name (class-name "display"))
-
 (define (display->xexprs [d : Display]) : XExprs
   (tagged% 'center
            `((class ,display-class-name))
            (inline->xexprs (display-contents d))))
-
-(define code-class-name (class-name "code"))
 
 (define (code->xexprs [c : Code]) : XExprs
   (tagged% 'code

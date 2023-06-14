@@ -14,6 +14,7 @@
          "inline.rkt"
          "id.rkt"
          "document.rkt"
+         (submod "inline.rkt" style)
          "xexpr-table.rkt")
 
 (require/typed racket/hash
@@ -178,6 +179,7 @@
       max-width: 800px;
       margin: 40px auto;
     }
+    @|inline-css|
   })
 
 (define default-config:assets
