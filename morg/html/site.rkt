@@ -16,6 +16,7 @@
          "document.rkt"
          (submod "inline.rkt" style)
          (submod "id.rkt" style)
+         (submod "toc.rkt" style)
          "xexpr-table.rkt")
 
 (require/typed racket/hash
@@ -182,6 +183,7 @@
     }
     @|id-css|
     @|inline-css|
+    @|toc-css|
   })
 
 (define default-config:assets
