@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang at-exp typed/racket
 
 (require "../data/section.rkt"
          "../data/article.rkt"
@@ -14,11 +14,28 @@
          "config.rkt"
          "xexpr-table.rkt")
 
-(provide section->xexprs
-         section-class-name
-         section-title-class-name
-         section-body-class-name
-         section-toc-class-name)
+(provide section->xexprs)
+
+(module style typed/racket
+  (require "class.rkt"
+           "../markup/string.rkt")
+
+  (provide section-class-name
+           section-title-class-name
+           section-body-class-name
+           section-toc-class-name
+           section-css)
+
+  (define section-class-name (class-name "section"))
+  (define section-title-class-name (class-name "section-title"))
+  (define section-body-class-name (class-name "section-body"))
+  (define section-toc-class-name (class-name "section-toc"))
+
+  (define section-css
+    @string%{
+    }))
+
+(require 'style)
 
 (define ((article->xexprs* [cfg : Config]) [a : Article] [xtbl : XExprTable]) : XExprTable
   (hash-set xtbl (article-id a) ((article->xexprs cfg) a)))
@@ -28,11 +45,6 @@
   (cond
    [(article? e) (hash-ref xtbl (article-id e))]
    [(block? e) ((block->xexprs cfg) e)]))
-
-(define section-class-name (class-name "section"))
-(define section-title-class-name (class-name "section-title"))
-(define section-body-class-name (class-name "section-body"))
-(define section-toc-class-name (class-name "section-toc"))
 
 (: section->xexprs : (Config . -> . (Section XExprTable . -> . XExprTable)))
 
@@ -48,6 +60,7 @@
              (tagged% 'h1
                       `((class ,section-title-class-name))
                       (id->xexprs/a i)
+                      " "
                       (inline->xexprs (section-title s)))
              (apply tagged%
                     'div

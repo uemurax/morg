@@ -18,6 +18,7 @@
          (submod "id.rkt" style)
          (submod "toc.rkt" style)
          (submod "article.rkt" style)
+         (submod "section.rkt" style)
          "xexpr-table.rkt")
 
 (require/typed racket/hash
@@ -186,6 +187,7 @@
     @|inline-css|
     @|toc-css|
     @|article-css|
+    @|section-css|
   })
 
 (define default-config:assets
