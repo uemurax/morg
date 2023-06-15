@@ -19,6 +19,7 @@
          (submod "toc.rkt" style)
          (submod "article.rkt" style)
          (submod "section.rkt" style)
+         (submod "block.rkt" style)
          "xexpr-table.rkt")
 
 (require/typed racket/hash
@@ -185,6 +186,7 @@
     }
     @|id-css|
     @|inline-css|
+    @|block-css|
     @|toc-css|
     @|article-css|
     @|section-css|

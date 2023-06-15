@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang at-exp typed/racket
 
 (require "../data/block.rkt"
          "../markup/xexpr.rkt"
@@ -10,19 +10,30 @@
          "inline.rkt"
          "splice.rkt")
 
-(provide block->xexprs
-         paragraph-class-name)
+(provide block->xexprs)
+
+(module style typed/racket
+  (require "class.rkt"
+           "../markup/string.rkt")
+  (provide paragraph-class-name
+           print-index-class-name
+           block-css)
+
+  (define paragraph-class-name (class-name "paragraph"))
+  (define print-index-class-name (class-name "print-index"))
+
+  (define block-css
+    @string%{
+    }))
+
+(require 'style)
 
 (: block->xexprs : (Config . -> . (Block . -> . XExprs)))
-
-(define paragraph-class-name (class-name "paragraph"))
 
 (define (paragraph->xexprs [x : Paragraph]) : XExprs
   (tagged% 'p
            `((class ,paragraph-class-name))
            (inline->xexprs (paragraph-contents x))))
-
-(define print-index-class-name (class-name "print-index"))
 
 (define ((print-index->xexprs [cfg : Config]) [p : PrintIndex]) : XExprs
   (define tbl (config-index-table cfg))
