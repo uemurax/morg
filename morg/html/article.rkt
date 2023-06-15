@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang at-exp typed/racket
 
 (require "../data/article.rkt"
          "../markup/xexpr.rkt"
@@ -10,21 +10,43 @@
          "block.rkt"
          "id.rkt")
 
-(provide article->xexprs
-         statement-class-name
-         statement-header-class-name
-         statement-header-header-class-name
-         statement-header-title-class-name
-         statement-body-class-name
-         proof-class-name
-         proof-header-class-name
-         proof-body-class-name)
+(provide article->xexprs)
 
-(define statement-class-name (class-name "statement"))
-(define statement-header-class-name (class-name "statement-header"))
-(define statement-header-header-class-name (class-name "statement-header-header"))
-(define statement-header-title-class-name (class-name "statement-header-title"))
-(define statement-body-class-name (class-name "statement-body"))
+(module style typed/racket
+  (require "class.rkt"
+           "../markup/string.rkt")
+  (provide statement-class-name
+           statement-header-class-name
+           statement-header-header-class-name
+           statement-header-title-class-name
+           statement-body-class-name
+           proof-class-name
+           proof-header-class-name
+           proof-body-class-name
+           article-class-name
+           article-css)
+
+  (define statement-class-name (class-name "statement"))
+  (define statement-header-class-name (class-name "statement-header"))
+  (define statement-header-header-class-name (class-name "statement-header-header"))
+  (define statement-header-title-class-name (class-name "statement-header-title"))
+  (define statement-body-class-name (class-name "statement-body"))
+  (define proof-class-name (class-name "proof"))
+  (define proof-header-class-name (class-name "proof-header"))
+  (define proof-body-class-name (class-name "proof-body"))
+  (define article-class-name (class-name "article"))
+
+  (define article-css
+    @string%{
+      .@|article-class-name|, .@|statement-class-name|, .@|proof-class-name| {
+        margin-block: 1em;
+      }
+      .@|statement-header-header-class-name|, .@|proof-header-class-name| {
+        font-weight: bold;
+      }
+    }))
+
+(require 'style)
 
 (define ((article->xexprs:statement [cfg : Config]) [a : Article]) : XExprs
   (define f inline->xexprs)
@@ -34,6 +56,7 @@
            (tagged% 'header
                     `((class ,statement-header-class-name))
                     (id->xexprs/a (article-id a))
+                    " "
                     (tagged% 'span
                              `((class ,statement-header-header-class-name))
                              (f (article-header a)))
@@ -45,21 +68,15 @@
                     `((class ,statement-body-class-name))
                     ((block->xexprs cfg) (article-contents a)))))
 
-(define proof-class-name (class-name "proof"))
-(define proof-header-class-name (class-name "proof-header"))
-(define proof-body-class-name (class-name "proof-body"))
-
 (define ((proof->xexprs [cfg : Config]) [pf : Proof]) : XExprs
-  (tagged% 'div
+  (tagged% 'details
            `((class ,proof-class-name))
-           (tagged% 'header
+           (tagged% 'summary
                     `((class ,proof-header-class-name))
                     (inline->xexprs (proof-header pf)))
            (tagged% 'div
                     `((class ,proof-body-class-name))
                     ((block->xexprs cfg) (proof-contents pf)))))
-
-(define article-class-name (class-name "article"))
 
 (define ((article->xexprs [cfg : Config]) [a : Article]) : XExprs
   (define pf (article-proof a))
