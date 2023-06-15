@@ -6,6 +6,7 @@
          (prefix-in text: "../text/config.rkt"))
 
 (provide (struct-out config) Config
+         config-make-section-ref%
          Option OptionList
          (struct-out package) Package
          default-config)
@@ -35,6 +36,10 @@
    [back-matter : TextTeXLike])
   #:transparent
   #:type-name Config)
+
+(define ((config-make-section-ref% [cfg : Config])
+         [depth : Natural] . [num : StringTreeLike *])
+  ((config-make-section-ref cfg) depth (apply string-tree-like->string* num)))
 
 (define (default-config:make-section-ref [depth : Natural] [num : String])
   @text-tex%{@((text:config-make-section-ref text:default-config) depth num)})

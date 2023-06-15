@@ -16,7 +16,7 @@
 (provide ->latex
          ->latex/publish)
 
-(define (->latex #:config [cfg : UserConfig default-config]
+(define (->latex #:config [cfg : Config default-config]
                  [doc : (U Document)]) : String
   (define x
     (cond
@@ -49,7 +49,7 @@
              #t)
   (void))
 
-(define (->latex/publish #:config [cfg : UserConfig default-config]
+(define (->latex/publish #:config [cfg : Config default-config]
                          [doc : (U Document)]
                          [dst-dir : Path]) : Void
   (define s (->latex #:config cfg doc))
