@@ -31,7 +31,7 @@
     @string%{
       .@toc-node-class-name {
         list-style-type: none;
-        padding-left: 1em;
+        padding-inline-start: 1em;
       }
     }))
 
