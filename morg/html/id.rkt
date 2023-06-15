@@ -7,8 +7,7 @@
          "class.rkt")
 
 (provide id->url
-         id->xexprs/a
-         id-class-name)
+         id->xexprs/a)
 
 (module style typed/racket
   (require "class.rkt"
