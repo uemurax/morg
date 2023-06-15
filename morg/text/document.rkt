@@ -9,21 +9,22 @@
          "inline.rkt"
          "block.rkt"
          "date.rkt"
+         "state.rkt"
          "config.rkt")
 
 (provide document->text)
 
-(define ((document->text [user-cfg : UserConfig]) [doc : Document]) : StringTree
+(define ((document->text [cfg : Config]) [doc : Document]) : StringTree
   (define front (document-front doc))
   (define main (document-main doc))
   (define back (document-back doc))
-  (define cfg
-    (config user-cfg
-            (make-index-table doc)
-            (make-node-table main)))
-  (define f (inline->text cfg))
-  (define g (section->text cfg))
-  (define h (block->text cfg))
+  (define st
+    (state cfg
+           (make-index-table doc)
+           (make-node-table main)))
+  (define f (inline->text st))
+  (define g (section->text st))
+  (define h (block->text st))
   @string%{
     @(f (document-title doc))
     ========================================

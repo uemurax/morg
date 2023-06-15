@@ -5,24 +5,25 @@
          "data/article.rkt"
          "data/node.rkt"
          "data/index-table.rkt"
+         "markup/string.rkt"
          "text/document.rkt"
          "text/section.rkt"
          "text/article.rkt"
          "text/config.rkt"
-         (only-in "data/tree.rkt" tree-flatten))
+         "text/state.rkt")
 
 (provide ->text)
 
-(define (->text #:config [cfg : UserConfig default-config] [doc : (U Document Section Article)]) : String
+(define (->text #:config [cfg : Config default-config] [doc : (U Document Section Article)]) : String
   (define x
     (cond
      [(document? doc) ((document->text cfg) doc)]
      [(section? doc)
-      (define cfg-1
-        (config cfg empty-index-table (make-node-table (list doc))))
-      ((section->text cfg-1) doc)]
+      (define st
+        (state cfg empty-index-table (make-node-table (list doc))))
+      ((section->text st) doc)]
      [(article? doc)
-      (define cfg-1
-        (config cfg empty-index-table (make-node-table (list))))
-      ((article->text cfg-1) doc)]))
-  (apply string-append (tree-flatten x)))
+      (define st
+        (state cfg empty-index-table (make-node-table (list))))
+      ((article->text st) doc)]))
+  (string-tree->string x))
