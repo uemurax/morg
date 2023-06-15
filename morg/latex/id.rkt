@@ -12,10 +12,10 @@
 
 (define (id->latex [i : Id]) : tex:TextTeX
   (define x (id-contents i))
-  @text-tex%{@macro%["textcolor" @argument%{gray} @argument%{[@|x|]}]})
+  @text-tex%{@macro%["textcolor" @argument%{gray} @argument%{@macro%["normalsize"]@macro%["texttt" @argument%{[@|x|]}]}]})
 
 (define (id->latex/margin [i : Id]) : tex:TextTeX
-  @text-tex%{@macro%["marginpar" @argument%{@(id->latex i)}]})
+  @text-tex%{@macro%["marginnote" @argument%{@(id->latex i)}]})
 
 (define (id->label [i : Id]) : tex:TextTeX
   @text-tex%{morg-generated-@(id-contents i)})

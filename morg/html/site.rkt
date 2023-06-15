@@ -14,6 +14,13 @@
          "inline.rkt"
          "id.rkt"
          "document.rkt"
+         (submod "inline.rkt" style)
+         (submod "id.rkt" style)
+         (submod "toc.rkt" style)
+         (submod "article.rkt" style)
+         (submod "section.rkt" style)
+         (submod "block.rkt" style)
+         (submod "document.rkt" style)
          "xexpr-table.rkt")
 
 (require/typed racket/hash
@@ -127,6 +134,8 @@
       @inline%{@|h| -- @|doc-title|}]))
   (xexprs%
    (tagged% 'meta '((charset "UTF-8")))
+   (tagged% 'meta '((name "viewport")
+                    (content "width=device-width,initial-scale=1")))
    (tagged% 'title '()
             (inline->xexprs title))
    (tagged% 'link
@@ -178,6 +187,13 @@
       max-width: 800px;
       margin: 40px auto;
     }
+    @|id-css|
+    @|inline-css|
+    @|block-css|
+    @|toc-css|
+    @|article-css|
+    @|section-css|
+    @|document-css|
   })
 
 (define default-config:assets

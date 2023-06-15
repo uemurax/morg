@@ -61,10 +61,13 @@
     @(use-package "hyperref")
     @(use-package "xcolor")
     @(use-package "multicol")
+    @(use-package "marginnote")
     @(apply %
       (map (lambda ([p : Package])
              (use-package (package-name p)))
            pkgs))
+
+    @macro%["setcounter" @argument%{secnumdepth} @argument%{-100}]
 
     @macro%["title" @argument%{@(g (document-title doc))}]
     @macro%["author" (apply argument% (list-join-1 (map g (document-author doc)) @macro%["and"]))]

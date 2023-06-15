@@ -53,9 +53,8 @@
   (define t
     @%{@|n|@|title|})
   @text-tex%{
-    @macro%[sec-macro star-argument% @argument%{@|t|}]
-    @macro%["addcontentsline" @argument%{toc} @argument%{@|sec-macro|} @argument%{@|t|}]
-    @(id->hypertarget id)@(id->latex/margin id)
+    @macro%[sec-macro @optional-argument%{@|t|} @argument%{@|t|@(id->latex/margin id)}]
+    @(id->hypertarget id)
     @(apply % (map (section-element->latex cfg) (section-contents s)))
     @(apply % (map (section->latex cfg) (section-subsections s)))
   })
