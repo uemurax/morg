@@ -134,6 +134,8 @@
       @inline%{@|h| -- @|doc-title|}]))
   (xexprs%
    (tagged% 'meta '((charset "UTF-8")))
+   (tagged% 'meta '((name "viewport")
+                    (content "width=device-width,initial-scale=1")))
    (tagged% 'title '()
             (inline->xexprs title))
    (tagged% 'link
