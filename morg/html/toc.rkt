@@ -29,7 +29,7 @@
 
   (define toc-css
     @string%{
-      .@toc-node-class-name {
+      .@|toc-node-class-name| {
         list-style-type: none;
         padding-inline-start: 1em;
       }
