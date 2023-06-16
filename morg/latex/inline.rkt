@@ -59,6 +59,14 @@
     }
   })
 
+(define ((ordered-list->latex [st : State])
+         [ol : OrderedList]) : tex:TextTeX
+  @text-tex%{
+    @environment%["enumerate"]{
+      @(apply % (map (list-item->latex st) (ordered-list-contents ol)))
+    }
+  })
+
 (define ((href->latex [st : State])
          [h : HRef]) : tex:TextTeX
   (define url (href-url h))
@@ -89,6 +97,7 @@
    [(math? x) ((math->latex st) x)]
    [(ref? x) ((ref->latex st) x)]
    [(unordered-list? x) ((unordered-list->latex st) x)]
+   [(ordered-list? x) ( (ordered-list->latex st) x)]
    [(href? x) ((href->latex st) x)]
    [(emph? x) ((emph->latex st) x)]
    [(display? x) ((display->latex st) x)]

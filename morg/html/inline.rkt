@@ -22,6 +22,7 @@
            list-item-class-name
            list-item-head-class-name
            unordered-list-class-name
+           ordered-list-class-name
            href-class-name
            emph-class-name
            display-class-name
@@ -33,6 +34,7 @@
   (define list-item-class-name (class-name "list-item"))
   (define list-item-head-class-name (class-name "list-item-head"))
   (define unordered-list-class-name (class-name "unordered-list"))
+  (define ordered-list-class-name (class-name "ordered-list"))
   (define href-class-name (class-name "href"))
   (define emph-class-name (class-name "emph"))
   (define display-class-name (class-name "display"))
@@ -40,7 +42,7 @@
   
   (define inline-css
     @string%{
-      .@|unordered-list-class-name| {
+      .@|unordered-list-class-name|, .@|ordered-list-class-name| {
         padding-inline-start: 1em;
       }
       .@|list-item-head-class-name| {
@@ -82,6 +84,12 @@
              (style "list-style-type: none;"))
            (apply % (map list-item->xexprs (unordered-list-contents ul)))))
 
+(define (ordered-list->xexprs [ol : OrderedList]) : XExprs
+  (tagged% 'ol
+           `((class ,ordered-list-class-name)
+             (style "list-style-type: none;"))
+           (apply % (map list-item->xexprs (ordered-list-contents ol)))))
+
 (define (href->xexprs [h : HRef]) : XExprs
   (define url (href-url h))
   (define contents (href-contents h))
@@ -114,6 +122,7 @@
    [(math? x) (math->xexprs x)]
    [(ref? x) (ref->xexprs x)]
    [(unordered-list? x) (unordered-list->xexprs x)]
+   [(ordered-list? x) (ordered-list->xexprs x)]
    [(href? x) (href->xexprs x)]
    [(emph? x) (emph->xexprs x)]
    [(display? x) (display->xexprs x)]
