@@ -14,6 +14,7 @@
          (struct-out emph) Emph
          (struct-out display) Display
          (struct-out code) Code
+         (struct-out dfn) Dfn
          (struct-out math) Math)
 
 (struct inline
@@ -31,6 +32,7 @@
      Emph
      Display
      Code
+     Dfn
      Text))
 
 (struct text
@@ -84,3 +86,8 @@
   ([contents : Inline])
   #:transparent
   #:type-name Code)
+
+(struct dfn
+  ([contents : Inline])
+  #:transparent
+  #:type-name Dfn)
