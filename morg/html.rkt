@@ -1,6 +1,7 @@
 #lang typed/racket
 
 (require "html/site.rkt"
+         "html/config.rkt"
          "data/document.rkt")
 
 (require/typed racket/file
@@ -12,7 +13,7 @@
 (provide ->html
          ->html/publish)
 
-(define (->html #:config [cfg : UserConfig default-config]
+(define (->html #:config [cfg : Config default-config]
                 [doc : Document]) : Site
   (make-site cfg doc))
 
@@ -37,7 +38,7 @@
    (directory-list tmp-dir))
   (void))
 
-(define (->html/publish #:config [cfg : UserConfig default-config]
+(define (->html/publish #:config [cfg : Config default-config]
                         [doc : Document]
                         [dst-dir : Path]) : Void
   (define s (->html #:config cfg doc))

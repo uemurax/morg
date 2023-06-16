@@ -9,7 +9,7 @@
          "block.rkt"
          "inline.rkt"
          "id.rkt"
-         "config.rkt")
+         "state.rkt")
 
 (provide article->latex)
 
@@ -19,20 +19,20 @@
 (define label-skip
   @macro%["hspace" @argument%{@macro%["labelsep"]}])
 
-(define ((proof->latex [cfg : Config])
+(define ((proof->latex [st : State])
          [p : Proof]) : tex:TextTeX
   (define arg
-    @optional-argument%{@|label-skip|@header-style{@((inline->latex cfg) (proof-header p))}:})
+    @optional-argument%{@|label-skip|@header-style{@((inline->latex st) (proof-header p))}:})
   @text-tex%{
     @environment%["trivlist"]{
       @macro%["item" arg]
-      @((block->latex cfg) (proof-contents p))
+      @((block->latex st) (proof-contents p))
     }
   })
 
-(define ((article->latex [cfg : Config])
+(define ((article->latex [st : State])
          [a : Article]) : tex:TextTeX
-  (define tbl (config-node-table cfg))
+  (define tbl (state-node-table st))
   (define id (article-id a))
   (define in? (node-table-has-key? tbl id))
   (define num : TextTeXLike
@@ -43,10 +43,10 @@
       @%{@header-style{@|n|} }]
      [else @%{}]))
   (define h : TextTeXLike
-    @%{@header-style{@((inline->latex cfg) (article-header a))}})
+    @%{@header-style{@((inline->latex st) (article-header a))}})
   (define title (article-title a))
   (define t : TextTeXLike
-    @when%[title]{ (@((inline->latex cfg) title))})
+    @when%[title]{ (@((inline->latex st) title))})
   (define arg
     @optional-argument%{@|label-skip|@|num|@|h|@|t|:})
   (define pf
@@ -55,7 +55,7 @@
     @environment%["trivlist"]{
       @macro%["item" arg]
       @(id->hypertarget id)@(id->latex/margin id)
-      @((block->latex cfg) (article-contents a))
+      @((block->latex st) (article-contents a))
     }
-    @when%[pf]{@((proof->latex cfg) pf)}
+    @when%[pf]{@((proof->latex st) pf)}
   })

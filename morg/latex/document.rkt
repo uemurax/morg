@@ -11,6 +11,7 @@
          "section.rkt"
          "inline.rkt"
          "block.rkt"
+         "state.rkt"
          "config.rkt")
 
 (provide document->latex)
@@ -25,7 +26,7 @@
     @argument%{@|pkg|}
   ])
 
-(define ((document->latex [user-cfg : UserConfig])
+(define ((document->latex [cfg : Config])
          [doc : Document]) : tex:TextTeX
   (define front (document-front doc))
   (define main (document-main doc))
@@ -33,16 +34,16 @@
   (define tbl (make-node-table main))
   (define untbl-1 (make-node-table front))
   (define untbl (make-node-table back #:init untbl-1))
-  (define cfg
-    (config user-cfg
+  (define st
+    (state cfg
             (make-index-table doc)
             tbl untbl))
-  (define cls @argument%{@(user-config-class user-cfg)})
-  (define cls-opt @optional-argument%{@(apply options% (user-config-class-options user-cfg))})
-  (define f (section->latex cfg))
-  (define g (inline->latex cfg))
-  (define h (block->latex cfg))
-  (define pkgs (user-config-packages user-cfg))
+  (define cls @argument%{@(config-class cfg)})
+  (define cls-opt @optional-argument%{@(apply options% (config-class-options cfg))})
+  (define f (section->latex st))
+  (define g (inline->latex st))
+  (define h (block->latex st))
+  (define pkgs (config-packages cfg))
   @text-tex%{
     @pass-options-to-package["hyperref"
      "pdfusetitle"
@@ -74,14 +75,14 @@
     @macro%["date" @argument%{@(date->text (document-date doc))}]
 
     @environment%["document"]{
-      @(user-config-front-matter user-cfg)
+      @(config-front-matter cfg)
       @macro%["maketitle"]
       @(h (document-contents doc))
       @macro%["tableofcontents"]
       @(apply % (map f front))
-      @(user-config-main-matter user-cfg)
+      @(config-main-matter cfg)
       @(apply % (map f main))
-      @(user-config-back-matter user-cfg)
+      @(config-back-matter cfg)
       @(apply % (map f back))
     }
   })

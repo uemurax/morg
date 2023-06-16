@@ -6,7 +6,7 @@
          "../data/block.rkt"
          "../markup/string.rkt"
          "../markup/splice.rkt"
-         "config.rkt"
+         "state.rkt"
          "inline.rkt"
          "block.rkt"
          "article.rkt"
@@ -15,21 +15,21 @@
 
 (provide section->text)
 
-(define ((section->text [cfg : Config]) [s : Section]) : StringTree
+(define ((section->text [st : State]) [s : Section]) : StringTree
   @string%{
 
-    @(header s cfg)
+    @(header s st)
 
-    @(body s cfg)
+    @(body s st)
 
-    @(sub s cfg)
+    @(sub s st)
   })
 
-(define (header [s : Section] [cfg : Config]) : StringTree
-  (define tbl (config-node-table cfg))
+(define (header [s : Section] [st : State]) : StringTree
+  (define tbl (state-node-table st))
   (define id (section-id s))
   (define in? (node-table-has-key? tbl id))
-  (define title ((inline->text cfg) (section-title s)))
+  (define title ((inline->text st) (section-title s)))
   (define num
     @string%{@when%[in?]{@(section-node-format-index (cast (node-table-ref tbl id) SectionNode)) }})
   (define i
@@ -39,15 +39,15 @@
     ----------------------------------------
   })
 
-(define ((section-element->text [cfg : Config]) [e : SectionElement]) : StringTree
+(define ((section-element->text [st : State]) [e : SectionElement]) : StringTree
   (cond
-   [(article? e) ((article->text cfg) e)]
-   [(block? e) ((block->text cfg) e)]))
+   [(article? e) ((article->text st) e)]
+   [(block? e) ((block->text st) e)]))
 
-(define (body [s : Section] [cfg : Config]) : StringTree
+(define (body [s : Section] [st : State]) : StringTree
   (apply string%
-         (map (section-element->text cfg) (section-contents s))))
+         (map (section-element->text st) (section-contents s))))
 
-(define (sub [s : Section] [cfg : Config]) : StringTree
+(define (sub [s : Section] [st : State]) : StringTree
   (apply string%
-         (map (section->text cfg) (section-subsections s))))
+         (map (section->text st) (section-subsections s))))

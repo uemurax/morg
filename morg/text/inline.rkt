@@ -10,38 +10,39 @@
          "numbering.rkt"
          "id.rkt"
          "tex.rkt"
-         "config.rkt")
+         "config.rkt"
+         "state.rkt")
 
 (provide inline->text)
 
-(: inline->text : (Config . -> . (Inline . -> . StringTree)))
+(: inline->text : (State . -> . (Inline . -> . StringTree)))
 
-(define ((inline->text cfg) i)
+(define ((inline->text st) i)
   (define x (inline-contents i))
   (cond
-   [(text? x) ((text->text cfg) x)]
-   [(splice? x) ((splice->text (inline->text cfg)) x)]
-   [(ref? x) ((ref->text cfg) x)]
-   [(math? x) ((math->text cfg) x)]
-   [(unordered-list? x) ((unordered-list->text cfg) x)]
-   [(href? x) ((href->text cfg) x)]
-   [(emph? x) ((emph->text cfg) x)]
-   [(display? x) ((display->text cfg) x)]
-   [(code? x) ((code->text cfg) x)]
+   [(text? x) ((text->text st) x)]
+   [(splice? x) ((splice->text (inline->text st)) x)]
+   [(ref? x) ((ref->text st) x)]
+   [(math? x) ((math->text st) x)]
+   [(unordered-list? x) ((unordered-list->text st) x)]
+   [(href? x) ((href->text st) x)]
+   [(emph? x) ((emph->text st) x)]
+   [(display? x) ((display->text st) x)]
+   [(code? x) ((code->text st) x)]
    [else (error "Unimplemented.")]))
 
-(define ((text->text [_cfg : Config]) [t : Text]) : StringTree
+(define ((text->text [_st : State]) [t : Text]) : StringTree
   (string% (text-contents t)))
 
-(define ((ref->text [cfg : Config]) [r : Ref]) : StringTree
-  (define tbl (config-node-table cfg))
+(define ((ref->text [st : State]) [r : Ref]) : StringTree
+  (define tbl (state-node-table st))
   (define id (ref-id r))
   (define in? (node-table-has-key? tbl id))
   (define s
     (cond
      [in?
-      (define user (config-user-config cfg))
-      (define mk (user-config-make-section-ref user))
+      (define user (state-config st))
+      (define mk (config-make-section-ref% user))
       (define nd (node-table-ref tbl id))
       (define s1
         (cond
@@ -49,46 +50,46 @@
           (mk (length (node-trace nd))
               (section-node-format-index nd))]
          [(article-node? nd)
-          @string%{@((inline->text cfg) (article-header (article-node-contents nd))) @(article-node-format-index nd)}]))
+          @string%{@((inline->text st) (article-header (article-node-contents nd))) @(article-node-format-index nd)}]))
       @string%{@|s1| }]
      [else @string%{}]))
   @string%{@|s|@(id->text id)})
 
-(define ((math->text [_cfg : Config]) [m : Math]) : StringTree
+(define ((math->text [_st : State]) [m : Math]) : StringTree
   @string%{\(@(math-tex->text (math-contents m))\)})
 
-(define ((list-item->text [cfg : Config])
+(define ((list-item->text [st : State])
          [i : ListItem]) : StringTree
-  @string%{ * @((inline->text cfg) (list-item-contents i))})
+  @string%{ * @((inline->text st) (list-item-contents i))})
 
-(define ((unordered-list->text [cfg : Config])
+(define ((unordered-list->text [st : State])
          [ul : UnorderedList]) : StringTree
   @string%{
-    {@(apply % (map (list-item->text cfg) (unordered-list-contents ul)))}
+    {@(apply % (map (list-item->text st) (unordered-list-contents ul)))}
   })
 
-(define ((href->text [cfg : Config])
+(define ((href->text [st : State])
          [h : HRef]) : StringTree
   (define url (href-url h))
   (define contents (href-contents h))
   (if contents
-      @string%{[@((inline->text cfg) contents)](@|url|)}
+      @string%{[@((inline->text st) contents)](@|url|)}
       @string%{<@|url|>}))
 
-(define ((emph->text [cfg : Config])
+(define ((emph->text [st : State])
          [e : Emph]) : StringTree
-  @string%{*@((inline->text cfg) (emph-contents e))*})
+  @string%{*@((inline->text st) (emph-contents e))*})
 
-(define ((display->text [cfg : Config])
+(define ((display->text [st : State])
          [d : Display]) : StringTree
   @string%{
     
     
-    @((inline->text cfg) (display-contents d))
+    @((inline->text st) (display-contents d))
     
     
   })
 
-(define ((code->text [cfg : Config])
+(define ((code->text [st : State])
          [c : Code]) : StringTree
-  @string%{`@((inline->text cfg) (code-contents c))`})
+  @string%{`@((inline->text st) (code-contents c))`})

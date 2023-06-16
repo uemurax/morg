@@ -6,7 +6,7 @@
          "../data/splice.rkt"
          "../data/index-table.rkt"
          "class.rkt"
-         "config.rkt"
+         "state.rkt"
          "inline.rkt"
          "splice.rkt")
 
@@ -28,15 +28,15 @@
 
 (require 'style)
 
-(: block->xexprs : (Config . -> . (Block . -> . XExprs)))
+(: block->xexprs : (State . -> . (Block . -> . XExprs)))
 
 (define (paragraph->xexprs [x : Paragraph]) : XExprs
   (tagged% 'p
            `((class ,paragraph-class-name))
            (inline->xexprs (paragraph-contents x))))
 
-(define ((print-index->xexprs [cfg : Config]) [p : PrintIndex]) : XExprs
-  (define tbl (config-index-table cfg))
+(define ((print-index->xexprs [cfg : State]) [p : PrintIndex]) : XExprs
+  (define tbl (state-index-table cfg))
   (define type (print-index-type p))
   (define in? (index-table-has-key? tbl type))
   (cond

@@ -1,14 +1,12 @@
 #lang at-exp typed/racket
 
-(require "../data/node.rkt"
-         "../data/tex.rkt"
-         "../data/index-table.rkt"
+(require "../data/tex.rkt"
          "../markup/string.rkt"
          "../markup/tex.rkt"
          (prefix-in text: "../text/config.rkt"))
 
 (provide (struct-out config) Config
-         (struct-out user-config) UserConfig
+         config-make-section-ref%
          Option OptionList
          (struct-out package) Package
          default-config)
@@ -26,32 +24,28 @@
   #:type-name Package)
 
 (struct config
-  ([user-config : UserConfig]
-   [index-table : IndexTable]
-   [node-table : NodeTable]
-   [unnumbered-node-table : NodeTable])
-  #:transparent
-  #:type-name Config)
-
-(struct user-config
   ([section-macros : (Listof String)]
    [section-macro-fallback : String]
    [class : String]
    [class-options : OptionList]
    [packages : (Listof Package)]
-   [make-section-ref : (Natural StringTree . -> . TextTeX)]
+   [make-section-ref : (Natural String . -> . TextTeXLike)]
    [index-num-columns : Exact-Positive-Integer]
-   [front-matter : TextTeX]
-   [main-matter : TextTeX]
-   [back-matter : TextTeX])
+   [front-matter : TextTeXLike]
+   [main-matter : TextTeXLike]
+   [back-matter : TextTeXLike])
   #:transparent
-  #:type-name UserConfig)
+  #:type-name Config)
 
-(define (default-config:make-section-ref [depth : Natural] [num : StringTree]) : TextTeX
-  @text-tex%{@((text:user-config-make-section-ref text:default-config) depth num)})
+(define ((config-make-section-ref% [cfg : Config])
+         [depth : Natural] . [num : StringTreeLike *])
+  ((config-make-section-ref cfg) depth (apply string-tree-like->string* num)))
+
+(define (default-config:make-section-ref [depth : Natural] [num : String])
+  @text-tex%{@((text:config-make-section-ref text:default-config) depth num)})
 
 (define default-config
-  (user-config
+  (config
    '("section" "subsection" "subsubsection" "paragraph")
    "subparagraph"
    "article"

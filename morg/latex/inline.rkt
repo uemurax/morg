@@ -10,20 +10,21 @@
          "../text/numbering.rkt"
          "id.rkt"
          "splice.rkt"
+         "state.rkt"
          "config.rkt")
 
 (provide inline->latex)
 
-(: inline->latex : (Config . -> . (Inline . -> . tex:TextTeX)))
+(: inline->latex : (State . -> . (Inline . -> . tex:TextTeX)))
 
-(define ((text->latex [_cfg : Config])
+(define ((text->latex [_st : State])
           [x : Text]) : tex:TextTeX
   @text-tex%{@(text-contents x)})
 
-(define ((ref->latex [cfg : Config])
+(define ((ref->latex [st : State])
          [x : Ref]) : tex:TextTeX
   (define i (ref-id x))
-  (define tbl (config-node-table cfg))
+  (define tbl (state-node-table st))
   (define in? (node-table-has-key? tbl i))
   (define text : TextTeXLike
     (cond
@@ -31,64 +32,64 @@
       (define nd (node-table-ref tbl i))
       (cond
        [(section-node? nd)
-        (define mk (user-config-make-section-ref (config-user-config cfg)))
+        (define mk (config-make-section-ref% (state-config st)))
         @(mk (length (node-trace nd))
              (section-node-format-index nd))]
        [(article-node? nd)
         (define a (article-node-contents nd))
-        @%{@((inline->latex cfg) (article-header a)) @(article-node-format-index nd)}])]
+        @%{@((inline->latex st) (article-header a)) @(article-node-format-index nd)}])]
      [else (id->latex i)]))
   @text-tex%{@(id->hyperlink i text)})
 
-(define ((math->latex [_cfg : Config])
+(define ((math->latex [_st : State])
          [x : Math]) : tex:TextTeX
   (tex:text-tex (tex:math (math-contents x))))
 
-(define ((list-item->latex [cfg : Config])
+(define ((list-item->latex [st : State])
          [i : ListItem]) : tex:TextTeX
-  @text-tex%{@macro%["item"]@((inline->latex cfg) (list-item-contents i))})
+  @text-tex%{@macro%["item"]@((inline->latex st) (list-item-contents i))})
 
-(define ((unordered-list->latex [cfg : Config])
+(define ((unordered-list->latex [st : State])
          [ul : UnorderedList]) : tex:TextTeX
   @text-tex%{
     @environment%["itemize"]{
-      @(apply % (map (list-item->latex cfg) (unordered-list-contents ul)))
+      @(apply % (map (list-item->latex st) (unordered-list-contents ul)))
     }
   })
 
-(define ((href->latex [cfg : Config])
+(define ((href->latex [st : State])
          [h : HRef]) : tex:TextTeX
   (define url (href-url h))
   (define contents (href-contents h))
   (define x @text-tex%{@macro%["url" @argument%{@|url|}]})
   (if contents
-      @text-tex%{@((inline->latex cfg) contents)@macro%["footnote" @argument%{@|x|}]}
+      @text-tex%{@((inline->latex st) contents)@macro%["footnote" @argument%{@|x|}]}
       x))
 
-(define ((emph->latex [cfg : Config])
+(define ((emph->latex [st : State])
          [e : Emph]) : tex:TextTeX
-  @text-tex%{@macro%["emph" @argument%{@((inline->latex cfg) (emph-contents e))}]})
+  @text-tex%{@macro%["emph" @argument%{@((inline->latex st) (emph-contents e))}]})
 
-(define ((display->latex [cfg : Config])
+(define ((display->latex [st : State])
          [d : Display]) : tex:TextTeX
   @text-tex%{@environment%["center"]{
-    @((inline->latex cfg) (display-contents d))
+    @((inline->latex st) (display-contents d))
   }})
 
-(define ((code->latex [cfg : Config])
+(define ((code->latex [st : State])
          [c : Code]) : tex:TextTeX
-  @text-tex%{@macro%["texttt" @argument%{@((inline->latex cfg) (code-contents c))}]})
+  @text-tex%{@macro%["texttt" @argument%{@((inline->latex st) (code-contents c))}]})
 
-(define ((inline->latex cfg) i)
+(define ((inline->latex st) i)
   (define x (inline-contents i))
   (cond
-   [(text? x) ((text->latex cfg) x)]
-   [(math? x) ((math->latex cfg) x)]
-   [(ref? x) ((ref->latex cfg) x)]
-   [(unordered-list? x) ((unordered-list->latex cfg) x)]
-   [(href? x) ((href->latex cfg) x)]
-   [(emph? x) ((emph->latex cfg) x)]
-   [(display? x) ((display->latex cfg) x)]
-   [(code? x) ((code->latex cfg) x)]
-   [(splice? x) ((splice->latex (inline->latex cfg)) x)]
+   [(text? x) ((text->latex st) x)]
+   [(math? x) ((math->latex st) x)]
+   [(ref? x) ((ref->latex st) x)]
+   [(unordered-list? x) ((unordered-list->latex st) x)]
+   [(href? x) ((href->latex st) x)]
+   [(emph? x) ((emph->latex st) x)]
+   [(display? x) ((display->latex st) x)]
+   [(code? x) ((code->latex st) x)]
+   [(splice? x) ((splice->latex (inline->latex st)) x)]
    [else (error "Unimplemented.")]))

@@ -8,45 +8,45 @@
          "inline.rkt"
          "id.rkt"
          "numbering.rkt"
-         "config.rkt")
+         "state.rkt")
 
 (provide article->text)
 
-(define ((article->text [cfg : Config]) [a : Article]) : StringTree
+(define ((article->text [st : State]) [a : Article]) : StringTree
   @string%{
 
-    @(head a cfg)
-    @(body a cfg)
+    @(head a st)
+    @(body a st)
   })
 
-(define (head [a : Article] [cfg : Config]) : StringTree
-  (define tbl (config-node-table cfg))
+(define (head [a : Article] [st : State]) : StringTree
+  (define tbl (state-node-table st))
   (define id (article-id a))
   (define in? (node-table-has-key? tbl id))
-  (define h ((inline->text cfg) (article-header a)))
+  (define h ((inline->text st) (article-header a)))
   (define title (article-title a))
   (define num
     @string%{@when%[in?]{@(article-node-format-index (cast (node-table-ref tbl id) ArticleNode)) }})
   (define tt
-    @string%{@when%[title]{ (@((inline->text cfg) title))}})
+    @string%{@when%[title]{ (@((inline->text st) title))}})
   (define i
     (id->text id))
   @string%{
     @|num|@|i| @|h|@|tt|
   })
 
-(define (body [a : Article] [cfg : Config]) : StringTree
+(define (body [a : Article] [st : State]) : StringTree
   (define pf (article-proof a))
   @string%{
-    @((block->text cfg) (article-contents a))
+    @((block->text st) (article-contents a))
     @when%[pf]{
-      @((proof->text cfg) pf)
+      @((proof->text st) pf)
     }
   })
 
-(define ((proof->text [cfg : Config]) [p : Proof]) : StringTree
+(define ((proof->text [st : State]) [p : Proof]) : StringTree
   @string%{
 
-    @((inline->text cfg) (proof-header p))
-    @((block->text cfg) (proof-contents p))
+    @((inline->text st) (proof-header p))
+    @((block->text st) (proof-contents p))
   })

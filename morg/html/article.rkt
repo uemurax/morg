@@ -5,7 +5,7 @@
          "../markup/splice.rkt"
          "../data/id.rkt"
          "class.rkt"
-         "config.rkt"
+         "state.rkt"
          "inline.rkt"
          "block.rkt"
          "id.rkt")
@@ -48,7 +48,7 @@
 
 (require 'style)
 
-(define ((article->xexprs:statement [cfg : Config]) [a : Article]) : XExprs
+(define ((article->xexprs:statement [cfg : State]) [a : Article]) : XExprs
   (define f inline->xexprs)
   (define title (article-title a))
   (tagged% 'div
@@ -68,7 +68,7 @@
                     `((class ,statement-body-class-name))
                     ((block->xexprs cfg) (article-contents a)))))
 
-(define ((proof->xexprs [cfg : Config]) [pf : Proof]) : XExprs
+(define ((proof->xexprs [cfg : State]) [pf : Proof]) : XExprs
   (tagged% 'details
            `((class ,proof-class-name))
            (tagged% 'summary
@@ -78,7 +78,7 @@
                     `((class ,proof-body-class-name))
                     ((block->xexprs cfg) (proof-contents pf)))))
 
-(define ((article->xexprs [cfg : Config]) [a : Article]) : XExprs
+(define ((article->xexprs [cfg : State]) [a : Article]) : XExprs
   (define pf (article-proof a))
   (tagged% 'article
            `((class ,article-class-name)

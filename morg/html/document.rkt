@@ -5,7 +5,7 @@
          "../markup/xexpr.rkt"
          "../text/date.rkt"
          "../data/index-table.rkt"
-         "config.rkt"
+         "state.rkt"
          "inline.rkt"
          "toc.rkt"
          "section.rkt"
@@ -13,8 +13,7 @@
          "xexpr-table.rkt"
          "class.rkt")
 
-(provide document->xexprs
-         )
+(provide document->xexprs)
 
 (module style typed/racket
   (require "class.rkt"
@@ -57,7 +56,7 @@
   (define main (document-main doc))
   (define back (document-back doc))
   (define itbl (make-index-table doc))
-  (define cfg (config itbl))
+  (define cfg (state itbl))
   (define tbl : XExprTable (hash))
   (define (f [x : XExprTable] [ss : (Listof Section)])
     (foldl (section->xexprs cfg) x ss))

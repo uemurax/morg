@@ -1,28 +1,23 @@
 #lang at-exp typed/racket
 
-(require "../data/node.rkt"
-         "../data/index-table.rkt"
-         "../markup/string.rkt")
+(require "../markup/string.rkt")
 
 (provide (struct-out config) Config
-         (struct-out user-config) UserConfig
-         default-config)
+         default-config
+         config-make-section-ref%)
 
 (struct config
-  ([user-config : UserConfig]
-   [index-table : IndexTable]
-   [node-table : NodeTable])
+  ([make-section-ref : (Natural String . -> . StringTreeLike)])
   #:transparent
   #:type-name Config)
 
-(struct user-config
-  ([make-section-ref : (Natural StringTree . -> . StringTree)])
-  #:transparent
-  #:type-name UserConfig)
-
-(define (default-config:make-section-ref [_depth : Natural] [num : StringTree]) : StringTree
+(define (default-config:make-section-ref [_depth : Natural] [num : String]) : StringTreeLike
   @string%{Section @|num|})
 
 (define default-config
-  (user-config
+  (config
    default-config:make-section-ref))
+
+(define ((config-make-section-ref% [cfg : Config])
+         [depth : Natural] . [num : StringTreeLike *])
+  ((config-make-section-ref cfg) depth (apply string-tree-like->string* num)))

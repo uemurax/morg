@@ -11,7 +11,7 @@
          "block.rkt"
          "toc.rkt"
          "id.rkt"
-         "config.rkt"
+         "state.rkt"
          "xexpr-table.rkt")
 
 (provide section->xexprs)
@@ -37,16 +37,16 @@
 
 (require 'style)
 
-(define ((article->xexprs* [cfg : Config]) [a : Article] [xtbl : XExprTable]) : XExprTable
+(define ((article->xexprs* [cfg : State]) [a : Article] [xtbl : XExprTable]) : XExprTable
   (hash-set xtbl (article-id a) ((article->xexprs cfg) a)))
 
-(define ((section-element->xexprs [cfg : Config] [xtbl : XExprTable])
+(define ((section-element->xexprs [cfg : State] [xtbl : XExprTable])
          [e : SectionElement]) : XExprs
   (cond
    [(article? e) (hash-ref xtbl (article-id e))]
    [(block? e) ((block->xexprs cfg) e)]))
 
-(: section->xexprs : (Config . -> . (Section XExprTable . -> . XExprTable)))
+(: section->xexprs : (State . -> . (Section XExprTable . -> . XExprTable)))
 
 (define ((section->xexprs cfg) s xtbl)
   (define xtbl-1
