@@ -24,6 +24,7 @@
              [emph% emph]
              [display% disp]
              [code% code]
+             [dfn% dfn]
              [index% index]
              [print-index% print-index]
              [section% section])

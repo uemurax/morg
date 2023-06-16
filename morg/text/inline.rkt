@@ -30,6 +30,7 @@
    [(emph? x) ((emph->text st) x)]
    [(display? x) ((display->text st) x)]
    [(code? x) ((code->text st) x)]
+   [(dfn? x) ((dfn->text st) x)]
    [else (error "Unimplemented.")]))
 
 (define ((text->text [_st : State]) [t : Text]) : StringTree
@@ -100,3 +101,7 @@
 (define ((code->text [st : State])
          [c : Code]) : StringTree
   @string%{`@((inline->text st) (code-contents c))`})
+
+(define ((dfn->text [st : State])
+         [d : Dfn]) : StringTree
+  @string%{*@((inline->text st) (dfn-contents d))*})

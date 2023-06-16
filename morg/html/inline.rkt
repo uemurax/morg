@@ -27,6 +27,7 @@
            emph-class-name
            display-class-name
            code-class-name
+           dfn-class-name
            inline-css)
 
   (define katex-class-name (class-name "katex"))
@@ -39,6 +40,7 @@
   (define emph-class-name (class-name "emph"))
   (define display-class-name (class-name "display"))
   (define code-class-name (class-name "code"))
+  (define dfn-class-name (class-name "dfn"))
   
   (define inline-css
     @string%{
@@ -47,6 +49,10 @@
       }
       .@|list-item-head-class-name| {
         margin-inline-end: 1em;
+      }
+      .@|dfn-class-name| {
+        font-style: normal;
+        font-weight: bold;
       }
     }))
 
@@ -115,6 +121,11 @@
            `((class ,code-class-name))
            (inline->xexprs (code-contents c))))
 
+(define (dfn->xexprs [d : Dfn]) : XExprs
+  (tagged% 'dfn
+           `((class ,dfn-class-name))
+           (inline->xexprs (dfn-contents d))))
+
 (define (inline->xexprs [i : Inline]) : XExprs
   (define x (inline-contents i))
   (cond
@@ -127,5 +138,6 @@
    [(emph? x) (emph->xexprs x)]
    [(display? x) (display->xexprs x)]
    [(code? x) (code->xexprs x)]
+   [(dfn? x) (dfn->xexprs x)]
    [(splice? x) ((splice->xexprs inline->xexprs) x)]
    [else (error "Unimplemented.")]))

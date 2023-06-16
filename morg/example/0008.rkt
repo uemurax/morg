@@ -12,7 +12,7 @@
       @index[#:key "thing"]{Thing}
     ]
     @paragraph{
-      A thing consists of the following data.
+      A @dfn{thing} consists of the following data.
       @unordered-list[
         @list-item{Something}
         @list-item{Some other thing}
