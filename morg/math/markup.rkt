@@ -17,6 +17,7 @@
          binary%
          monoid%
          big-op%
+         delimiter%
          apply-with-parens%
          math-tex+%)
 
@@ -106,9 +107,16 @@
           ((inst sub-sup% MathTeXAtom+Like MathTeX+Like) op #:_ sub #:^ sup)
           (apply dec-degree% xs)))
 
+(define ((delimiter% #:left [left : MathTeX+Like]
+                     #:right [right : MathTeX+Like])
+         . [xs : MathTeX+Like *])
+  (group% left
+          (apply (paren%/curried #:level #t #:left "" #:right "") xs)
+          right))
+
 (define ((apply-with-parens% #:left [left : MathTeX+Like "("]
                              #:right [right : MathTeX+Like ")"])
          [f : MathTeX+Like] . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
   (paren% #:level #f
           (dec-degree% (group% f))
-          (paren% #:left left #:right right (splice xs))))
+          (apply (delimiter% #:left left #:right right) xs)))

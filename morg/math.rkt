@@ -15,6 +15,7 @@
              [dec-degree% dec-degree]
              [binary% binary]
              [big-op% big-op]
+             [delimiter% delimiter]
              [apply-with-parens% apply-with-parens]
              [monoid% monoid])
  sub-sup _ ^
