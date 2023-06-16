@@ -20,6 +20,7 @@
   (provide katex-class-name
            ref-class-name
            list-item-class-name
+           list-item-head-class-name
            unordered-list-class-name
            href-class-name
            emph-class-name
@@ -30,6 +31,7 @@
   (define katex-class-name (class-name "katex"))
   (define ref-class-name (class-name "ref"))
   (define list-item-class-name (class-name "list-item"))
+  (define list-item-head-class-name (class-name "list-item-head"))
   (define unordered-list-class-name (class-name "unordered-list"))
   (define href-class-name (class-name "href"))
   (define emph-class-name (class-name "emph"))
@@ -38,6 +40,12 @@
   
   (define inline-css
     @string%{
+      .@|unordered-list-class-name| {
+        padding-inline-start: 1em;
+      }
+      .@|list-item-head-class-name| {
+        margin-inline-end: 1em;
+      }
     }))
 
 (require 'style)
@@ -63,11 +71,15 @@
 (define (list-item->xexprs [i : ListItem]) : XExprs
   (tagged% 'li
            `((class ,list-item-class-name))
+           (tagged% 'span
+                    `((class ,list-item-head-class-name))
+                    (list-item-head i))
            (inline->xexprs (list-item-contents i))))
 
 (define (unordered-list->xexprs [ul : UnorderedList]) : XExprs
   (tagged% 'ul
-           `((class ,unordered-list-class-name))
+           `((class ,unordered-list-class-name)
+             (style "list-style-type: none;"))
            (apply % (map list-item->xexprs (unordered-list-contents ul)))))
 
 (define (href->xexprs [h : HRef]) : XExprs
