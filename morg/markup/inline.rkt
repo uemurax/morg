@@ -49,8 +49,9 @@
 (define (math% . [xs : MathTeXLike *]) : Math
   (math (apply math-tex% xs)))
 
-(define (list-item% . [xs : InlineLike *]) : ListItem
-  (list-item (apply inline% xs)))
+(define (list-item% #:head [head : StringTreeLike "-"]
+                    . [xs : InlineLike *]) : ListItem
+  (list-item (string-tree-like->string head) (apply inline% xs)))
 
 (define (unordered-list% . [xs : ListItem *]) : UnorderedList
   (unordered-list xs))

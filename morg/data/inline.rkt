@@ -47,7 +47,8 @@
   #:type-name Math)
 
 (struct list-item
-  ([contents : Inline])
+  ([head : String]
+   [contents : Inline])
   #:transparent
   #:type-name ListItem)
 
