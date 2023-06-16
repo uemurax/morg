@@ -90,6 +90,10 @@
          [c : Code]) : tex:TextTeX
   @text-tex%{@macro%["texttt" @argument%{@((inline->latex st) (code-contents c))}]})
 
+(define ((dfn->latex [st : State])
+         [d : Dfn]) : tex:TextTeX
+  @text-tex%{@macro%["emph" @argument%{@((inline->latex st) (dfn-contents d))}]})
+
 (define ((inline->latex st) i)
   (define x (inline-contents i))
   (cond
@@ -100,6 +104,7 @@
    [(ordered-list? x) ( (ordered-list->latex st) x)]
    [(href? x) ((href->latex st) x)]
    [(emph? x) ((emph->latex st) x)]
+   [(dfn? x) ((dfn->latex st) x)]
    [(display? x) ((display->latex st) x)]
    [(code? x) ((code->latex st) x)]
    [(splice? x) ((splice->latex (inline->latex st)) x)]
