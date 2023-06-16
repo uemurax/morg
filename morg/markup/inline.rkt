@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang at-exp typed/racket
 
 (require "../data/inline.rkt"
          "../data/id.rkt"
@@ -12,6 +12,7 @@
          math%
          list-item%
          unordered-list%
+         ordered-list%
          href%
          emph%
          display%
@@ -25,6 +26,7 @@
             Ref
             Math
             UnorderedList
+            OrderedList
             HRef
             Emph
             Display
@@ -49,11 +51,29 @@
 (define (math% . [xs : MathTeXLike *]) : Math
   (math (apply math-tex% xs)))
 
-(define (list-item% . [xs : InlineLike *]) : ListItem
-  (list-item (apply inline% xs)))
+(define (list-item% #:head [head : StringTreeLike "-"]
+                    . [xs : InlineLike *]) : ListItem
+  (list-item (string-tree-like->string head) (apply inline% xs)))
 
 (define (unordered-list% . [xs : ListItem *]) : UnorderedList
   (unordered-list xs))
+
+(define (ordered-list%:default-format [n : Natural])
+  @string%{@(number->string n)})
+
+(define ((ordered-list%:modify-item [fmt : (Natural . -> . StringTreeLike)])
+        [i : ListItem] [n : Natural])
+  (list-item
+   (string-tree-like->string (fmt (+ n 1)))
+   (list-item-contents i)))
+
+(define (ordered-list% #:format [fmt : (Natural . -> . StringTreeLike)
+                                  ordered-list%:default-format]
+                       . [xs : ListItem *]) : OrderedList
+  (define rng (range (length xs)))
+  (define ys
+    (map (ordered-list%:modify-item fmt) xs rng))
+  (ordered-list ys))
 
 (define (href% [url : String] . [xs : InlineLike *]) : HRef
   (define contents

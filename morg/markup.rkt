@@ -18,6 +18,7 @@
              [ref% ref]
              [list-item% list-item]
              [unordered-list% unordered-list]
+             [ordered-list% ordered-list]
              [href% href]
              [date% date]
              [emph% emph]

@@ -25,6 +25,7 @@
    [(ref? x) ((ref->text st) x)]
    [(math? x) ((math->text st) x)]
    [(unordered-list? x) ((unordered-list->text st) x)]
+   [(ordered-list? x) ((ordered-list->text st) x)]
    [(href? x) ((href->text st) x)]
    [(emph? x) ((emph->text st) x)]
    [(display? x) ((display->text st) x)]
@@ -60,12 +61,18 @@
 
 (define ((list-item->text [st : State])
          [i : ListItem]) : StringTree
-  @string%{ * @((inline->text st) (list-item-contents i))})
+  @string%{ @(list-item-head i) @((inline->text st) (list-item-contents i))})
 
 (define ((unordered-list->text [st : State])
          [ul : UnorderedList]) : StringTree
   @string%{
     {@(apply % (map (list-item->text st) (unordered-list-contents ul)))}
+  })
+
+(define ((ordered-list->text [st : State])
+         [ol : OrderedList]) : StringTree
+  @string%{
+    {@(apply % (map (list-item->text st) (ordered-list-contents ol)))}
   })
 
 (define ((href->text [st : State])

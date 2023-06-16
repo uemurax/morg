@@ -9,6 +9,7 @@
          (struct-out text) Text
          (struct-out list-item) ListItem
          (struct-out unordered-list) UnorderedList
+         (struct-out ordered-list) OrderedList
          (struct-out href) HRef
          (struct-out emph) Emph
          (struct-out display) Display
@@ -25,6 +26,7 @@
      Ref
      Math
      UnorderedList
+     OrderedList
      HRef
      Emph
      Display
@@ -47,7 +49,8 @@
   #:type-name Math)
 
 (struct list-item
-  ([contents : Inline])
+  ([head : String]
+   [contents : Inline])
   #:transparent
   #:type-name ListItem)
 
@@ -55,6 +58,11 @@
   ([contents : (Listof ListItem)])
   #:transparent
   #:type-name UnorderedList)
+
+(struct ordered-list
+  ([contents : (Listof ListItem)])
+  #:transparent
+  #:type-name OrderedList)
 
 (struct href
   ([url : String]

@@ -47,13 +47,23 @@
 
 (define ((list-item->latex [st : State])
          [i : ListItem]) : tex:TextTeX
-  @text-tex%{@macro%["item"]@((inline->latex st) (list-item-contents i))})
+  (define itm
+    @macro%["item" @optional-argument%{@(list-item-head i)}])
+  @text-tex%{@|itm|@((inline->latex st) (list-item-contents i))})
 
 (define ((unordered-list->latex [st : State])
          [ul : UnorderedList]) : tex:TextTeX
   @text-tex%{
     @environment%["itemize"]{
       @(apply % (map (list-item->latex st) (unordered-list-contents ul)))
+    }
+  })
+
+(define ((ordered-list->latex [st : State])
+         [ol : OrderedList]) : tex:TextTeX
+  @text-tex%{
+    @environment%["enumerate"]{
+      @(apply % (map (list-item->latex st) (ordered-list-contents ol)))
     }
   })
 
@@ -87,6 +97,7 @@
    [(math? x) ((math->latex st) x)]
    [(ref? x) ((ref->latex st) x)]
    [(unordered-list? x) ((unordered-list->latex st) x)]
+   [(ordered-list? x) ( (ordered-list->latex st) x)]
    [(href? x) ((href->latex st) x)]
    [(emph? x) ((emph->latex st) x)]
    [(display? x) ((display->latex st) x)]
