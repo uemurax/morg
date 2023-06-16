@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang at-exp typed/racket
 
 (require "../data/inline.rkt"
          "../data/id.rkt"
@@ -58,8 +58,22 @@
 (define (unordered-list% . [xs : ListItem *]) : UnorderedList
   (unordered-list xs))
 
-(define (ordered-list% . [xs : ListItem *]) : OrderedList
-  (ordered-list xs))
+(define (ordered-list%:default-format [n : Natural])
+  @string%{@(number->string n)})
+
+(define ((ordered-list%:modify-item [fmt : (Natural . -> . StringTreeLike)])
+        [i : ListItem] [n : Natural])
+  (list-item
+   (string-tree-like->string (fmt (+ n 1)))
+   (list-item-contents i)))
+
+(define (ordered-list% #:format [fmt : (Natural . -> . StringTreeLike)
+                                  ordered-list%:default-format]
+                       . [xs : ListItem *]) : OrderedList
+  (define rng (range (length xs)))
+  (define ys
+    (map (ordered-list%:modify-item fmt) xs rng))
+  (ordered-list ys))
 
 (define (href% [url : String] . [xs : InlineLike *]) : HRef
   (define contents
