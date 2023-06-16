@@ -12,6 +12,7 @@
          math%
          list-item%
          unordered-list%
+         ordered-list%
          href%
          emph%
          display%
@@ -25,6 +26,7 @@
             Ref
             Math
             UnorderedList
+            OrderedList
             HRef
             Emph
             Display
@@ -55,6 +57,9 @@
 
 (define (unordered-list% . [xs : ListItem *]) : UnorderedList
   (unordered-list xs))
+
+(define (ordered-list% . [xs : ListItem *]) : OrderedList
+  (ordered-list xs))
 
 (define (href% [url : String] . [xs : InlineLike *]) : HRef
   (define contents
