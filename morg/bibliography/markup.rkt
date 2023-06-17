@@ -32,7 +32,7 @@
                   #:title [title : InlineLike]
                   #:journal-title [journal-title : InlineLike]
                   #:date [d : Date]
-                  #:volume [volume : (Option InlineLike) #f]
+                  #:volume [volume : InlineLike]
                   #:number [number : (Option InlineLike) #f]
                   #:pages [pages : (Option InlineLike) #f]
                   #:doi [doi : (Option String) #f]
@@ -42,7 +42,7 @@
            (inline% title)
            (inline% journal-title)
            d
-           (option-map inline% volume)
+           (inline% volume)
            (option-map inline% number)
            (option-map inline% pages)
            doi url ep))

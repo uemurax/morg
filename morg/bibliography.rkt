@@ -11,6 +11,7 @@
 (provide
  bib
  (rename-out [eprint% eprint]
+             [article% article]
              [book% book]))
 
 (define (bib #:header [header : InlineLike @%{Bibliography item}]
