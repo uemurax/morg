@@ -1,14 +1,14 @@
 #lang at-exp typed/racket
 
 (require morg/markup
-         (prefix-in b: morg/bibliography))
+         (prefix-in bib: morg/bibliography))
 
 (provide part:someone-2003-0000)
 
 (define part:someone-2003-0000
-  @b:bib[
+  @bib:bibliography[
     "someone-2003-0000"
-    @b:book[
+    @bib:book[
       #:author @list[@%{Some One}]
       #:title @%{An introduction to something}
       #:date (date 2003)

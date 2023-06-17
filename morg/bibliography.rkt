@@ -9,14 +9,14 @@
          "markup/splice.rkt")
 
 (provide
- bib
+ bibliography
  (rename-out [eprint% eprint]
              [article% article]
              [book% book]))
 
-(define (bib #:header [header : InlineLike @%{Bibliography item}]
-             [maybe-id : String]
-             [b : BibItem])
+(define (bibliography
+         #:header [header : InlineLike @%{Bibliography item}]
+         [maybe-id : String] [b : BibItem])
   @x:article%[
     #:id maybe-id
     #:header header
