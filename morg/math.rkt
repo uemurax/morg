@@ -6,7 +6,7 @@
          "markup/tex.rkt")
 
 (provide
- (struct-out user-config)
+ (struct-out config)
  default-config
  MathTeX+Like
  MathTeXAtom+Like

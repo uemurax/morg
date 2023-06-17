@@ -7,9 +7,9 @@
 
 (provide make-math)
 
-(define ((make-math [usr-cfg : UserConfig default-config])
+(define ((make-math [cfg : Config default-config])
          . [xs : MathTeX+Like *]) : i:Math
-  (define cfg
-    (config usr-cfg
+  (define st
+    (state cfg
             (level #t 0)))
-  (i:math ((format-math-tex+ cfg) (apply math-tex+% xs))))
+  (i:math ((format-math-tex+ st) (apply math-tex+% xs))))
