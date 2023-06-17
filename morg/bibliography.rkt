@@ -10,12 +10,13 @@
 
 (provide
  bibliography
+ bibliography/curried
  (rename-out [eprint% eprint]
              [article% article]
              [book% book]))
 
-(define (bibliography
-         #:header [header : InlineLike @%{Bibliography item}]
+(define ((bibliography/curried
+          #:header [header : InlineLike @%{Bibliography item}])
          [maybe-id : String] [b : BibItem])
   @x:article%[
     #:id maybe-id
@@ -24,3 +25,8 @@
       @(format-bib-item b)
     }
   ])
+
+(define (bibliography
+         #:header [header : InlineLike @%{Bibliography item}]
+         [maybe-id : String] [b : BibItem])
+  ((bibliography/curried #:header header) maybe-id b))
