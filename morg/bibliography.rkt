@@ -3,24 +3,32 @@
 (require "bibliography/markup.rkt"
          "bibliography/format.rkt"
          "bibliography/bib-item.rkt"
-         "markup/article.rkt"
+         (prefix-in x: "markup/article.rkt")
          "markup/inline.rkt"
          "markup/block.rkt"
-         "markup/splice.rkt"
-         "data/article.rkt")
+         "markup/splice.rkt")
 
 (provide
- bib
+ bibliography
+ bibliography/curried
  (rename-out [eprint% eprint]
+             [article% article]
              [book% book]))
 
-(define (bib #:header [header : InlineLike @%{Bibliography item}]
-             [maybe-id : String]
-             [b : BibItem]) : Article
-  @article%[
+(define ((bibliography/curried
+          #:header [header : InlineLike @%{Bibliography item}])
+         #:id [maybe-id : String]
+         [b : BibItem])
+  @x:article%[
     #:id maybe-id
     #:header header
     @paragraph%{
       @(format-bib-item b)
     }
   ])
+
+(define (bibliography
+         #:header [header : InlineLike @%{Bibliography item}]
+         #:id [maybe-id : String]
+         [b : BibItem])
+  ((bibliography/curried #:header header) #:id maybe-id b))

@@ -6,10 +6,12 @@
 (provide BibItem
          EPrintType
          (struct-out eprint) EPrint
+         (struct-out article) Article
          (struct-out book) Book)
 
 (define-type BibItem
-  (U Book))
+  (U Book
+     Article))
 
 (define-type EPrintType
   (U 'arXiv))
@@ -31,3 +33,17 @@
    [eprint : (Option EPrint)])
   #:transparent
   #:type-name Book)
+
+(struct article
+  ([author : (Listof Inline)]
+   [title : Inline]
+   [journal-title : Inline]
+   [date : Date]
+   [volume : Inline]
+   [number : (Option Inline)]
+   [pages : (Option Inline)]
+   [doi : (Option String)]
+   [url : (Option String)]
+   [eprint : (Option EPrint)])
+  #:transparent
+  #:type-name Article)
