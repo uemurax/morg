@@ -26,6 +26,9 @@
     @argument%{@|pkg|}
   ])
 
+(define (set-counter [cnt : String] [n : Integer])
+  @macro%["setcounter" @argument%{@|cnt|} @argument%{@(number->string n)}])
+
 (define ((document->latex [cfg : Config])
          [doc : Document]) : tex:TextTeX
   (define front (document-front doc))
@@ -68,7 +71,8 @@
              (use-package (package-name p)))
            pkgs))
 
-    @macro%["setcounter" @argument%{secnumdepth} @argument%{-100}]
+    @(set-counter "secnumdepth" -100)
+    @(set-counter "tocdepth" 100)
 
     @macro%["title" @argument%{@(g (document-title doc))}]
     @macro%["author" (apply argument% (list-join-1 (map g (document-author doc)) @macro%["and"]))]
