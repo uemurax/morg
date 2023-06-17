@@ -4,6 +4,7 @@
          "../data/tex.rkt"
          "../data/splice.rkt"
          "../util/list.rkt"
+         "../markup/splice.rkt"
          "../markup/tex.rkt")
 
 (provide MathTeXAtom+Like
@@ -101,14 +102,14 @@
 
 (define ((delimiter% #:left [left : MathTeX+Like]
                      #:right [right : MathTeX+Like])
-         . [xs : MathTeX+Like *])
-  (group% left
-          (apply (paren%/curried #:level #t #:left "" #:right "") xs)
-          right))
+         . [xs : MathTeX+Like *]) : MathTeX+Like
+  (% left
+     (apply (paren%/curried #:level #t #:left "" #:right "") xs)
+     right))
 
 (define ((apply-with-parens% #:left [left : MathTeX+Like "("]
                              #:right [right : MathTeX+Like ")"])
          [f : MathTeX+Like] . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
   (paren% #:level #f
-          (dec-degree% (group% f))
+          (dec-degree% f)
           (apply (delimiter% #:left left #:right right) xs)))
