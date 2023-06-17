@@ -7,7 +7,7 @@
 
 (define part:someone-2003-0000
   @bib:bibliography[
-    "someone-2003-0000"
+    #:id "someone-2003-0000"
     @bib:book[
       #:author @list[@%{Some One}]
       #:title @%{An introduction to something}

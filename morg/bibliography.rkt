@@ -17,7 +17,8 @@
 
 (define ((bibliography/curried
           #:header [header : InlineLike @%{Bibliography item}])
-         [maybe-id : String] [b : BibItem])
+         #:id [maybe-id : String]
+         [b : BibItem])
   @x:article%[
     #:id maybe-id
     #:header header
@@ -28,5 +29,6 @@
 
 (define (bibliography
          #:header [header : InlineLike @%{Bibliography item}]
-         [maybe-id : String] [b : BibItem])
-  ((bibliography/curried #:header header) maybe-id b))
+         #:id [maybe-id : String]
+         [b : BibItem])
+  ((bibliography/curried #:header header) #:id maybe-id b))
