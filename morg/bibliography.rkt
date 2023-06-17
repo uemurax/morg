@@ -3,11 +3,10 @@
 (require "bibliography/markup.rkt"
          "bibliography/format.rkt"
          "bibliography/bib-item.rkt"
-         "markup/article.rkt"
+         (prefix-in x: "markup/article.rkt")
          "markup/inline.rkt"
          "markup/block.rkt"
-         "markup/splice.rkt"
-         "data/article.rkt")
+         "markup/splice.rkt")
 
 (provide
  bib
@@ -16,8 +15,8 @@
 
 (define (bib #:header [header : InlineLike @%{Bibliography item}]
              [maybe-id : String]
-             [b : BibItem]) : Article
-  @article%[
+             [b : BibItem])
+  @x:article%[
     #:id maybe-id
     #:header header
     @paragraph%{
