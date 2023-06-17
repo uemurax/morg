@@ -8,7 +8,10 @@
          "splice.rkt"
          "../util/option.rkt")
 
-(provide article%/curried article% proof%)
+(provide article%/curried 
+         article%
+         proof%/curried
+         proof%)
 
 (define ((article%/curried [header : InlineLike])
          #:id [maybe-id : String]
@@ -36,7 +39,11 @@
    #:proof proof
    (apply % contents)))
 
-(define (proof% #:header [header : InlineLike @inline%{Proof}]
-                . [contents : BlockLike *]) : Proof
+(define ((proof%/curried #:header [header : InlineLike @inline%{Proof}])
+         . [contents : BlockLike *]) : Proof
   (proof (inline% header)
          (apply block% contents)))
+
+(define (proof% #:header [header : InlineLike @inline%{Proof}]
+                . [contents : BlockLike *]) : Proof
+  (apply (proof%/curried #:header header) contents))

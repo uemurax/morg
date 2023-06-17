@@ -13,6 +13,7 @@
  (rename-out [article% article]
              [article%/curried article/curried]
              [proof% proof]
+             [proof%/curried proof/curried]
              [paragraph% paragraph]
              [document% document]
              [ref% ref]
