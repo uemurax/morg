@@ -9,6 +9,7 @@
          PureInlineElement
          pure-inline-element-map
          inline-element-map
+         pure-inline->inline
          (struct-out inline) Inline
          (struct-out pure-inline) PureInline
          (struct-out ref) Ref
@@ -191,3 +192,9 @@
    [(anchor? x) ((anchor-map f) x)]
    [(anchor-ref? x) x]
    [else ((pure-inline-element-map f) x)]))
+
+(define (pure-inline->inline [x : PureInline]) : Inline
+  (define y (pure-inline-contents x))
+  (cond
+   [(splice? y) (inline (splice-map pure-inline->inline y))]
+   [else (inline ((pure-inline-element-map pure-inline->inline) y))]))

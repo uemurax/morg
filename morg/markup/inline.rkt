@@ -22,10 +22,12 @@
          dfn%
          anchor%
          anchor-ref%
+         pure-inline%
          inline%)
 
 (define-type InlineLike
   (U Inline
+     PureInline
      (Splice InlineLike)
      (InlineElement InlineLike)
      StringTreeLike))
@@ -39,6 +41,7 @@
 (define (inline-like->inline [x : InlineLike]) : Inline
   (cond
    [(inline? x) x]
+   [(pure-inline? x) (pure-inline->inline x)]
    [(splice? x)
     (inline (splice-map inline-like->inline x))]
    [((make-predicate StringTreeLike) x)
