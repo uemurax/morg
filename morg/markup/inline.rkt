@@ -3,6 +3,7 @@
 (require "../data/inline.rkt"
          "../data/id.rkt"
          "../data/splice.rkt"
+         "../util/option.rkt"
          "string.rkt"
          "tex.rkt")
 
@@ -72,29 +73,47 @@
 (define (math% . [xs : MathTeXLike *]) : Math
   (math (apply math-tex% xs)))
 
-(define #:forall (Inline)
-        (list-item% #:head [head : (U StringTreeLike Inline) "-"]
-                    . [xs : Inline *])
-  (list-item head (splice xs)))
+(struct (PureInline Inline) list-item+
+  ([head : PureInline]
+   [id : (Option Id)]
+   [contents : Inline])
+  #:transparent
+  #:type-name ListItem+)
 
-(define #:forall (Inline)
-        (unordered-list% . [xs : (ListItem Inline) *])
-  (unordered-list xs))
+(define #:forall (PureInline Inline)
+        (list-item% #:head [head : (U StringTreeLike PureInline) "-"]
+                    #:id [maybe-id : (Option String) #f]
+                    . [xs : Inline *])
+  (list-item+ head (option-map id maybe-id) (splice xs)))
+
+(define #:forall (PureInline Inline)
+        (list-item+->list-item [li : (ListItem+ PureInline Inline)])
+  (define id (list-item+-id li))
+  (define head (list-item+-head li))
+  (define contents (list-item+-contents li))
+  (if id
+      (list-item (anchor id head) contents)
+      (list-item head contents)))
+  
+(define #:forall (PureInline Inline)
+        (unordered-list% . [xs : (ListItem+ PureInline Inline) *])
+  (unordered-list
+   (map (inst list-item+->list-item PureInline Inline) xs)))
 
 (define (ordered-list%:default-format [n : Natural])
-  @(number->string n))
+  (number->string n))
 
-(define #:forall (Inline)
+(define #:forall (PureInline Inline)
         ((ordered-list%:modify-item [fmt : (Natural . -> . Inline)])
-         [i : (ListItem Inline)] [n : Natural])
-  (list-item
-   (fmt (+ n 1))
-   (list-item-contents i)))
+         [i : (ListItem+ PureInline Inline)] [n : Natural])
+  (list-item+->list-item
+   (struct-copy list-item+ i
+    [head (fmt (+ n 1))])))
 
-(define #:forall (Inline)
+(define #:forall (PureInline Inline)
         (ordered-list% #:format [fmt : (Natural . -> . (U StringTreeLike Inline))
                                   ordered-list%:default-format]
-                       . [xs : (ListItem Inline) *])
+                       . [xs : (ListItem+ PureInline Inline) *])
   (define rng (range (length xs)))
   (define ys
     (map (ordered-list%:modify-item fmt) xs rng))
