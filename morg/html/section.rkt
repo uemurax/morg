@@ -37,23 +37,26 @@
 
 (require 'style)
 
-(define ((article->xexprs* [cfg : State]) [a : Article] [xtbl : XExprTable]) : XExprTable
-  (hash-set xtbl (article-id a) ((article->xexprs cfg) a)))
+(define ((article->xexprs* [st : State]) [a : Article] [xtbl : XExprTable]) : XExprTable
+  (hash-set xtbl (article-id a) ((article->xexprs st) a)))
 
-(define ((section-element->xexprs [cfg : State] [xtbl : XExprTable])
+(define ((section-element->xexprs [st : State] [xtbl : XExprTable])
          [e : SectionElement]) : XExprs
   (cond
    [(article? e) (hash-ref xtbl (article-id e))]
-   [(block? e) ((block->xexprs cfg) e)]))
+   [(block? e) ((block->xexprs st) e)]))
 
 (: section->xexprs : (State . -> . (Section XExprTable . -> . XExprTable)))
 
-(define ((section->xexprs cfg) s xtbl)
-  (define xtbl-1
-    (foldl (article->xexprs* cfg) xtbl (section-articles s)))
-  (define xtbl-2
-    (foldl (section->xexprs cfg) xtbl-1 (section-subsections s)))
+(define ((section->xexprs st-1) s xtbl)
   (define i (section-id s))
+  (define st
+    (struct-copy state st-1
+     [id i]))
+  (define xtbl-1
+    (foldl (article->xexprs* st) xtbl (section-articles s)))
+  (define xtbl-2
+    (foldl (section->xexprs st) xtbl-1 (section-subsections s)))
   (define this-xexpr
     (tagged% 'section
              `((class ,section-class-name))
@@ -65,7 +68,7 @@
              (apply tagged%
                     'div
                     `((class ,section-body-class-name))
-                    (map (section-element->xexprs cfg xtbl-2)
+                    (map (section-element->xexprs st xtbl-2)
                          (section-contents s)))
              (tagged% 'nav
                       `((class ,section-toc-class-name))

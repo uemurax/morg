@@ -3,10 +3,12 @@
 (require "../data/inline.rkt"
          "../markup/xexpr.rkt"
          "../text/tex.rkt"
+         "../text/id.rkt"
          "../data/splice.rkt"
+         "../data/anchor-table.rkt"
          "../markup/string.rkt"
          "../markup/splice.rkt"
-         "class.rkt"
+         "state.rkt"
          "id.rkt"
          "splice.rkt")
 
@@ -29,6 +31,8 @@
            display-class-name
            code-class-name
            dfn-class-name
+           anchor-class-name
+           anchor-ref-class-name
            inline-css)
 
   (define katex-class-name (class-name "katex"))
@@ -42,7 +46,9 @@
   (define display-class-name (class-name "display"))
   (define code-class-name (class-name "code"))
   (define dfn-class-name (class-name "dfn"))
-  
+  (define anchor-class-name (class-name "anchor"))
+  (define anchor-ref-class-name (class-name "anchor-ref"))
+
   (define inline-css
     @string%{
       .@|unordered-list-class-name|, .@|ordered-list-class-name| {
@@ -58,6 +64,8 @@
     }))
 
 (require 'style)
+
+(: inline->xexprs : (State . -> . (Inline . -> . XExprs)))
 
 (define (text->xexprs [x : Text]) : XExprs
   (xexprs% (text-contents x)))
@@ -157,13 +165,43 @@
    [(code? pi) ((code->xexprs f) pi)]
    [(dfn? pi) ((dfn->xexprs f) pi)]))
 
-(define #:forall (Inline)
-        ((inline-element->xexprs [f : (Inline . -> . XExprs)])
+(define #:forall (PureInline)
+        ((anchor->xexprs [st : State]
+                         [g : (PureInline . -> . XExprs)])
+          [a : (Anchor PureInline)]) : XExprs
+  (tagged% 'a
+           `((class ,anchor-class-name)
+             (id ,(anchor-id->css-id (state-id st) (anchor-id a))))
+           (g (anchor-contents a))))
+
+(define ((anchor-ref->xexprs [st : State])
+         [ar : AnchorRef]) : XExprs
+  (define id-n (anchor-ref-node ar))
+  (define id-a (anchor-ref-anchor ar))
+  (define url
+    (string-tree->string
+     @string%{@(id->url id-n)#@(anchor-id->css-id id-n id-a)}))
+  (define tbl (state-anchor-table st))
+  (define key (anchor-key id-n id-a))
+  (define l
+    (cond
+     [(anchor-table-has-key? tbl key)
+      (pure-inline->xexprs (anchor-contents (anchor-table-ref tbl key)))]
+     [else (anchor-id->text id-n id-a)]))
+  (tagged% 'a
+           `((class ,anchor-ref-class-name)
+             (href ,url))
+           l))
+
+(define #:forall (PureInline Inline)
+        ((inline-element->xexprs [st : State]
+                                 [g : (PureInline . -> . XExprs)]
+                                 [f : (Inline . -> . XExprs)])
          [i : (InlineElement PureInline Inline)]) : XExprs
   (cond
    [(ref? i) (ref->xexprs i)]
-   [(anchor? i) (error "Unimplemented.")]
-   [(anchor-ref? i) (error "Unimplemented.")]
+   [(anchor? i) ((anchor->xexprs st g) i)]
+   [(anchor-ref? i) ((anchor-ref->xexprs st) i)]
    [else ((pure-inline-element->xexprs f) i)]))
 
 (define (pure-inline->xexprs [pi : PureInline]) : XExprs
@@ -173,9 +211,10 @@
    [(splice? x) ((splice->xexprs f) x)]
    [else ((pure-inline-element->xexprs f) x)]))
 
-(define (inline->xexprs [i : Inline]) : XExprs
+(define ((inline->xexprs st) i)
   (define x (inline-contents i))
-  (define f inline->xexprs)
+  (define f (inline->xexprs st))
+  (define g pure-inline->xexprs)
   (cond
-   [(splice? x) ((splice->xexprs inline->xexprs) x)]
-   [else ((inline-element->xexprs f) x)]))
+   [(splice? x) ((splice->xexprs f) x)]
+   [else ((inline-element->xexprs st g f) x)]))
