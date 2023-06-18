@@ -13,22 +13,22 @@
          proof%/curried
          proof%)
 
-(define ((article%/curried [header : InlineLike])
+(define ((article%/curried [header : PureInlineLike])
          #:id [maybe-id : String]
-         #:title [title : (Option InlineLike) #f]
+         #:title [title : (Option PureInlineLike) #f]
          #:indexes [indexes : (Listof Index) '()]
          #:proof [proof : (Option Proof) #f]
          . [contents : BlockLike *]) : Article
   (article (id maybe-id)
-           (inline% header)
-           (option-map inline% title)
+           (pure-inline% header)
+           (option-map pure-inline% title)
            indexes
            (apply block% contents)
            proof))
 
 (define (article% #:id [maybe-id : String]
-                  #:header [header : InlineLike]
-                  #:title [title : (Option InlineLike) #f]
+                  #:header [header : PureInlineLike]
+                  #:title [title : (Option PureInlineLike) #f]
                   #:indexes [indexes : (Listof Index) '()]
                   #:proof [proof : (Option Proof) #f]
                   . [contents : BlockLike *]) : Article
@@ -39,11 +39,11 @@
    #:proof proof
    (apply % contents)))
 
-(define ((proof%/curried #:header [header : InlineLike @inline%{Proof}])
+(define ((proof%/curried #:header [header : PureInlineLike "Proof"])
          . [contents : BlockLike *]) : Proof
-  (proof (inline% header)
+  (proof (pure-inline% header)
          (apply block% contents)))
 
-(define (proof% #:header [header : InlineLike @inline%{Proof}]
+(define (proof% #:header [header : PureInlineLike "Proof"]
                 . [contents : BlockLike *]) : Proof
   (apply (proof%/curried #:header header) contents))

@@ -22,7 +22,7 @@
 (define ((proof->latex [st : State])
          [p : Proof]) : tex:TextTeX
   (define arg
-    @optional-argument%{@|label-skip|@header-style{@((inline->latex st) (proof-header p))}:})
+    @optional-argument%{@|label-skip|@header-style{@(pure-inline->latex (proof-header p))}:})
   @text-tex%{
     @environment%["trivlist"]{
       @macro%["item" arg]
@@ -30,10 +30,13 @@
     }
   })
 
-(define ((article->latex [st : State])
+(define ((article->latex [st-1 : State])
          [a : Article]) : tex:TextTeX
-  (define tbl (state-node-table st))
   (define id (article-id a))
+  (define st
+    (struct-copy state st-1
+     [id id]))
+  (define tbl (state-node-table st))
   (define in? (node-table-has-key? tbl id))
   (define num : TextTeXLike
     (cond
@@ -43,10 +46,10 @@
       @%{@header-style{@|n|} }]
      [else @%{}]))
   (define h : TextTeXLike
-    @%{@header-style{@((inline->latex st) (article-header a))}})
+    @%{@header-style{@(pure-inline->latex (article-header a))}})
   (define title (article-title a))
   (define t : TextTeXLike
-    @when%[title]{ (@((inline->latex st) title))})
+    @when%[title]{ (@(pure-inline->latex title))})
   (define arg
     @optional-argument%{@|label-skip|@|num|@|h|@|t|:})
   (define pf

@@ -29,7 +29,7 @@
   (define tbl (state-node-table st))
   (define id (section-id s))
   (define in? (node-table-has-key? tbl id))
-  (define title ((inline->text st) (section-title s)))
+  (define title (pure-inline->text (section-title s)))
   (define num
     @string%{@when%[in?]{@(section-node-format-index (cast (node-table-ref tbl id) SectionNode)) }})
   (define i

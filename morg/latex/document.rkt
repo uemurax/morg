@@ -4,6 +4,7 @@
          (prefix-in tex: "../data/tex.rkt")
          "../data/node.rkt"
          "../data/index-table.rkt"
+         "../data/anchor-table.rkt"
          "../markup/tex.rkt"
          "../markup/splice.rkt"
          "../util/list.rkt"
@@ -39,12 +40,14 @@
   (define untbl (make-node-table back #:init untbl-1))
   (define st
     (state cfg
-            (make-index-table doc)
-            tbl untbl))
+           (document-id doc)
+           (make-index-table doc)
+           (make-anchor-table doc)
+           tbl untbl))
   (define cls @argument%{@(config-class cfg)})
   (define cls-opt @optional-argument%{@(apply options% (config-class-options cfg))})
   (define f (section->latex st))
-  (define g (inline->latex st))
+  (define g pure-inline->latex)
   (define h (block->latex st))
   (define pkgs (config-packages cfg))
   @text-tex%{

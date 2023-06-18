@@ -11,7 +11,7 @@
 
 (struct section
   ([id : Id]
-   [title : Inline]
+   [title : PureInline]
    [contents : (Listof SectionElement)]
    [subsections : (Listof Section)])
   #:transparent

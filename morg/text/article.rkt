@@ -23,12 +23,12 @@
   (define tbl (state-node-table st))
   (define id (article-id a))
   (define in? (node-table-has-key? tbl id))
-  (define h ((inline->text st) (article-header a)))
+  (define h (pure-inline->text (article-header a)))
   (define title (article-title a))
   (define num
     @string%{@when%[in?]{@(article-node-format-index (cast (node-table-ref tbl id) ArticleNode)) }})
   (define tt
-    @string%{@when%[title]{ (@((inline->text st) title))}})
+    @string%{@when%[title]{ (@(pure-inline->text title))}})
   (define i
     (id->text id))
   @string%{
@@ -47,6 +47,6 @@
 (define ((proof->text [st : State]) [p : Proof]) : StringTree
   @string%{
 
-    @((inline->text st) (proof-header p))
+    @(pure-inline->text (proof-header p))
     @((block->text st) (proof-contents p))
   })

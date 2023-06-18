@@ -5,6 +5,7 @@
          "../markup/xexpr.rkt"
          "../text/date.rkt"
          "../data/index-table.rkt"
+         "../data/anchor-table.rkt"
          "state.rkt"
          "inline.rkt"
          "toc.rkt"
@@ -55,11 +56,13 @@
   (define front (document-front doc))
   (define main (document-main doc))
   (define back (document-back doc))
-  (define itbl (make-index-table doc))
-  (define cfg (state itbl))
+  (define st
+    (state (document-id doc)
+           (make-index-table doc)
+           (make-anchor-table doc)))
   (define tbl : XExprTable (hash))
   (define (f [x : XExprTable] [ss : (Listof Section)])
-    (foldl (section->xexprs cfg) x ss))
+    (foldl (section->xexprs st) x ss))
   (define tbl-1 (f tbl front))
   (define tbl-2 (f tbl-1 main))
   (define tbl-3 (f tbl-2 back))
@@ -68,19 +71,19 @@
              `((class ,document-class-name))
              (tagged% 'h1
                       `((class ,document-title-class-name))
-                      (inline->xexprs title))
+                      (pure-inline->xexprs title))
              (tagged% 'address
                       `((class ,document-address-class-name))
                       (tagged% 'ul
                                `((class ,document-author-list-class-name))
                                (apply tagged% 'li
                                       `((class ,document-author-class-name))
-                                      (map inline->xexprs
+                                      (map pure-inline->xexprs
                                            author))))
              (tagged% 'div
                       `((class ,document-date-class-name))
                       (date->text (document-date doc)))
-             ((block->xexprs cfg) (document-contents doc))
+             ((block->xexprs st) (document-contents doc))
              (tagged% 'nav
                       `((class ,document-front-toc-class-name))
                       (make-toc front))

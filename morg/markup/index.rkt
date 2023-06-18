@@ -24,5 +24,5 @@
 
 (define (index% #:key [key : String]
                 #:type [type : Symbol 'index]
-                . [xs : InlineLike *]) : Index
-  (index key (apply inline% xs) type))
+                . [xs : PureInlineLike *]) : Index
+  (index key (apply pure-inline% xs) type))

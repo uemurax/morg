@@ -59,5 +59,5 @@
                              (tagged% 'a
                                       `((class ,toc-edge-title-class-name)
                                         (href ,(id->url i)))
-                                      (inline->xexprs title)))
+                                      (pure-inline->xexprs title)))
                     (make-toc:aux (section-subsections s)))))

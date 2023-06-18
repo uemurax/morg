@@ -74,19 +74,19 @@
     (cond
      [(document? n) doc-title]
      [(section-node? n)
-      @inline%{@(section-title (section-node-contents n)) -- @|doc-title|}]
+      @pure-inline%{@(section-title (section-node-contents n)) -- @|doc-title|}]
      [(article-node? n)
       (define a (article-node-contents n))
       (define t (article-title a))
       (define h
         (if t t (id->text (article-id a))))
-      @inline%{@|h| -- @|doc-title|}]))
+      @pure-inline%{@|h| -- @|doc-title|}]))
   (xexprs%
    (tagged% 'meta '((charset "UTF-8")))
    (tagged% 'meta '((name "viewport")
                     (content "width=device-width,initial-scale=1")))
    (tagged% 'title '()
-            (inline->xexprs title))
+            (pure-inline->xexprs title))
    (tagged% 'link
             '((rel "stylesheet")
               (href "https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css")

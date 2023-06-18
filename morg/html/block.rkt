@@ -30,27 +30,27 @@
 
 (: block->xexprs : (State . -> . (Block . -> . XExprs)))
 
-(define (paragraph->xexprs [x : Paragraph]) : XExprs
+(define ((paragraph->xexprs [st : State]) [x : Paragraph]) : XExprs
   (tagged% 'p
            `((class ,paragraph-class-name))
-           (inline->xexprs (paragraph-contents x))))
+           ((inline->xexprs st) (paragraph-contents x))))
 
-(define ((print-index->xexprs [cfg : State]) [p : PrintIndex]) : XExprs
-  (define tbl (state-index-table cfg))
+(define ((print-index->xexprs [st : State]) [p : PrintIndex]) : XExprs
+  (define tbl (state-index-table st))
   (define type (print-index-type p))
   (define in? (index-table-has-key? tbl type))
   (cond
    [in?
     (tagged% 'div
              `((class ,print-index-class-name))
-             (inline->xexprs (index-list->inline (index-table-ref tbl type))))]
+             ((inline->xexprs st) (index-list->inline (index-table-ref tbl type))))]
    [else (xexprs%)]))
 
-(define ((block->xexprs cfg) b)
+(define ((block->xexprs st) b)
   (define x (block-contents b))
-  (define f (block->xexprs cfg))
+  (define f (block->xexprs st))
   (cond
-   [(paragraph? x) (paragraph->xexprs x)]
-   [(print-index? x) ((print-index->xexprs cfg) x)]
+   [(paragraph? x) ((paragraph->xexprs st) x)]
+   [(print-index? x) ((print-index->xexprs st) x)]
    [(splice? x) ((splice->xexprs f) x)]
    [else (error "Unimplemented.")]))

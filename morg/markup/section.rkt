@@ -18,10 +18,10 @@
     (block% x)]))
 
 (define (section% #:id [maybe-id : String]
-                  #:title [title : InlineLike]
+                  #:title [title : PureInlineLike]
                   #:subsections [subsections : (Listof Section) (list)]
                   . [contents : SectionElementLike *]) : Section
   (section (id maybe-id)
-           (inline% title)
+           (pure-inline% title)
            (map section-element-like->section-element contents)
            subsections))

@@ -25,9 +25,12 @@
 
 (: section->latex : (State . -> . (Section . -> . tex:TextTeX)))
 
-(define ((section->latex st) s)
-  (define cfg (state-config st))
+(define ((section->latex st-1) s)
   (define id (section-id s))
+  (define st
+    (struct-copy state st-1
+     [id id]))
+  (define cfg (state-config st))
   (define tbl (state-node-table st))
   (define untbl (state-unnumbered-node-table st))
   (define place
@@ -48,7 +51,7 @@
     (if (< depth (length sms))
         (list-ref sms depth)
         fbk))
-  (define title ((inline->latex st) (section-title s)))
+  (define title (pure-inline->latex (section-title s)))
   (define n : TextTeXLike
     @when%[(eq? place 'numbered)]{@(section-node-format-index nd)@macro%["enskip"]})
   (define t

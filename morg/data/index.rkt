@@ -7,7 +7,7 @@
 
 (struct index
   ([key : String]
-   [display : Inline]
+   [display : PureInline]
    [type : Symbol])
   #:transparent
   #:type-name Index)

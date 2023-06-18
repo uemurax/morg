@@ -48,8 +48,8 @@
 
 (require 'style)
 
-(define ((article->xexprs:statement [cfg : State]) [a : Article]) : XExprs
-  (define f inline->xexprs)
+(define ((article->xexprs:statement [st : State]) [a : Article]) : XExprs
+  (define f pure-inline->xexprs)
   (define title (article-title a))
   (tagged% 'div
            `((class ,statement-class-name))
@@ -66,23 +66,26 @@
                                (f title))))
            (tagged% 'div
                     `((class ,statement-body-class-name))
-                    ((block->xexprs cfg) (article-contents a)))))
+                    ((block->xexprs st) (article-contents a)))))
 
-(define ((proof->xexprs [cfg : State]) [pf : Proof]) : XExprs
+(define ((proof->xexprs [st : State]) [pf : Proof]) : XExprs
   (tagged% 'details
            `((class ,proof-class-name))
            (tagged% 'summary
                     `((class ,proof-header-class-name))
-                    (inline->xexprs (proof-header pf)))
+                    (pure-inline->xexprs (proof-header pf)))
            (tagged% 'div
                     `((class ,proof-body-class-name))
-                    ((block->xexprs cfg) (proof-contents pf)))))
+                    ((block->xexprs st) (proof-contents pf)))))
 
-(define ((article->xexprs [cfg : State]) [a : Article]) : XExprs
+(define ((article->xexprs [st-1 : State]) [a : Article]) : XExprs
+  (define id (article-id a))
+  (define st
+    (struct-copy state st-1
+     [id id]))
   (define pf (article-proof a))
   (tagged% 'article
-           `((class ,article-class-name)
-             (id ,(id-contents (article-id a))))
-           ((article->xexprs:statement cfg) a)
+           `((class ,article-class-name))
+           ((article->xexprs:statement st) a)
            (when% pf
-             ((proof->xexprs cfg) pf))))
+             ((proof->xexprs st) pf))))

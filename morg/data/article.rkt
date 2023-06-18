@@ -10,8 +10,8 @@
 
 (struct article
   ([id : Id]
-   [header : Inline]
-   [title : (Option Inline)]
+   [header : PureInline]
+   [title : (Option PureInline)]
    [indexes : (Listof Index)]
    [contents : Block]
    [proof : (Option Proof)])
@@ -19,7 +19,7 @@
   #:type-name Article)
 
 (struct proof
-  ([header : Inline]
+  ([header : PureInline]
    [contents : Block])
   #:transparent
   #:type-name Proof)
