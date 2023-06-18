@@ -48,7 +48,7 @@
     (if (< depth (length sms))
         (list-ref sms depth)
         fbk))
-  (define title ((inline->latex st) (section-title s)))
+  (define title (pure-inline->latex (section-title s)))
   (define n : TextTeXLike
     @when%[(eq? place 'numbered)]{@(section-node-format-index nd)@macro%["enskip"]})
   (define t

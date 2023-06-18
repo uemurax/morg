@@ -44,7 +44,7 @@
   (define cls @argument%{@(config-class cfg)})
   (define cls-opt @optional-argument%{@(apply options% (config-class-options cfg))})
   (define f (section->latex st))
-  (define g (inline->latex st))
+  (define g pure-inline->latex)
   (define h (block->latex st))
   (define pkgs (config-packages cfg))
   @text-tex%{
