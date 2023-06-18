@@ -5,6 +5,7 @@
          "../data/node.rkt"
          "../data/article.rkt"
          "../data/splice.rkt"
+         "../data/anchor-table.rkt"
          "../markup/tex.rkt"
          "../markup/splice.rkt"
          "../text/numbering.rkt"
@@ -116,14 +117,37 @@
    [(code? x) ((code->latex f) x)]
    [(dfn? x) ((dfn->latex f) x)]))
 
-(define #:forall (Inline)
+(define #:forall (PureInline)
+        ((anchor->latex [st : State]
+                        [g : (PureInline . -> . tex:TextTeX)])
+         [a : (Anchor PureInline)]) : tex:TextTeX
+  (define id-n (state-id st))
+  (define id-a (anchor-id a))
+  (define l (g (anchor-contents a)))
+  @text-tex%{@(anchor-id->hypertarget id-n id-a l)})
+
+(define ((anchor-ref->latex [st : State])
+         [ar : AnchorRef]) : tex:TextTeX
+  (define id-n (anchor-ref-node ar))
+  (define id-a (anchor-ref-anchor ar))
+  (define key (anchor-key id-n id-a))
+  (define tbl (state-anchor-table st))
+  (cond
+   [(anchor-table-has-key? tbl key)
+    (define a (anchor-table-ref tbl key))
+    (define l (pure-inline->latex (anchor-contents a)))
+    @text-tex%{@(anchor-id->hyperlink id-n id-a l)}]
+   [else @text-tex%{@(anchor-id->latex id-n id-a)}]))
+
+(define #:forall (PureInline Inline)
         ((inline-element->latex [st : State]
+                                [g : (PureInline . -> . tex:TextTeX)]
                                 [f : (Inline . -> . tex:TextTeX)])
          [i : (InlineElement PureInline Inline)]) : tex:TextTeX
   (cond
    [(ref? i) ((ref->latex st) i)]
-   [(anchor? i) (error "Unimplemented.")]
-   [(anchor-ref? i) (error "Unimplemented.")]
+   [(anchor? i) ((anchor->latex st g) i)]
+   [(anchor-ref? i) ((anchor-ref->latex st) i)]
    [else ((pure-inline-element->latex f) i)]))
 
 (define (pure-inline->latex pi)
@@ -136,6 +160,7 @@
 (define ((inline->latex st) i)
   (define x (inline-contents i))
   (define f (inline->latex st))
+  (define g pure-inline->latex)
   (cond
    [(splice? x) ((splice->latex f) x)]
-   [else ((inline-element->latex st f) x)]))
+   [else ((inline-element->latex st g f) x)]))

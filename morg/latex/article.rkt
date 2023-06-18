@@ -30,10 +30,13 @@
     }
   })
 
-(define ((article->latex [st : State])
+(define ((article->latex [st-1 : State])
          [a : Article]) : tex:TextTeX
-  (define tbl (state-node-table st))
   (define id (article-id a))
+  (define st
+    (struct-copy state st-1
+     [id id]))
+  (define tbl (state-node-table st))
   (define in? (node-table-has-key? tbl id))
   (define num : TextTeXLike
     (cond
