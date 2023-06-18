@@ -18,6 +18,8 @@
          display%
          code%
          dfn%
+         anchor%
+         anchor-ref%
          inline%)
 
 (define-type InlineLike
@@ -95,3 +97,10 @@
 
 (define (dfn% . [xs : InlineLike *]) : Dfn
   (dfn (apply inline% xs)))
+
+(define (anchor% #:id [maybe-id : String] . [xs : InlineLike *]) : Anchor
+  (anchor (id maybe-id) (apply inline% xs)))
+
+(define (anchor-ref% #:anchor [maybe-anchor : String]
+                     #:node [maybe-node : String]) : AnchorRef
+  (anchor-ref (id maybe-anchor) (id maybe-node)))

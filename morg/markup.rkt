@@ -26,6 +26,8 @@
              [display% disp]
              [code% code]
              [dfn% dfn]
+             [anchor% anchor]
+             [anchor-ref% anchor-ref]
              [index% index]
              [print-index% print-index]
              [section% section])
