@@ -15,6 +15,8 @@
          (struct-out display) Display
          (struct-out code) Code
          (struct-out dfn) Dfn
+         (struct-out anchor) Anchor
+         (struct-out anchor-ref) AnchorRef
          (struct-out math) Math)
 
 (struct inline
@@ -33,6 +35,8 @@
      Display
      Code
      Dfn
+     Anchor
+     AnchorRef
      Text))
 
 (struct text
@@ -91,3 +95,15 @@
   ([contents : Inline])
   #:transparent
   #:type-name Dfn)
+
+(struct anchor
+  ([id : Id]
+   [contents : Inline])
+  #:transparent
+  #:type-name Anchor)
+
+(struct anchor-ref
+  ([anchor : Id]
+   [node : Id])
+  #:transparent
+  #:type-name AnchorRef)
