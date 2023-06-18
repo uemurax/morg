@@ -61,6 +61,9 @@
         font-style: normal;
         font-weight: bold;
       }
+      .@|display-class-name| {
+        margin-block: 1em;
+      }
     }))
 
 (require 'style)
