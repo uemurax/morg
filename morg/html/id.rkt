@@ -39,4 +39,4 @@
 
 (define (anchor-id->css-id [node : Id] [anchor : Id])
   (string-tree->string
-   @string%{a_@(id-contents node)_@(id-contents anchor)}))
+   @string%{a井@(id-contents node)井@(id-contents anchor)}))

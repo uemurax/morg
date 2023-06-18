@@ -85,8 +85,7 @@
      [id id]))
   (define pf (article-proof a))
   (tagged% 'article
-           `((class ,article-class-name)
-             (id ,(id-contents id)))
+           `((class ,article-class-name))
            ((article->xexprs:statement st) a)
            (when% pf
              ((proof->xexprs st) pf))))

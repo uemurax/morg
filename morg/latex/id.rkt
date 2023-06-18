@@ -27,7 +27,7 @@
   @macro%["marginnote" @argument%{@(id->latex i)}])
 
 (define (id->label [i : Id])
-  @text-tex%{morg-generated-@(id-contents i)})
+  @text-tex%{morg-generated!@(id-contents i)})
 
 (define (hypertarget [label : TextTeXLike] [text : TextTeXLike])
   @macro%["hypertarget" @argument%{@|label|} @argument%{@|text|}])
@@ -42,7 +42,7 @@
   (hyperlink (id->label i) x))
 
 (define (anchor-id->label [node : Id] [anchor : Id])
-  @text-tex%{morg-generated-anchor-@(id-contents node)---@(id-contents anchor)})
+  @text-tex%{morg-generated-anchor!@(id-contents node)!@(id-contents anchor)})
 
 (define (anchor-id->hypertarget [node : Id] [anchor : Id] [label : TextTeXLike])
   (hypertarget (anchor-id->label node anchor) label))
