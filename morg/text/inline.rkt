@@ -62,7 +62,7 @@
 
 (define ((list-item->text [st : State])
          [i : ListItem]) : StringTree
-  @string%{ @(list-item-head i) @((inline->text st) (list-item-contents i))})
+  @string%{ @((inline->text st) (list-item-head i)) @((inline->text st) (list-item-contents i))})
 
 (define ((unordered-list->text [st : State])
          [ul : UnorderedList]) : StringTree

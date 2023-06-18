@@ -48,7 +48,7 @@
 (define ((list-item->latex [st : State])
          [i : ListItem]) : tex:TextTeX
   (define itm
-    @macro%["item" @optional-argument%{@(list-item-head i)}])
+    @macro%["item" @optional-argument%{@((inline->latex st) (list-item-head i))}])
   @text-tex%{@|itm|@((inline->latex st) (list-item-contents i))})
 
 (define ((unordered-list->latex [st : State])

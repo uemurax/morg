@@ -55,23 +55,23 @@
 (define (math% . [xs : MathTeXLike *]) : Math
   (math (apply math-tex% xs)))
 
-(define (list-item% #:head [head : StringTreeLike "-"]
+(define (list-item% #:head [head : InlineLike "-"]
                     . [xs : InlineLike *]) : ListItem
-  (list-item (string-tree-like->string head) (apply inline% xs)))
+  (list-item (inline% head) (apply inline% xs)))
 
 (define (unordered-list% . [xs : ListItem *]) : UnorderedList
   (unordered-list xs))
 
 (define (ordered-list%:default-format [n : Natural])
-  @string%{@(number->string n)})
+  @(number->string n))
 
-(define ((ordered-list%:modify-item [fmt : (Natural . -> . StringTreeLike)])
+(define ((ordered-list%:modify-item [fmt : (Natural . -> . InlineLike)])
         [i : ListItem] [n : Natural])
   (list-item
-   (string-tree-like->string (fmt (+ n 1)))
+   (inline% (fmt (+ n 1)))
    (list-item-contents i)))
 
-(define (ordered-list% #:format [fmt : (Natural . -> . StringTreeLike)
+(define (ordered-list% #:format [fmt : (Natural . -> . InlineLike)
                                   ordered-list%:default-format]
                        . [xs : ListItem *]) : OrderedList
   (define rng (range (length xs)))

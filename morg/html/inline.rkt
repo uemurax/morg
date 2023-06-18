@@ -81,7 +81,7 @@
            `((class ,list-item-class-name))
            (tagged% 'span
                     `((class ,list-item-head-class-name))
-                    (list-item-head i))
+                    (inline->xexprs (list-item-head i)))
            (inline->xexprs (list-item-contents i))))
 
 (define (unordered-list->xexprs [ul : UnorderedList]) : XExprs
