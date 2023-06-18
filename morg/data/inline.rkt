@@ -32,7 +32,7 @@
   #:type-name PureInline)
 
 (struct inline
-  ([contents : (U (Splice Inline) (InlineElement Inline))])
+  ([contents : (U (Splice Inline) (InlineElement PureInline Inline))])
   #:transparent
   #:type-name Inline)
 
@@ -47,10 +47,10 @@
      (Code X)
      (Dfn X)))
 
-(define-type (InlineElement X)
-  (U (PureInlineElement X)
+(define-type (InlineElement PureInline Inline)
+  (U (PureInlineElement Inline)
      Ref
-     (Anchor X)
+     (Anchor PureInline)
      AnchorRef))
 
 (struct text
@@ -110,9 +110,9 @@
   #:transparent
   #:type-name Dfn)
 
-(struct (Inline) anchor
+(struct (PureInline) anchor
   ([id : Id]
-   [contents : Inline])
+   [contents : PureInline])
   #:transparent
   #:type-name Anchor)
 
@@ -184,14 +184,15 @@
    [(code? x) ((code-map f) x)]
    [(dfn? x) ((dfn-map f) x)]))
 
-(define #:forall (X Y)
-        ((inline-element-map[f : (X . -> . Y)])
-         [x : (InlineElement X)]) : (InlineElement Y)
+(define #:forall (X1 X2 Y1 Y2)
+        ((inline-element-map [f : (X1 . -> . X2)]
+                             [g : (Y1 . -> . Y2)])
+         [x : (InlineElement X1 Y1)]) : (InlineElement X2 Y2)
   (cond
    [(ref? x) x]
    [(anchor? x) ((anchor-map f) x)]
    [(anchor-ref? x) x]
-   [else ((pure-inline-element-map f) x)]))
+   [else ((pure-inline-element-map g) x)]))
 
 (define (pure-inline->inline [x : PureInline]) : Inline
   (define y (pure-inline-contents x))

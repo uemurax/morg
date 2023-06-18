@@ -119,7 +119,7 @@
 (define #:forall (Inline)
         ((inline-element->latex [st : State]
                                 [f : (Inline . -> . tex:TextTeX)])
-         [i : (InlineElement Inline)]) : tex:TextTeX
+         [i : (InlineElement PureInline Inline)]) : tex:TextTeX
   (cond
    [(ref? i) ((ref->latex st) i)]
    [(anchor? i) (error "Unimplemented.")]

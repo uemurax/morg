@@ -159,7 +159,7 @@
 
 (define #:forall (Inline)
         ((inline-element->xexprs [f : (Inline . -> . XExprs)])
-         [i : (InlineElement Inline)]) : XExprs
+         [i : (InlineElement PureInline Inline)]) : XExprs
   (cond
    [(ref? i) (ref->xexprs i)]
    [(anchor? i) (error "Unimplemented.")]

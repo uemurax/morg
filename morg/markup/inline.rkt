@@ -29,7 +29,7 @@
   (U Inline
      PureInline
      (Splice InlineLike)
-     (InlineElement InlineLike)
+     (InlineElement PureInlineLike InlineLike)
      StringTreeLike))
 
 (define-type PureInlineLike
@@ -46,7 +46,10 @@
     (inline (splice-map inline-like->inline x))]
    [((make-predicate StringTreeLike) x)
     (inline (text (string-tree-like->string x)))]
-   [else (inline ((inline-element-map inline-like->inline) x))]))
+   [else
+    (inline ((inline-element-map pure-inline-like->pure-inline
+                                 inline-like->inline)
+             x))]))
 
 (define (pure-inline-like->pure-inline [x : PureInlineLike]) : PureInline
   (cond

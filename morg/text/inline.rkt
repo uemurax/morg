@@ -117,7 +117,7 @@
 (define #:forall (Inline)
         ((inline-element->text [st : State]
                                [f : (Inline . -> . StringTree)])
-         [i : (InlineElement Inline)]) : StringTree
+         [i : (InlineElement PureInline Inline)]) : StringTree
   (cond
    [(ref? i) ((ref->text st) i)]
    [(anchor? i) (error "Unimplemented.")]
