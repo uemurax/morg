@@ -11,6 +11,7 @@
          "splice.rkt")
 
 (provide inline->xexprs
+         pure-inline->xexprs
          katex-delimiter-left
          katex-delimiter-right)
 
@@ -76,68 +77,105 @@
   (define i (ref-id x))
   (id->xexprs/a i))
 
-(define (list-item->xexprs [i : ListItem]) : XExprs
+(define #:forall (Inline)
+        ((list-item->xexprs [f : (Inline . -> . XExprs)])
+          [i : (ListItem Inline)]) : XExprs
   (tagged% 'li
            `((class ,list-item-class-name))
            (tagged% 'span
                     `((class ,list-item-head-class-name))
-                    (inline->xexprs (list-item-head i)))
-           (inline->xexprs (list-item-contents i))))
+                    (f (list-item-head i)))
+           (f (list-item-contents i))))
 
-(define (unordered-list->xexprs [ul : UnorderedList]) : XExprs
+(define #:forall (Inline)
+        ((unordered-list->xexprs [f : (Inline . -> . XExprs)])
+         [ul : (UnorderedList Inline)]) : XExprs
   (tagged% 'ul
            `((class ,unordered-list-class-name)
              (style "list-style-type: none;"))
-           (apply % (map list-item->xexprs (unordered-list-contents ul)))))
+           (apply % (map (list-item->xexprs f) (unordered-list-contents ul)))))
 
-(define (ordered-list->xexprs [ol : OrderedList]) : XExprs
+(define #:forall (Inline)
+        ((ordered-list->xexprs [f : (Inline . -> . XExprs)])
+         [ol : (OrderedList Inline)]) : XExprs
   (tagged% 'ol
            `((class ,ordered-list-class-name)
              (style "list-style-type: none;"))
-           (apply % (map list-item->xexprs (ordered-list-contents ol)))))
+           (apply % (map (list-item->xexprs f) (ordered-list-contents ol)))))
 
-(define (href->xexprs [h : HRef]) : XExprs
+(define #:forall (Inline)
+        ((href->xexprs [f : (Inline . -> . XExprs)])
+         [h : (HRef Inline)]) : XExprs
   (define url (href-url h))
   (define contents (href-contents h))
   (tagged% 'a
            `((class ,href-class-name)
              (href ,url))
            (if contents
-               (inline->xexprs contents)
+               (f contents)
                url)))
 
-(define (emph->xexprs [e : Emph]) : XExprs
+(define #:forall (Inline)
+        ((emph->xexprs [f : (Inline . -> . XExprs)])
+         [e : (Emph Inline)]) : XExprs
   (tagged% 'em
            `((class ,emph-class-name))
-           (inline->xexprs (emph-contents e))))
+           (f (emph-contents e))))
 
-(define (display->xexprs [d : Display]) : XExprs
+(define #:forall (Inline)
+        ((display->xexprs [f : (Inline . -> . XExprs)])
+         [d : (Display Inline)]) : XExprs
   (tagged% 'center
            `((class ,display-class-name))
-           (inline->xexprs (display-contents d))))
+           (f (display-contents d))))
 
-(define (code->xexprs [c : Code]) : XExprs
+(define #:forall (Inline)
+        ((code->xexprs [f : (Inline . -> . XExprs)])
+         [c : (Code Inline)]) : XExprs
   (tagged% 'code
            `((class ,code-class-name))
-           (inline->xexprs (code-contents c))))
+           (f (code-contents c))))
 
-(define (dfn->xexprs [d : Dfn]) : XExprs
+(define #:forall (Inline)
+        ((dfn->xexprs [f : (Inline . -> . XExprs)])
+         [d : (Dfn Inline)]) : XExprs
   (tagged% 'dfn
            `((class ,dfn-class-name))
-           (inline->xexprs (dfn-contents d))))
+           (f (dfn-contents d))))
+
+(define #:forall (Inline)
+        ((pure-inline-element->xexprs [f : (Inline . -> . XExprs)])
+         [pi : (PureInlineElement Inline)]) : XExprs
+  (cond
+   [(text? pi) (text->xexprs pi)]
+   [(math? pi) (math->xexprs pi)]
+   [(unordered-list? pi) ((unordered-list->xexprs f) pi)]
+   [(ordered-list? pi) ((ordered-list->xexprs f) pi)]
+   [(href? pi) ((href->xexprs f) pi)]
+   [(emph? pi) ((emph->xexprs f) pi)]
+   [(display? pi) ((display->xexprs f) pi)]
+   [(code? pi) ((code->xexprs f) pi)]
+   [(dfn? pi) ((dfn->xexprs f) pi)]))
+
+(define #:forall (Inline)
+        ((inline-element->xexprs [f : (Inline . -> . XExprs)])
+         [i : (InlineElement Inline)]) : XExprs
+  (cond
+   [(ref? i) (ref->xexprs i)]
+   [(anchor? i) (error "Unimplemented.")]
+   [(anchor-ref? i) (error "Unimplemented.")]
+   [else ((pure-inline-element->xexprs f) i)]))
+
+(define (pure-inline->xexprs [pi : PureInline]) : XExprs
+  (define x (pure-inline-contents pi))
+  (define f pure-inline->xexprs)
+  (cond
+   [(splice? x) ((splice->xexprs f) x)]
+   [else ((pure-inline-element->xexprs f) x)]))
 
 (define (inline->xexprs [i : Inline]) : XExprs
   (define x (inline-contents i))
+  (define f inline->xexprs)
   (cond
-   [(text? x) (text->xexprs x)]
-   [(math? x) (math->xexprs x)]
-   [(ref? x) (ref->xexprs x)]
-   [(unordered-list? x) (unordered-list->xexprs x)]
-   [(ordered-list? x) (ordered-list->xexprs x)]
-   [(href? x) (href->xexprs x)]
-   [(emph? x) (emph->xexprs x)]
-   [(display? x) (display->xexprs x)]
-   [(code? x) (code->xexprs x)]
-   [(dfn? x) (dfn->xexprs x)]
    [(splice? x) ((splice->xexprs inline->xexprs) x)]
-   [else (error "Unimplemented.")]))
+   [else ((inline-element->xexprs f) x)]))

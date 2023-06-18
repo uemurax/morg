@@ -68,14 +68,14 @@
              `((class ,document-class-name))
              (tagged% 'h1
                       `((class ,document-title-class-name))
-                      (inline->xexprs title))
+                      (pure-inline->xexprs title))
              (tagged% 'address
                       `((class ,document-address-class-name))
                       (tagged% 'ul
                                `((class ,document-author-list-class-name))
                                (apply tagged% 'li
                                       `((class ,document-author-class-name))
-                                      (map inline->xexprs
+                                      (map pure-inline->xexprs
                                            author))))
              (tagged% 'div
                       `((class ,document-date-class-name))

@@ -49,7 +49,7 @@
 (require 'style)
 
 (define ((article->xexprs:statement [cfg : State]) [a : Article]) : XExprs
-  (define f inline->xexprs)
+  (define f pure-inline->xexprs)
   (define title (article-title a))
   (tagged% 'div
            `((class ,statement-class-name))
@@ -73,7 +73,7 @@
            `((class ,proof-class-name))
            (tagged% 'summary
                     `((class ,proof-header-class-name))
-                    (inline->xexprs (proof-header pf)))
+                    (pure-inline->xexprs (proof-header pf)))
            (tagged% 'div
                     `((class ,proof-body-class-name))
                     ((block->xexprs cfg) (proof-contents pf)))))

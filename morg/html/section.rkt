@@ -61,7 +61,7 @@
                       `((class ,section-title-class-name))
                       (id->xexprs/a i)
                       " "
-                      (inline->xexprs (section-title s)))
+                      (pure-inline->xexprs (section-title s)))
              (apply tagged%
                     'div
                     `((class ,section-body-class-name))
