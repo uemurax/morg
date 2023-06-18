@@ -2,9 +2,15 @@
 
 (require "splice.rkt"
          "id.rkt"
+         "../util/option.rkt"
          (only-in "tex.rkt" MathTeX))
 
-(provide (struct-out inline) Inline
+(provide InlineElement
+         PureInlineElement
+         pure-inline-element-map
+         inline-element-map
+         (struct-out inline) Inline
+         (struct-out pure-inline) PureInline
          (struct-out ref) Ref
          (struct-out text) Text
          (struct-out list-item) ListItem
@@ -19,25 +25,32 @@
          (struct-out anchor-ref) AnchorRef
          (struct-out math) Math)
 
+(struct pure-inline
+  ([contents : (U (Splice PureInline) (PureInlineElement PureInline))])
+  #:transparent
+  #:type-name PureInline)
+
 (struct inline
-  ([contents : (InlineElement Inline)])
+  ([contents : (U (Splice Inline) (InlineElement Inline))])
   #:transparent
   #:type-name Inline)
 
-(define-type (InlineElement X)
-  (U (Splice X)
-     Ref
+(define-type (PureInlineElement X)
+  (U Text
      Math
-     UnorderedList
-     OrderedList
-     HRef
-     Emph
-     Display
-     Code
-     Dfn
-     Anchor
-     AnchorRef
-     Text))
+     (UnorderedList X)
+     (OrderedList X)
+     (HRef X)
+     (Emph X)
+     (Display X)
+     (Code X)
+     (Dfn X)))
+
+(define-type (InlineElement X)
+  (U (PureInlineElement X)
+     Ref
+     (Anchor X)
+     AnchorRef))
 
 (struct text
   ([contents : String])
@@ -54,49 +67,49 @@
   #:transparent
   #:type-name Math)
 
-(struct list-item
+(struct (Inline) list-item
   ([head : Inline]
    [contents : Inline])
   #:transparent
   #:type-name ListItem)
 
-(struct unordered-list
-  ([contents : (Listof ListItem)])
+(struct (Inline) unordered-list
+  ([contents : (Listof (ListItem Inline))])
   #:transparent
   #:type-name UnorderedList)
 
-(struct ordered-list
-  ([contents : (Listof ListItem)])
+(struct (Inline) ordered-list
+  ([contents : (Listof (ListItem Inline))])
   #:transparent
   #:type-name OrderedList)
 
-(struct href
+(struct (Inline) href
   ([url : String]
    [contents : (Option Inline)])
   #:transparent
   #:type-name HRef)
 
-(struct emph
+(struct (Inline) emph
   ([contents : Inline])
   #:transparent
   #:type-name Emph)
 
-(struct display
+(struct (Inline) display
   ([contents : Inline])
   #:transparent
   #:type-name Display)
 
-(struct code
+(struct (Inline) code
   ([contents : Inline])
   #:transparent
   #:type-name Code)
 
-(struct dfn
+(struct (Inline) dfn
   ([contents : Inline])
   #:transparent
   #:type-name Dfn)
 
-(struct anchor
+(struct (Inline) anchor
   ([id : Id]
    [contents : Inline])
   #:transparent
@@ -107,3 +120,74 @@
    [node : Id])
   #:transparent
   #:type-name AnchorRef)
+
+(define #:forall (X Y)
+        ((list-item-map [f : (X . -> . Y)])
+         [x : (ListItem X)]) : (ListItem Y)
+  (list-item (f (list-item-head x))
+             (f (list-item-contents x))))
+
+(define #:forall (X Y)
+        ((unordered-list-map [f : (X . -> . Y)])
+         [x : (UnorderedList X)]) : (UnorderedList Y)
+  (unordered-list (map (list-item-map f) (unordered-list-contents x))))
+
+(define #:forall (X Y)
+        ((ordered-list-map [f : (X . -> . Y)])
+         [x : (OrderedList X)]) : (OrderedList Y)
+  (ordered-list (map (list-item-map f) (ordered-list-contents x))))
+
+(define #:forall (X Y)
+        ((href-map [f : (X . -> . Y)])
+         [x : (HRef X)]) : (HRef Y)
+  (href (href-url x)
+        (option-map f (href-contents x))))
+
+(define #:forall (X Y)
+        ((emph-map [f : (X . -> . Y)])
+         [x : (Emph X)]) : (Emph Y)
+  (emph (f (emph-contents x))))
+
+(define #:forall (X Y)
+        ((display-map [f : (X . -> . Y)])
+         [x : (Display X)]) : (Display Y)
+  (display (f (display-contents x))))
+
+(define #:forall (X Y)
+        ((code-map [f : (X . -> . Y)])
+         [x : (Code X)]) : (Code Y)
+  (code (f (code-contents x))))
+
+(define #:forall (X Y)
+        ((dfn-map [f : (X . -> . Y)])
+         [x : (Dfn X)]) : (Dfn Y)
+  (dfn (f (dfn-contents x))))
+
+(define #:forall (X Y)
+        ((anchor-map [f : (X . -> . Y)])
+         [x : (Anchor X)]) : (Anchor Y)
+  (anchor (anchor-id x)
+          (f (anchor-contents x))))
+
+(define #:forall (X Y)
+        ((pure-inline-element-map [f : (X . -> . Y)])
+         [x : (PureInlineElement X)]) : (PureInlineElement Y)
+  (cond
+   [(text? x) x]
+   [(math? x) x]
+   [(unordered-list? x) ((unordered-list-map f) x)]
+   [(ordered-list? x) ((ordered-list-map f) x)]
+   [(href? x) ((href-map f) x)]
+   [(emph? x) ((emph-map f) x)]
+   [(display? x) ((display-map f) x)]
+   [(code? x) ((code-map f) x)]
+   [(dfn? x) ((dfn-map f) x)]))
+
+(define #:forall (X Y)
+        ((inline-element-map[f : (X . -> . Y)])
+         [x : (InlineElement X)]) : (InlineElement Y)
+  (cond
+   [(ref? x) x]
+   [(anchor? x) ((anchor-map f) x)]
+   [(anchor-ref? x) x]
+   [else ((pure-inline-element-map f) x)]))
