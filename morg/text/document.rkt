@@ -22,7 +22,7 @@
     (state cfg
            (make-index-table doc)
            (make-node-table main)))
-  (define f (inline->text st))
+  (define f pure-inline->text)
   (define g (section->text st))
   (define h (block->text st))
   @string%{
