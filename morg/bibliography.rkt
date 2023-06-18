@@ -15,8 +15,11 @@
              [article% article]
              [book% book]))
 
+(define default-header
+  "Bibliography item")
+
 (define ((bibliography/curried
-          #:header [header : InlineLike @%{Bibliography item}])
+          #:header [header : PureInlineLike default-header])
          #:id [maybe-id : String]
          [b : BibItem])
   @x:article%[
@@ -28,7 +31,7 @@
   ])
 
 (define (bibliography
-         #:header [header : InlineLike @%{Bibliography item}]
+         #:header [header : PureInlineLike default-header]
          #:id [maybe-id : String]
          [b : BibItem])
   ((bibliography/curried #:header header) #:id maybe-id b))
