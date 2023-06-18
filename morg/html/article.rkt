@@ -63,7 +63,9 @@
                     (when% title
                       (tagged% 'span
                                `((class ,statement-header-title-class-name))
-                               (f title))))
+                               "("
+                               (f title)
+                               ")")))
            (tagged% 'div
                     `((class ,statement-body-class-name))
                     ((block->xexprs st) (article-contents a)))))
