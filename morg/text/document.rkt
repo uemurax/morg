@@ -4,6 +4,7 @@
          "../markup/string.rkt"
          "../data/node.rkt"
          "../data/index-table.rkt"
+         "../data/anchor-table.rkt"
          "../util/list.rkt"
          "section.rkt"
          "inline.rkt"
@@ -21,6 +22,7 @@
   (define st
     (state cfg
            (make-index-table doc)
+           (make-anchor-table doc)
            (make-node-table main)))
   (define f pure-inline->text)
   (define g (section->text st))

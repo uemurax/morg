@@ -4,6 +4,7 @@
          "../data/splice.rkt"
          "../data/node.rkt"
          "../data/article.rkt"
+         "../data/anchor-table.rkt"
          "../markup/string.rkt"
          "../markup/splice.rkt"
          "splice.rkt"
@@ -114,22 +115,32 @@
    [(code? pi) ((code->text f) pi)]
    [(dfn? pi) ((dfn->text f) pi)]))
 
-(define #:forall (Inline)
+(define ((anchor-ref->text [st : State])
+         [ar : AnchorRef]) : StringTree
+  (define tbl (state-anchor-table st))
+  (define key
+    (anchor-key (anchor-ref-node ar) (anchor-ref-anchor ar)))
+  (define a (anchor-table-ref tbl key))
+  (pure-inline->text (anchor-contents a)))
+
+(define #:forall (PureInline Inline)
         ((inline-element->text [st : State]
+                               [g : (PureInline . -> . StringTree)]
                                [f : (Inline . -> . StringTree)])
          [i : (InlineElement PureInline Inline)]) : StringTree
   (cond
    [(ref? i) ((ref->text st) i)]
-   [(anchor? i) (error "Unimplemented.")]
-   [(anchor-ref? i) (error "Unimplemented.")]
+   [(anchor? i) (g (anchor-contents i))]
+   [(anchor-ref? i) ((anchor-ref->text st) i)]
    [else ((pure-inline-element->text f) i)]))
 
 (define ((inline->text st) i)
   (define x (inline-contents i))
   (define f (inline->text st))
+  (define g pure-inline->text)
   (cond
    [(splice? x) (string% (splice-map f x))]
-   [else ((inline-element->text st f) x)]))
+   [else ((inline-element->text st g f) x)]))
 
 (define (pure-inline->text pi)
   (define x (pure-inline-contents pi))
