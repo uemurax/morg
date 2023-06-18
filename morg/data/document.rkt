@@ -10,8 +10,8 @@
 
 (struct document
   ([id : Id]
-   [author : (Listof Inline)]
-   [title : Inline]
+   [author : (Listof PureInline)]
+   [title : PureInline]
    [date : Date]
    [contents : Block]
    [front : (Listof Section)]
