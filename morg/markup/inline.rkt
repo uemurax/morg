@@ -88,6 +88,7 @@
 
 (define #:forall (PureInline Inline)
         (list-item+->list-item [li : (ListItem+ PureInline Inline)])
+        : (ListItem (U Inline PureInline (Anchor PureInline)))
   (define id (list-item+-id li))
   (define head (list-item+-head li))
   (define contents (list-item+-contents li))
@@ -104,19 +105,20 @@
   (number->string n))
 
 (define #:forall (PureInline Inline)
-        ((ordered-list%:modify-item [fmt : (Natural . -> . Inline)])
+        ((ordered-list%:modify-item [fmt : (Natural . -> . PureInline)])
          [i : (ListItem+ PureInline Inline)] [n : Natural])
   (list-item+->list-item
-   (struct-copy list-item+ i
-    [head (fmt (+ n 1))])))
+   (list-item+ (fmt (+ n 1))
+               (list-item+-id i)
+               (list-item+-contents i))))
 
 (define #:forall (PureInline Inline)
-        (ordered-list% #:format [fmt : (Natural . -> . (U StringTreeLike Inline))
+        (ordered-list% #:format [fmt : (Natural . -> . (U StringTreeLike PureInline))
                                   ordered-list%:default-format]
                        . [xs : (ListItem+ PureInline Inline) *])
   (define rng (range (length xs)))
   (define ys
-    (map (ordered-list%:modify-item fmt) xs rng))
+    (map ((inst ordered-list%:modify-item (U StringTreeLike PureInline) Inline) fmt) xs rng))
   (ordered-list ys))
 
 (define #:forall (Inline)

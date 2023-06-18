@@ -9,7 +9,11 @@
     #:id "000C"
     #:header @%{Theorem}
     @paragraph{
-      The following is equivalent: @anchor[#:id "0000"]{(1)} true; @anchor[#:id "0001"]{(2)} not false.
+      The following is equivalent.
+      @ordered-list[
+        @list-item[#:id "0000"]{True.}
+        @list-item[#:id "0001"]{Not false.}
+      ]
     }
     #:proof @proof[
       @paragraph{

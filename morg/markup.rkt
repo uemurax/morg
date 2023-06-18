@@ -17,9 +17,6 @@
              [paragraph% paragraph]
              [document% document]
              [ref% ref]
-             [list-item% list-item]
-             [unordered-list% unordered-list]
-             [ordered-list% ordered-list]
              [href% href]
              [date% date]
              [emph% emph]
@@ -31,6 +28,12 @@
              [print-index% print-index]
              [section% section])
  anchor
+ list-item
+ ordered-list
+ unordered-list
  (all-from-out "markup/splice.rkt"))
 
 (define anchor (inst anchor% PureInlineLike))
+(define list-item (inst list-item% PureInlineLike InlineLike))
+(define ordered-list (inst ordered-list% PureInlineLike InlineLike))
+(define unordered-list (inst unordered-list% PureInlineLike InlineLike))
