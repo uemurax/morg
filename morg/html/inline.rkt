@@ -181,9 +181,11 @@
          [ar : AnchorRef]) : XExprs
   (define id-n (anchor-ref-node ar))
   (define id-a (anchor-ref-anchor ar))
+  (define id-this (state-id st))
+  (define not-this? (not (equal? id-n id-this)))
   (define url
     (string-tree->string
-     @string%{@(id->url id-n)#@(anchor-id->css-id id-n id-a)}))
+     @string%{@when%[not-this?]{@(id->url id-n)}#@(anchor-id->css-id id-n id-a)}))
   (define tbl (state-anchor-table st))
   (define key (anchor-key id-n id-a))
   (define l
