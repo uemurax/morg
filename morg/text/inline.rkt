@@ -118,10 +118,12 @@
 (define ((anchor-ref->text [st : State])
          [ar : AnchorRef]) : StringTree
   (define tbl (state-anchor-table st))
-  (define key
-    (anchor-key (anchor-ref-node ar) (anchor-ref-anchor ar)))
-  (define a (anchor-table-ref tbl key))
-  (pure-inline->text (anchor-contents a)))
+  (define id-n (anchor-ref-node ar))
+  (define id-a (anchor-ref-anchor ar))
+  (define key (anchor-key id-n id-a))
+  (if (anchor-table-has-key? tbl key)
+      (pure-inline->text (anchor-contents (anchor-table-ref tbl key)))
+      @string%{@(anchor-id->text id-n id-a)}))
 
 (define #:forall (PureInline Inline)
         ((inline-element->text [st : State]

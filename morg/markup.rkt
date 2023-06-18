@@ -26,9 +26,11 @@
              [display% disp]
              [code% code]
              [dfn% dfn]
-             [anchor% anchor]
              [anchor-ref% anchor-ref]
              [index% index]
              [print-index% print-index]
              [section% section])
+ anchor
  (all-from-out "markup/splice.rkt"))
+
+(define anchor (inst anchor% PureInlineLike))

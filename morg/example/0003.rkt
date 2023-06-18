@@ -6,6 +6,7 @@
          "0006.rkt"
          "0008.rkt"
          "000B.rkt"
+         "000C.rkt"
          "0007.rkt")
 
 (provide part:0003)
@@ -26,6 +27,7 @@
       Also check out @href["https://example.com"].
     }
     part:000B
+    part:000C
   ])
 
 (module+ main
