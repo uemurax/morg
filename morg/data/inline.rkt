@@ -126,7 +126,7 @@
   #:type-name AnchorRef)
 
 (struct span-class
-  ([name : String])
+  ()
   #:type-name SpanClass)
 
 (struct (Inline) span

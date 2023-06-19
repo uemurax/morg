@@ -15,7 +15,7 @@
          "id.rkt"
          "document.rkt"
          "config.rkt"
-         (submod "inline.rkt" style))
+         "class/inline.rkt")
 
 (require/typed racket/hash
   [hash-union ((HashTable String String) (HashTable String String) . -> . (HashTable String String))])
@@ -49,7 +49,7 @@
 
 (define (make-site [cfg : Config] [doc : Document]) : Site
   (define pages
-    (document->xexprs doc))
+    ((document->xexprs cfg) doc))
   (define st
     (site-state
      (make-node-table (document-front doc))

@@ -8,7 +8,9 @@
          "../data/anchor-table.rkt"
          "../markup/string.rkt"
          "../markup/splice.rkt"
+         "class/inline.rkt"
          "state.rkt"
+         "config.rkt"
          "id.rkt"
          "splice.rkt")
 
@@ -16,57 +18,6 @@
          pure-inline->xexprs
          katex-delimiter-left
          katex-delimiter-right)
-
-(module style typed/racket
-  (require "class.rkt"
-           "../markup/string.rkt")
-  (provide katex-class-name
-           ref-class-name
-           list-item-class-name
-           list-item-head-class-name
-           unordered-list-class-name
-           ordered-list-class-name
-           href-class-name
-           emph-class-name
-           display-class-name
-           code-class-name
-           dfn-class-name
-           anchor-class-name
-           anchor-ref-class-name
-           inline-css)
-
-  (define katex-class-name (class-name "katex"))
-  (define ref-class-name (class-name "ref"))
-  (define list-item-class-name (class-name "list-item"))
-  (define list-item-head-class-name (class-name "list-item-head"))
-  (define unordered-list-class-name (class-name "unordered-list"))
-  (define ordered-list-class-name (class-name "ordered-list"))
-  (define href-class-name (class-name "href"))
-  (define emph-class-name (class-name "emph"))
-  (define display-class-name (class-name "display"))
-  (define code-class-name (class-name "code"))
-  (define dfn-class-name (class-name "dfn"))
-  (define anchor-class-name (class-name "anchor"))
-  (define anchor-ref-class-name (class-name "anchor-ref"))
-
-  (define inline-css
-    @string%{
-      .@|unordered-list-class-name|, .@|ordered-list-class-name| {
-        padding-inline-start: 1em;
-      }
-      .@|list-item-head-class-name| {
-        margin-inline-end: 1em;
-      }
-      .@|dfn-class-name| {
-        font-style: normal;
-        font-weight: bold;
-      }
-      .@|display-class-name| {
-        margin-block: 1em;
-      }
-    }))
-
-(require 'style)
 
 (: inline->xexprs : (State . -> . (Inline . -> . XExprs)))
 
@@ -198,6 +149,22 @@
              (href ,url))
            l))
 
+(define #:forall (Inline)
+        ((span->xexprs [st : State]
+                       [f : (Inline . -> . XExprs)])
+         [s : (Span Inline)]) : XExprs
+  (define cfg (state-config st))
+  (define rnd (config-render-span cfg))
+  (define cls (span-class-id s))
+  (define g
+    (if (hash-has-key? rnd cls)
+        (hash-ref rnd cls)
+        (lambda ([xs : (Listof XExprs)])
+          (apply xexprs% xs))))
+  (tagged% 'span
+           `((class ,span-class-name))
+           (g (map f (span-contents s)))))
+
 (define #:forall (PureInline Inline)
         ((inline-element->xexprs [st : State]
                                  [g : (PureInline . -> . XExprs)]
@@ -207,6 +174,7 @@
    [(ref? i) (ref->xexprs i)]
    [(anchor? i) ((anchor->xexprs st g) i)]
    [(anchor-ref? i) ((anchor-ref->xexprs st) i)]
+   [(span? i) ((span->xexprs st f) i)]
    [else ((pure-inline-element->xexprs f) i)]))
 
 (define (pure-inline->xexprs [pi : PureInline]) : XExprs

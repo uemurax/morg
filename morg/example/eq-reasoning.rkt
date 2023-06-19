@@ -5,4 +5,4 @@
 (provide eq-reasoning-span-class)
 
 (define eq-reasoning-span-class
-  (span-class "eq-reasoning"))
+  (span-class))

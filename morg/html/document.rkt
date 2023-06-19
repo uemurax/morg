@@ -12,45 +12,12 @@
          "section.rkt"
          "block.rkt"
          "xexpr-table.rkt"
-         "class.rkt")
+         "config.rkt"
+         "class/document.rkt")
 
 (provide document->xexprs)
 
-(module style typed/racket
-  (require "class.rkt"
-           "../markup/string.rkt")
-  (provide document-class-name
-           document-title-class-name
-           document-address-class-name
-           document-author-list-class-name
-           document-author-class-name
-           document-date-class-name
-           document-front-toc-class-name
-           document-main-toc-class-name
-           document-back-toc-class-name
-           document-css)
-
-  (define document-class-name (class-name "document"))
-  (define document-title-class-name (class-name "document-title"))
-  (define document-address-class-name (class-name "document-address"))
-  (define document-author-list-class-name (class-name "document-author-list"))
-  (define document-author-class-name (class-name "document-author"))
-  (define document-front-toc-class-name (class-name "document-front-toc"))
-  (define document-main-toc-class-name (class-name "document-main-toc"))
-  (define document-back-toc-class-name (class-name "document-back-toc"))
-  (define document-date-class-name (class-name "document-date"))
-
-  (define document-css
-    @string%{
-      .@|document-author-list-class-name| {
-        list-style-type: none;
-        padding-inline-start: 0;
-      }
-    }))
-
-(require 'style)
-
-(define (document->xexprs [doc : Document]) : XExprTable
+(define ((document->xexprs [cfg : Config]) [doc : Document]) : XExprTable
   (define title (document-title doc))
   (define author (document-author doc))
   (define front (document-front doc))
@@ -58,6 +25,7 @@
   (define back (document-back doc))
   (define st
     (state (document-id doc)
+           cfg
            (make-index-table doc)
            (make-anchor-table doc)))
   (define tbl : XExprTable (hash))
