@@ -139,6 +139,20 @@
     @text-tex%{@(anchor-id->hyperlink id-n id-a l)}]
    [else @text-tex%{@(anchor-id->latex id-n id-a)}]))
 
+(define #:forall (Inline)
+        ((span->latex [st : State]
+                      [f : (Inline . -> . tex:TextTeX)])
+         [s : (Span Inline)]) : tex:TextTeX
+  (define cls (span-class-id s))
+  (define cfg (state-config st))
+  (define rnd (config-render-span cfg))
+  (define g
+    (if (hash-has-key? rnd cls)
+        (hash-ref rnd cls)
+        (lambda ([xs : (Listof TextTeXLike)])
+          (apply text-tex% xs))))
+  @text-tex%{@(g (map f (span-contents s)))})
+
 (define #:forall (PureInline Inline)
         ((inline-element->latex [st : State]
                                 [g : (PureInline . -> . tex:TextTeX)]
@@ -148,6 +162,7 @@
    [(ref? i) ((ref->latex st) i)]
    [(anchor? i) ((anchor->latex st g) i)]
    [(anchor-ref? i) ((anchor-ref->latex st) i)]
+   [(span? i) ((span->latex st f) i)]
    [else ((pure-inline-element->latex f) i)]))
 
 (define (pure-inline->latex pi)

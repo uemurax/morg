@@ -1,6 +1,7 @@
 #lang at-exp typed/racket
 
 (require "../data/tex.rkt"
+         (only-in "../data/inline.rkt" SpanClass)
          "../markup/string.rkt"
          "../markup/tex.rkt"
          (prefix-in text: "../text/config.rkt"))
@@ -30,6 +31,7 @@
    [class-options : OptionList]
    [packages : (Listof Package)]
    [make-section-ref : (Natural String . -> . TextTeXLike)]
+   [render-span : (HashTable SpanClass ((Listof TextTeXLike) . -> . TextTeXLike))]
    [index-num-columns : Exact-Positive-Integer]
    [front-matter : TextTeXLike]
    [main-matter : TextTeXLike]
@@ -52,6 +54,7 @@
    '()
    '()
    default-config:make-section-ref
+   (hash)
    1
    @text-tex%{}
    @text-tex%{}
