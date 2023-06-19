@@ -13,6 +13,7 @@
  bibliography/curried
  (rename-out [eprint% eprint]
              [article% article]
+             [thesis% thesis]
              [book% book]))
 
 (define default-header

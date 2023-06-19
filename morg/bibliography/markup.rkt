@@ -7,6 +7,7 @@
 
 (provide eprint%
          article%
+         thesis%
          book%)
 
 (define (eprint% #:type [type : EPrintType 'arXiv]
@@ -46,3 +47,18 @@
            (option-map inline% number)
            (option-map inline% pages)
            doi url ep))
+
+(define (thesis% #:author [author : (Listof InlineLike)]
+                 #:title [title : InlineLike]
+                 #:type [type : InlineLike "PhD Thesis"]
+                 #:institution [institution : InlineLike]
+                 #:date [d : Date]
+                 #:doi [doi : (Option String) #f]
+                 #:url [url : (Option String) #f]
+                 #:eprint [ep : (Option EPrint) #f]) : Thesis
+  (thesis (map inline% author)
+          (inline% title)
+          (inline% type)
+          (inline% institution)
+          d
+          doi url ep))
