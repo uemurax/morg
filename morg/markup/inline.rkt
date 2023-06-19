@@ -23,6 +23,7 @@
          dfn%
          anchor%
          anchor-ref%
+         span%
          pure-inline%
          inline%)
 
@@ -152,3 +153,8 @@
 (define (anchor-ref% #:anchor [maybe-anchor : String]
                      #:node [maybe-node : String]) : AnchorRef
   (anchor-ref (id maybe-anchor) (id maybe-node)))
+
+(define #:forall (Inline)
+        (span% [class-id : SpanClass]
+               . [xs : Inline *])
+  (span class-id xs))
