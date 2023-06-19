@@ -7,6 +7,7 @@
          EPrintType
          (struct-out eprint) EPrint
          (struct-out article) Article
+         (struct-out thesis) Thesis
          (struct-out book) Book)
 
 (define-type BibItem
@@ -47,3 +48,15 @@
    [eprint : (Option EPrint)])
   #:transparent
   #:type-name Article)
+
+(struct thesis
+  ([author : (Listof Inline)]
+   [title : Inline]
+   [type : Inline]
+   [institution : Inline]
+   [date : Date]
+   [doi : (Option String)]
+   [url : (Option String)]
+   [eprint : (Option EPrint)])
+  #:transparent
+  #:type-name Thesis)
