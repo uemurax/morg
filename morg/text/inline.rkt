@@ -125,6 +125,12 @@
       (pure-inline->text (anchor-contents (anchor-table-ref tbl key)))
       @string%{@(anchor-id->text id-n id-a)}))
 
+(define #:forall (Inline)
+        ((span->text [_st : State]
+                     [f : (Inline . -> . StringTree)])
+         [s : (Span Inline)]) : StringTree
+  (apply string% (map f (span-contents s))))
+
 (define #:forall (PureInline Inline)
         ((inline-element->text [st : State]
                                [g : (PureInline . -> . StringTree)]
@@ -134,6 +140,7 @@
    [(ref? i) ((ref->text st) i)]
    [(anchor? i) (g (anchor-contents i))]
    [(anchor-ref? i) ((anchor-ref->text st) i)]
+   [(span? i) ((span->text st f) i)]
    [else ((pure-inline-element->text f) i)]))
 
 (define ((inline->text st) i)
