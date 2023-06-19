@@ -12,6 +12,7 @@
 
 (define-type BibItem
   (U Book
+     Thesis
      Article))
 
 (define-type EPrintType
