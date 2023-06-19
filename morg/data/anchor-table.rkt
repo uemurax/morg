@@ -70,6 +70,8 @@
           (error (format "Duplicated anchor: ~a" key))
           (hash-set tbl key x))]
      [(anchor-ref? x) tbl]
+     [(span? x)
+      (foldl f tbl (span-contents x))]
      [else ((make-anchor-table:pure-inline-element n f) x tbl)])))
 
 (define ((make-anchor-table:inline n) il tbl)
