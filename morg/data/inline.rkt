@@ -24,6 +24,8 @@
          (struct-out dfn) Dfn
          (struct-out anchor) Anchor
          (struct-out anchor-ref) AnchorRef
+         (struct-out span-class) SpanClass
+         (struct-out span) Span
          (struct-out math) Math)
 
 (struct pure-inline
@@ -45,6 +47,7 @@
      (Emph X)
      (Display X)
      (Code X)
+     (Span X)
      (Dfn X)))
 
 (define-type (InlineElement PureInline Inline)
@@ -122,6 +125,16 @@
   #:transparent
   #:type-name AnchorRef)
 
+(struct span-class
+  ([name : String])
+  #:type-name SpanClass)
+
+(struct (Inline) span
+  ([class-id : SpanClass]
+   [contents : (Listof Inline)])
+  #:transparent
+  #:type-name Span)
+
 (define #:forall (X Y)
         ((list-item-map [f : (X . -> . Y)])
          [x : (ListItem X)]) : (ListItem Y)
@@ -171,6 +184,12 @@
           (f (anchor-contents x))))
 
 (define #:forall (X Y)
+        ((span-map [f : (X . -> . Y)])
+         [x : (Span X)]) : (Span Y)
+  (span (span-class-id x)
+        (map f (span-contents x))))
+
+(define #:forall (X Y)
         ((pure-inline-element-map [f : (X . -> . Y)])
          [x : (PureInlineElement X)]) : (PureInlineElement Y)
   (cond
@@ -182,6 +201,7 @@
    [(emph? x) ((emph-map f) x)]
    [(display? x) ((display-map f) x)]
    [(code? x) ((code-map f) x)]
+   [(span? x) ((span-map f) x)]
    [(dfn? x) ((dfn-map f) x)]))
 
 (define #:forall (X1 X2 Y1 Y2)
