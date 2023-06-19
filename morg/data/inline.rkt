@@ -47,12 +47,12 @@
      (Emph X)
      (Display X)
      (Code X)
-     (Span X)
      (Dfn X)))
 
 (define-type (InlineElement PureInline Inline)
   (U (PureInlineElement Inline)
      Ref
+     (Span Inline)
      (Anchor PureInline)
      AnchorRef))
 
@@ -201,7 +201,6 @@
    [(emph? x) ((emph-map f) x)]
    [(display? x) ((display-map f) x)]
    [(code? x) ((code-map f) x)]
-   [(span? x) ((span-map f) x)]
    [(dfn? x) ((dfn-map f) x)]))
 
 (define #:forall (X1 X2 Y1 Y2)
@@ -212,6 +211,7 @@
    [(ref? x) x]
    [(anchor? x) ((anchor-map f) x)]
    [(anchor-ref? x) x]
+   [(span? x) ((span-map g) x)]
    [else ((pure-inline-element-map g) x)]))
 
 (define (pure-inline->inline [x : PureInline]) : Inline
