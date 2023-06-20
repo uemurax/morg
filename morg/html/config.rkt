@@ -11,6 +11,9 @@
          "site-state.rkt"
          "d-pad.rkt"
          "breadcrumb.rkt"
+         "document-toc.rkt"
+         "pure-inline.rkt"
+         "id.rkt"
          "class.rkt"
          "class/inline.rkt"
          "class/id.rkt"
@@ -53,9 +56,21 @@
 
 (define default-config:css-name "default.css")
 
-(define main-container-class-name (class-name "main-container"))
+(define main-container-class-name (class-name "default-main-container"))
+(define body-container-class-name (class-name "default-body-container"))
+(define header-class-name (class-name "default-header"))
+(define site-title-class-name (class-name "default-site-title"))
 
-(define ((default-config:body-template [st : SiteState] [n : (U Node Document)])
+(define id-name class-name)
+(define side-nav-id (id-name "default-side-nav"))
+(define side-button-id (id-name "default-side-button"))
+
+(define (js-name [s : String])
+  (format "morg_generated_~a" s))
+(define toggle-side-nav (js-name "default_toggle_side_nav"))
+
+(define ((default-config:body-template:main-container
+          [st : SiteState] [n : (U Node Document)])
          [x : XExprs]) : XExprs
   (define node?
     ((make-predicate Node) n))
@@ -69,6 +84,47 @@
              (tagged% 'nav '()
                       (make-d-pad st n)))))
 
+(define ((default-config:body-template [st : SiteState] [n : (U Node Document)])
+         [x : XExprs]) : XExprs
+  (define main
+    ((default-config:body-template:main-container st n) x))
+  (cond
+   [(document? n) main]
+   [else
+    (define doc (site-state-root st))
+    (tagged% 'div
+             `((class ,body-container-class-name))
+             (tagged% 'div
+                      `((class ,header-class-name))
+                      (tagged% 'button
+                               `((id ,side-button-id)
+                                 (onclick ,(string-tree->string
+                                            @string%{@|toggle-side-nav|();})))
+                               "☰")
+                      (tagged% 'script '()
+                               @string%{
+                                 function @|toggle-side-nav|() {
+                                   console.log('called.');
+                                   let e = document.getElementById('@|side-nav-id|');
+                                   console.log(e);
+                                   if (e.style.display == "none") {
+                                     e.style.display = "block";
+                                   }
+                                   else {
+                                     e.style.display = "none";
+                                   }
+                                 }
+                               })
+                      (tagged% 'a
+                               `((class ,site-title-class-name)
+                                 (href ,(id->url (document-id doc))))
+                               (pure-inline->xexprs (document-title doc))))
+             (tagged% 'nav
+                      `((id ,side-nav-id)
+                        (style "display: none;"))
+                      (make-document-toc (site-state-root st)))
+             main)]))
+
 (define ((default-config:head-template [_st : SiteState] [_n : (U Node Document)])
          [x : XExprs]) : XExprs
   (xexprs%
@@ -77,6 +133,8 @@
             `((rel "stylesheet")
               (href ,default-config:css-name)))))
 
+(define header-size "2em")
+
 (define default-config:css
   @string%{
     body {
@@ -84,8 +142,9 @@
       font-size: 112.5%;
     }
     .@|main-container-class-name| {
-      max-width: 800px;
-      margin: 40px auto;
+      max-width: 40em;
+      margin: @|header-size| auto;
+      padding-block: 1em;
     }
     .@|id-class-name| {
       color: gray;
@@ -129,7 +188,7 @@
     }
     .@|breadcrumb-class-name| {
       list-style-type: none;
-      padding: 0pt;
+      padding: 0;
     }
     .@|breadcrumb-top-class-name|, .@|breadcrumb-node-class-name| {
       display: inline;
@@ -139,7 +198,28 @@
     }
     .@|document-toc-class-name| {
       list-style-type: none;
-      padding: 0pt;
+      padding: 0;
+    }
+    .@|site-title-class-name| {
+      font-weight: bold;
+      text-decoration-line: none;
+      color: gray;
+    }
+    .@|header-class-name| {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: @|header-size|;
+      z-index: 8;
+      background-color: #fdfdfb;
+    }
+    #@|side-nav-id| {
+      position: fixed;
+      top: @|header-size|;
+      width: 100%;
+      height: calc(100% - @|header-size|);
+      background-color: #fdfdfb;
+      z-index: 4;
     }
   })
 
