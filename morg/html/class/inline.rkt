@@ -15,7 +15,7 @@
          dfn-class-name
          anchor-class-name
          anchor-ref-class-name
-         span-class-name)
+         inline-ext-class-name)
 
 (define katex-class-name (class-name "katex"))
 (define ref-class-name (class-name "ref"))
@@ -30,4 +30,4 @@
 (define dfn-class-name (class-name "dfn"))
 (define anchor-class-name (class-name "anchor"))
 (define anchor-ref-class-name (class-name "anchor-ref"))
-(define span-class-name (class-name "span"))
+(define inline-ext-class-name (class-name "inline-ext"))

@@ -1,8 +1,8 @@
 #lang typed/racket
 
-(require morg/data/inline)
+(require morg/data/extension)
 
-(provide eq-reasoning-span-class)
+(provide eq-reasoning-class)
 
-(define eq-reasoning-span-class
-  (span-class))
+(define eq-reasoning-class
+  (ext-class))

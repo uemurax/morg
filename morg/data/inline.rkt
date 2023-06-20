@@ -3,6 +3,8 @@
 (require "splice.rkt"
          "id.rkt"
          "../util/option.rkt"
+         "../util/list.rkt"
+         "extension.rkt"
          (only-in "tex.rkt" MathTeX))
 
 (provide InlineElement
@@ -24,8 +26,6 @@
          (struct-out dfn) Dfn
          (struct-out anchor) Anchor
          (struct-out anchor-ref) AnchorRef
-         (struct-out span-class) SpanClass
-         (struct-out span) Span
          (struct-out math) Math)
 
 (struct pure-inline
@@ -52,7 +52,7 @@
 (define-type (InlineElement PureInline Inline)
   (U (PureInlineElement Inline)
      Ref
-     (Span Inline)
+     (Extension (Listof Inline))
      (Anchor PureInline)
      AnchorRef))
 
@@ -125,16 +125,6 @@
   #:transparent
   #:type-name AnchorRef)
 
-(struct span-class
-  ()
-  #:type-name SpanClass)
-
-(struct (Inline) span
-  ([class-id : SpanClass]
-   [contents : (Listof Inline)])
-  #:transparent
-  #:type-name Span)
-
 (define #:forall (X Y)
         ((list-item-map [f : (X . -> . Y)])
          [x : (ListItem X)]) : (ListItem Y)
@@ -184,12 +174,6 @@
           (f (anchor-contents x))))
 
 (define #:forall (X Y)
-        ((span-map [f : (X . -> . Y)])
-         [x : (Span X)]) : (Span Y)
-  (span (span-class-id x)
-        (map f (span-contents x))))
-
-(define #:forall (X Y)
         ((pure-inline-element-map [f : (X . -> . Y)])
          [x : (PureInlineElement X)]) : (PureInlineElement Y)
   (cond
@@ -211,7 +195,7 @@
    [(ref? x) x]
    [(anchor? x) ((anchor-map f) x)]
    [(anchor-ref? x) x]
-   [(span? x) ((span-map g) x)]
+   [(extension? x) ((extension-map (list-map g)) x)]
    [else ((pure-inline-element-map g) x)]))
 
 (define (pure-inline->inline [x : PureInline]) : Inline

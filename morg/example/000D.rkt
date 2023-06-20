@@ -1,7 +1,7 @@
 #lang at-exp typed/racket
 
 (require morg/markup
-         (only-in morg/markup/inline span%)
+         morg/data/extension
          "math.rkt"
          "eq-reasoning.rkt")
 
@@ -18,12 +18,14 @@
       @paragraph{
         This is proved as follows.
         @disp{
-          @span%[eq-reasoning-span-class
-            "" @math{1}
-            @math{=} "{Definition}"
-            "" @math{1 + 0}
-            @math{=} "{Definition}"
-            "" @math{1}
+          @extension[eq-reasoning-class
+            @list[
+              "" @math{1}
+              @math{=} "{Definition}"
+              "" @math{1 + 0}
+              @math{=} "{Definition}"
+              "" @math{1}
+            ]
           ]
         }
       }

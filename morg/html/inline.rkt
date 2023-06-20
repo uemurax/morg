@@ -6,6 +6,7 @@
          "../text/id.rkt"
          "../data/splice.rkt"
          "../data/anchor-table.rkt"
+         "../data/extension.rkt"
          "../markup/string.rkt"
          "../markup/splice.rkt"
          "class/inline.rkt"
@@ -150,20 +151,18 @@
            l))
 
 (define #:forall (Inline)
-        ((span->xexprs [st : State]
-                       [f : (Inline . -> . XExprs)])
-         [s : (Span Inline)]) : XExprs
+        ((extension->xexprs [st : State]
+                            [f : (Inline . -> . XExprs)])
+         [s : (Extension (Listof Inline))]) : XExprs
   (define cfg (state-config st))
-  (define rnd (config-render-span cfg))
-  (define cls (span-class-id s))
+  (define rnd (config-render-extension cfg))
   (define g
-    (if (hash-has-key? rnd cls)
-        (hash-ref rnd cls)
-        (lambda ([xs : (Listof XExprs)])
-          (apply xexprs% xs))))
+    (ext-hash-ref rnd s (lambda ()
+                          (lambda ([xs : (Listof XExprs)])
+                            (apply xexprs% xs)))))
   (tagged% 'span
-           `((class ,span-class-name))
-           (g (map f (span-contents s)))))
+           `((class ,inline-ext-class-name))
+           (g (map f (extension-contents s)))))
 
 (define #:forall (PureInline Inline)
         ((inline-element->xexprs [st : State]
@@ -174,7 +173,7 @@
    [(ref? i) (ref->xexprs i)]
    [(anchor? i) ((anchor->xexprs st g) i)]
    [(anchor-ref? i) ((anchor-ref->xexprs st) i)]
-   [(span? i) ((span->xexprs st f) i)]
+   [(extension? i) ((extension->xexprs st f) i)]
    [else ((pure-inline-element->xexprs f) i)]))
 
 (define (pure-inline->xexprs [pi : PureInline]) : XExprs

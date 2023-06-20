@@ -6,6 +6,7 @@
          "../data/article.rkt"
          "../data/splice.rkt"
          "../data/anchor-table.rkt"
+         "../data/extension.rkt"
          "../markup/tex.rkt"
          "../markup/splice.rkt"
          "../text/numbering.rkt"
@@ -140,18 +141,16 @@
    [else @text-tex%{@(anchor-id->latex id-n id-a)}]))
 
 (define #:forall (Inline)
-        ((span->latex [st : State]
-                      [f : (Inline . -> . tex:TextTeX)])
-         [s : (Span Inline)]) : tex:TextTeX
-  (define cls (span-class-id s))
+        ((extension->latex [st : State]
+                           [f : (Inline . -> . tex:TextTeX)])
+         [s : (Extension (Listof Inline))]) : tex:TextTeX
   (define cfg (state-config st))
-  (define rnd (config-render-span cfg))
+  (define rnd (config-render-extension cfg))
   (define g
-    (if (hash-has-key? rnd cls)
-        (hash-ref rnd cls)
-        (lambda ([xs : (Listof TextTeXLike)])
-          (apply text-tex% xs))))
-  @text-tex%{@(g (map f (span-contents s)))})
+    (ext-hash-ref rnd s (lambda ()
+                          (lambda ([xs : (Listof TextTeXLike)])
+                            (apply text-tex% xs)))))
+  @text-tex%{@(g (map f (extension-contents s)))})
 
 (define #:forall (PureInline Inline)
         ((inline-element->latex [st : State]
@@ -162,7 +161,7 @@
    [(ref? i) ((ref->latex st) i)]
    [(anchor? i) ((anchor->latex st g) i)]
    [(anchor-ref? i) ((anchor-ref->latex st) i)]
-   [(span? i) ((span->latex st f) i)]
+   [(extension? i) ((extension->latex st f) i)]
    [else ((pure-inline-element->latex f) i)]))
 
 (define (pure-inline->latex pi)

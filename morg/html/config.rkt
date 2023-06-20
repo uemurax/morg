@@ -4,6 +4,7 @@
          "../data/document.rkt"
          "../data/id.rkt"
          "../data/inline.rkt"
+         "../data/extension.rkt"
          "../markup/xexpr.rkt"
          "../markup/string.rkt"
          "class/inline.rkt"
@@ -34,7 +35,7 @@
 (struct config
   ([body-template : (SiteState (U Node Document) . -> . (XExprs . -> . XExprs))]
    [head-template : (SiteState (U Node Document) . -> . (XExprs . -> . XExprs))]
-   [render-span : (HashTable SpanClass ((Listof XExprs) . -> . XExprs))]
+   [render-extension : (ExtHash ((Listof XExprs) . -> . XExprs))]
    [assets : Assets])
   #:transparent
   #:type-name Config)
@@ -115,5 +116,5 @@
   (config
    default-config:body-template
    default-config:head-template
-   (hash)
+   (empty-ext-hash)
    default-config:assets))

@@ -5,6 +5,7 @@
          "../data/node.rkt"
          "../data/article.rkt"
          "../data/anchor-table.rkt"
+         "../data/extension.rkt"
          "../markup/string.rkt"
          "../markup/splice.rkt"
          "splice.rkt"
@@ -126,10 +127,10 @@
       @string%{@(anchor-id->text id-n id-a)}))
 
 (define #:forall (Inline)
-        ((span->text [_st : State]
-                     [f : (Inline . -> . StringTree)])
-         [s : (Span Inline)]) : StringTree
-  (apply string% (map f (span-contents s))))
+        ((extension->text [_st : State]
+                          [f : (Inline . -> . StringTree)])
+         [s : (Extension (Listof Inline))]) : StringTree
+  (apply string% (map f (extension-contents s))))
 
 (define #:forall (PureInline Inline)
         ((inline-element->text [st : State]
@@ -140,7 +141,7 @@
    [(ref? i) ((ref->text st) i)]
    [(anchor? i) (g (anchor-contents i))]
    [(anchor-ref? i) ((anchor-ref->text st) i)]
-   [(span? i) ((span->text st f) i)]
+   [(extension? i) ((extension->text st f) i)]
    [else ((pure-inline-element->text f) i)]))
 
 (define ((inline->text st) i)
