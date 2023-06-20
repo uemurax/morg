@@ -1,9 +1,8 @@
 #lang at-exp typed/racket
 
 (require morg/markup
-         morg/data/extension
-         "math.rkt"
-         "eq-reasoning.rkt")
+         morg/eq-reasoning
+         "math.rkt")
 
 (provide part:000D)
 
@@ -18,14 +17,12 @@
       @paragraph{
         This is proved as follows.
         @disp{
-          @extension[eq-reasoning-class
-            @list[
-              "" @math{1}
-              @math{=} "{Definition}"
-              "" @math{1 + 0}
-              @math{=} "{Definition}"
-              "" @math{1}
-            ]
+          @eq-reasoning[
+            @math{1}
+            @math{=} "Definition"
+            @math{1 + 0}
+            @math{=} "Definition"
+            @math{1}
           ]
         }
       }

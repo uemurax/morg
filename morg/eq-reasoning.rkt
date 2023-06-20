@@ -29,7 +29,7 @@
    [(list x) (list "" x)]
    [(list* term rel reason rst)
     (list* "" term
-           rel @inline%{ {reason}}
+           rel @inline%{ {@|reason|}}
            (eq-reasoning:list rst))]))
 
 (define (eq-reasoning:fun [e : EqReasoning]) : InlineLike
@@ -74,7 +74,10 @@
     (struct-copy config cfg
      [render-extension
       (ext-hash-set (config-render-extension cfg)
-                    cls eq-reasoning->latex)])))
+                    cls eq-reasoning->latex)]
+     [packages
+      (list* (package "longtable" '())
+             (config-packages cfg))])))
 
 (module* html-config #f
   (require "html/config.rkt")

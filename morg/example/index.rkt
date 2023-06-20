@@ -34,16 +34,24 @@
 (module+ main
   (require morg/text
            morg/latex
-           morg/html)
+           morg/html
+           (prefix-in latex: morg/latex/config)
+           (prefix-in latex:eq: (submod morg/eq-reasoning latex-config))
+           (prefix-in html: morg/html/config)
+           (prefix-in html:eq: (submod morg/eq-reasoning html-config)))
   (define-syntax (this-file stx)
     (with-syntax ([file (syntax-source stx)])
       #'file))
   (define this (cast (this-file) Path))
   (define this-dir (simplify-path (build-path this "..")))
   (define out-dir (build-path this-dir "_site"))
+  (define latex-cfg
+    (latex:eq:config-update latex:default-config))
+  (define html-cfg
+    (html:eq:config-update html:default-config))
   (display "\nTEXT OUTPUT==============================\n")
   (display (->text part:index))
   (display "\nPDF OUTPUT==============================\n")
-  (->latex/publish part:index out-dir)
+  (->latex/publish #:config latex-cfg part:index out-dir)
   (display "\nHTML OUTPUT==============================\n")
-  (->html/publish part:index out-dir))
+  (->html/publish #:config html-cfg part:index out-dir))
