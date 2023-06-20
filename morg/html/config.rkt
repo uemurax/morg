@@ -10,6 +10,7 @@
          "../markup/splice.rkt"
          "site-state.rkt"
          "d-pad.rkt"
+         "breadcrumb.rkt"
          "class.rkt"
          "class/inline.rkt"
          "class/id.rkt"
@@ -18,6 +19,7 @@
          "class/section.rkt"
          "class/block.rkt"
          "class/d-pad.rkt"
+         "class/breadcrumb.rkt"
          "class/document.rkt")
 
 (provide Assets
@@ -54,10 +56,15 @@
 
 (define ((default-config:body-template [st : SiteState] [n : (U Node Document)])
          [x : XExprs]) : XExprs
+  (define node?
+    ((make-predicate Node) n))
   (tagged% 'div
            `((class ,main-container-class-name))
+           (when% node?
+             (tagged% 'nav '()
+                      (make-breadcrumb st n)))
            x
-           (when% ((make-predicate Node) n)
+           (when% node?
              (tagged% 'nav '()
                       (make-d-pad st n)))))
 
@@ -118,6 +125,16 @@
     .@|d-pad-previous-class-name|, .@|d-pad-up-class-name|, .@|d-pad-next-class-name| {
       margin-inline: 1em;
       display: inline;
+    }
+    .@|breadcrumb-class-name| {
+      list-style-type: none;
+      padding: 0pt;
+    }
+    .@|breadcrumb-top-class-name|, .@|breadcrumb-node-class-name| {
+      display: inline;
+    }
+    .@|breadcrumb-node-class-name|::before {
+      content: " > ";
     }
   })
 

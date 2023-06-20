@@ -8,9 +8,9 @@
          "../markup/xexpr.rkt"
          "class/breadcrumb.rkt")
 
-(provide make-breadcumb)
+(provide make-breadcrumb)
 
-(define (make-breadcumb [st : SiteState] [n : Node]) : XExprs
+(define (make-breadcrumb [st : SiteState] [n : Node]) : XExprs
   (define top-id (document-id (site-state-root st)))
   (define ids (map node-id (node-trace n)))
   (define (f [i : Id])
