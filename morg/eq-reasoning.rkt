@@ -56,6 +56,9 @@
 
   (provide config-update)
 
+  (define (set-length [v : TextTeXLike] [l : TextTeXLike])
+    (macro% "setlength" (argument% v) (argument% l)))
+
   (define (eq-reasoning->latex [xs : (Listof TextTeXLike)]) : TextTeXLike
     (define xss (list-group xs 2))
     (define yss
@@ -64,11 +67,16 @@
            xss))
     (define zs
       (list-join yss (list @macro%["\\"])))
-    (text-tex%
-     ((inst environment% TextTeXLike)
-      "longtable"
-      #:arguments (list @argument%{ll})
-      (apply text-tex% zs))))
+    @text-tex%{
+      @macro%["begingroup"]
+      @(set-length @macro%["LTpre"] "0pt")
+      @(set-length @macro%["LTpost"] "-2em")
+      @((inst environment% TextTeXLike)
+        "longtable"
+        #:arguments (list @argument%{ll})
+        (apply text-tex% zs))
+      @macro%["endgroup"]
+    })
 
   (define (config-update [cfg : Config]) : Config
     (struct-copy config cfg
