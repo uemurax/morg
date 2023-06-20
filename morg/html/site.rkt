@@ -15,6 +15,7 @@
          "id.rkt"
          "document.rkt"
          "config.rkt"
+         "site-state.rkt"
          "class/inline.rkt")
 
 (require/typed racket/hash

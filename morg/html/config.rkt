@@ -7,6 +7,7 @@
          "../data/extension.rkt"
          "../markup/xexpr.rkt"
          "../markup/string.rkt"
+         "site-state.rkt"
          "class/inline.rkt"
          "class/id.rkt"
          "class/toc.rkt"
@@ -16,21 +17,12 @@
          "class/document.rkt")
 
 (provide Assets
-         (struct-out site-state) SiteState
          (struct-out config) Config
          site-state-node-ref
          default-config)
 
 (define-type Assets
   (HashTable String StringTreeLike))
-
-(struct site-state
-  ([front : NodeTable]
-   [main : NodeTable]
-   [back : NodeTable]
-   [root : Document])
-  #:transparent
-  #:type-name SiteState)
 
 (struct config
   ([body-template : (SiteState (U Node Document) . -> . (XExprs . -> . XExprs))]
