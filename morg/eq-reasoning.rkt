@@ -94,7 +94,7 @@
 
   (define (eq-reasoning->xexprs [xs : (Listof XExprs)]) : XExprs
     (apply tagged% 'span
-           '((style "display: grid; grid-template-columns: max-content max-content; grid-column-gap: 1em; text-align: start;"))
+           '((style "display: grid; grid-template-columns: max-content auto; grid-column-gap: 1em; text-align: start;"))
            (map (lambda ([x : XExprs])
                   (tagged% 'span '() x))
                 xs)))
