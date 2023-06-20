@@ -6,7 +6,7 @@
          "../data/id.rkt"
          "../markup/xexpr.rkt"
          "article.rkt"
-         "class.rkt"
+         "class/section.rkt"
          "inline.rkt"
          "block.rkt"
          "toc.rkt"
@@ -15,27 +15,6 @@
          "xexpr-table.rkt")
 
 (provide section->xexprs)
-
-(module style typed/racket
-  (require "class.rkt"
-           "../markup/string.rkt")
-
-  (provide section-class-name
-           section-title-class-name
-           section-body-class-name
-           section-toc-class-name
-           section-css)
-
-  (define section-class-name (class-name "section"))
-  (define section-title-class-name (class-name "section-title"))
-  (define section-body-class-name (class-name "section-body"))
-  (define section-toc-class-name (class-name "section-toc"))
-
-  (define section-css
-    @string%{
-    }))
-
-(require 'style)
 
 (define ((article->xexprs* [st : State]) [a : Article] [xtbl : XExprTable]) : XExprTable
   (hash-set xtbl (article-id a) ((article->xexprs st) a)))

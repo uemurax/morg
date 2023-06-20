@@ -3,15 +3,17 @@
 (require "../data/node.rkt"
          "../data/document.rkt"
          "../data/id.rkt"
+         "../data/inline.rkt"
+         "../data/extension.rkt"
          "../markup/xexpr.rkt"
          "../markup/string.rkt"
-         (submod "inline.rkt" style)
-         (submod "id.rkt" style)
-         (submod "toc.rkt" style)
-         (submod "article.rkt" style)
-         (submod "section.rkt" style)
-         (submod "block.rkt" style)
-         (submod "document.rkt" style))
+         "class/inline.rkt"
+         "class/id.rkt"
+         "class/toc.rkt"
+         "class/article.rkt"
+         "class/section.rkt"
+         "class/block.rkt"
+         "class/document.rkt")
 
 (provide Assets
          (struct-out site-state) SiteState
@@ -33,6 +35,7 @@
 (struct config
   ([body-template : (SiteState (U Node Document) . -> . (XExprs . -> . XExprs))]
    [head-template : (SiteState (U Node Document) . -> . (XExprs . -> . XExprs))]
+   [render-extension : (ExtHash ((Listof XExprs) . -> . XExprs))]
    [assets : Assets])
   #:transparent
   #:type-name Config)
@@ -73,13 +76,37 @@
       max-width: 800px;
       margin: 40px auto;
     }
-    @|id-css|
-    @|inline-css|
-    @|block-css|
-    @|toc-css|
-    @|article-css|
-    @|section-css|
-    @|document-css|
+    .@|id-class-name| {
+      color: gray;
+      text-decoration-line: none;
+    }
+    .@|unordered-list-class-name|, .@|ordered-list-class-name| {
+      padding-inline-start: 1em;
+    }
+    .@|list-item-head-class-name| {
+      margin-inline-end: 1em;
+    }
+    .@|dfn-class-name| {
+      font-style: normal;
+      font-weight: bold;
+    }
+    .@|display-class-name| {
+      margin-block: 1em;
+    }
+    .@|toc-node-class-name| {
+      list-style-type: none;
+      padding-inline-start: 1em;
+    }
+    .@|article-class-name|, .@|statement-class-name|, .@|proof-class-name| {
+      margin-block: 1em;
+    }
+    .@|statement-header-header-class-name|, .@|proof-header-class-name| {
+      font-weight: bold;
+    }
+    .@|document-author-list-class-name| {
+      list-style-type: none;
+      padding-inline-start: 0;
+    }
   })
 
 (define default-config:assets
@@ -89,4 +116,5 @@
   (config
    default-config:body-template
    default-config:head-template
+   (empty-ext-hash)
    default-config:assets))

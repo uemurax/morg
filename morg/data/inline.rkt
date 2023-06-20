@@ -3,6 +3,8 @@
 (require "splice.rkt"
          "id.rkt"
          "../util/option.rkt"
+         "../util/list.rkt"
+         "extension.rkt"
          (only-in "tex.rkt" MathTeX))
 
 (provide InlineElement
@@ -50,6 +52,7 @@
 (define-type (InlineElement PureInline Inline)
   (U (PureInlineElement Inline)
      Ref
+     (Extension (Listof Inline))
      (Anchor PureInline)
      AnchorRef))
 
@@ -192,6 +195,7 @@
    [(ref? x) x]
    [(anchor? x) ((anchor-map f) x)]
    [(anchor-ref? x) x]
+   [(extension? x) ((extension-map (list-map g)) x)]
    [else ((pure-inline-element-map g) x)]))
 
 (define (pure-inline->inline [x : PureInline]) : Inline

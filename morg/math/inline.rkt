@@ -3,6 +3,7 @@
 (require "tex-plus.rkt"
          "markup.rkt"
          "format.rkt"
+         "config.rkt"
          (prefix-in i: "../data/inline.rkt"))
 
 (provide make-math)

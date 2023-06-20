@@ -6,6 +6,7 @@
          "article.rkt"
          "section.rkt"
          "document.rkt"
+         "extension.rkt"
          "id.rkt")
 
 (provide (struct-out anchor-key) AnchorKey
@@ -70,6 +71,8 @@
           (error (format "Duplicated anchor: ~a" key))
           (hash-set tbl key x))]
      [(anchor-ref? x) tbl]
+     [(extension? x)
+      (foldl f tbl (extension-contents x))]
      [else ((make-anchor-table:pure-inline-element n f) x tbl)])))
 
 (define ((make-anchor-table:inline n) il tbl)

@@ -7,6 +7,7 @@
          "0008.rkt"
          "000B.rkt"
          "000C.rkt"
+         "000D.rkt"
          "0007.rkt")
 
 (provide part:0003)
@@ -28,6 +29,7 @@
     }
     part:000B
     part:000C
+    part:000D
   ])
 
 (module+ main

@@ -3,6 +3,7 @@
 (require "math/markup.rkt"
          "math/format.rkt"
          "math/inline.rkt"
+         "math/config.rkt"
          "markup/tex.rkt")
 
 (provide

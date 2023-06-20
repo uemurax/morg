@@ -75,6 +75,7 @@
   (define y (atom-contents x))
   (cond
    [(text? y) (t y)]
+   [(special? y) @string%{@(special-contents y)}]
    [(macro? y) ((macro->text f) y)]
    [(group? y) ((group->text f) y)]))
 

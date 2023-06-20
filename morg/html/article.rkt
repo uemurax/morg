@@ -4,49 +4,13 @@
          "../markup/xexpr.rkt"
          "../markup/splice.rkt"
          "../data/id.rkt"
-         "class.rkt"
+         "class/article.rkt"
          "state.rkt"
          "inline.rkt"
          "block.rkt"
          "id.rkt")
 
 (provide article->xexprs)
-
-(module style typed/racket
-  (require "class.rkt"
-           "../markup/string.rkt")
-  (provide statement-class-name
-           statement-header-class-name
-           statement-header-header-class-name
-           statement-header-title-class-name
-           statement-body-class-name
-           proof-class-name
-           proof-header-class-name
-           proof-body-class-name
-           article-class-name
-           article-css)
-
-  (define statement-class-name (class-name "statement"))
-  (define statement-header-class-name (class-name "statement-header"))
-  (define statement-header-header-class-name (class-name "statement-header-header"))
-  (define statement-header-title-class-name (class-name "statement-header-title"))
-  (define statement-body-class-name (class-name "statement-body"))
-  (define proof-class-name (class-name "proof"))
-  (define proof-header-class-name (class-name "proof-header"))
-  (define proof-body-class-name (class-name "proof-body"))
-  (define article-class-name (class-name "article"))
-
-  (define article-css
-    @string%{
-      .@|article-class-name|, .@|statement-class-name|, .@|proof-class-name| {
-        margin-block: 1em;
-      }
-      .@|statement-header-header-class-name|, .@|proof-header-class-name| {
-        font-weight: bold;
-      }
-    }))
-
-(require 'style)
 
 (define ((article->xexprs:statement [st : State]) [a : Article]) : XExprs
   (define f pure-inline->xexprs)
