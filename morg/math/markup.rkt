@@ -18,6 +18,7 @@
          big-op%
          delimiter%
          apply-with-parens%
+         sup-op%
          math-tex+%)
 
 (define-type MathTeXAtom+Like
@@ -113,3 +114,9 @@
   (paren% #:level #f
           (dec-degree% f)
           (apply (delimiter% #:left left #:right right) xs)))
+
+(define ((sup-op% #:level [lv : Symbol '?]
+                  [op : MathTeX+Like])
+         . [xs : MathTeX+Like *])
+  (paren% #:level lv
+          ((inst sub-sup% MathTeXAtom+Like MathTeX+Like) (apply group% xs) #:^ op)))

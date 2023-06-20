@@ -18,6 +18,7 @@
              [big-op% big-op]
              [delimiter% delimiter]
              [apply-with-parens% apply-with-parens]
+             [sup-op% sup-op]
              [monoid% monoid])
  sub-sup _ ^
  macro
