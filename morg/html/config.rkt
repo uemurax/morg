@@ -20,6 +20,7 @@
          "class/block.rkt"
          "class/d-pad.rkt"
          "class/breadcrumb.rkt"
+         "class/document-toc.rkt"
          "class/document.rkt")
 
 (provide Assets
@@ -135,6 +136,10 @@
     }
     .@|breadcrumb-node-class-name|::before {
       content: " > ";
+    }
+    .@|document-toc-class-name| {
+      list-style-type: none;
+      padding: 0pt;
     }
   })
 

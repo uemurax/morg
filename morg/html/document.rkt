@@ -13,6 +13,7 @@
          "block.rkt"
          "xexpr-table.rkt"
          "config.rkt"
+         "document-toc.rkt"
          "class/document.rkt")
 
 (provide document->xexprs)
@@ -52,13 +53,6 @@
                       `((class ,document-date-class-name))
                       (date->text (document-date doc)))
              ((block->xexprs st) (document-contents doc))
-             (tagged% 'nav
-                      `((class ,document-front-toc-class-name))
-                      (make-toc front))
-             (tagged% 'nav
-                      `((class ,document-main-toc-class-name))
-                      (make-toc main))
-             (tagged% 'nav
-                      `((class ,document-back-toc-class-name))
-                      (make-toc back))))
+             (tagged% 'nav '()
+                      (make-document-toc doc))))
   (hash-set tbl-3 (document-id doc) this-xexpr))
