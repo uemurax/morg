@@ -21,6 +21,7 @@
          macro%
          macro-1%
          group%
+         special%
          options%
          environment%)
 
@@ -30,6 +31,7 @@
 (define-type (AtomLike X)
   (U (Atom X)
      TextLike
+     Special
      (Macro X)
      (Group X)))
 
@@ -130,6 +132,8 @@
 (define #:forall (X)
         (group% . [xs : X *]) : (Group (Splice X))
   (group (splice xs)))
+
+(define special% special)
 
 (define #:forall (X)
         (environment% [name : StringTreeLike]

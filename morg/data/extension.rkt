@@ -3,7 +3,7 @@
 (provide (struct-out ext-class) ExtClass
          extension extension-contents extension? Extension
          ExtHash ext-hash-ref
-         empty-ext-hash ext-hash-insert
+         empty-ext-hash ext-hash-set
          extension-map)
 
 (struct ext-class
@@ -31,15 +31,10 @@
   ((inst ext-hash X) (hash)))
 
 (define #:forall (X)
-        (ext-hash-insert [h : (ExtHash X)]
-                         [c : ExtClass]
-                         [x : X]) : (ExtHash X)
-  (define tbl (ext-hash-contents h))
-  (cond
-   [(hash-has-key? tbl c)
-    (error "Key already exists.")]
-   [else
-    (ext-hash (hash-set tbl c x))]))
+        (ext-hash-set [h : (ExtHash X)]
+                      [c : ExtClass]
+                      [x : X]) : (ExtHash X)
+  (ext-hash (hash-set (ext-hash-contents h) c x)))
 
 (define #:forall (X Y)
         ((extension-map [f : (X . -> . Y)])

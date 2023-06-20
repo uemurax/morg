@@ -7,6 +7,7 @@
          (struct-out argument) Argument
          (struct-out macro) Macro
          (struct-out group) Group
+         (struct-out special) Special
          (struct-out atom) Atom
          (struct-out math) Math
          (except-out (struct-out sub-sup) sub-sup) SubSup
@@ -41,8 +42,16 @@
   #:transparent
   #:type-name Group)
 
+(define-type SpecialCharacter
+  (U "&"))
+
+(struct special
+  ([contents : SpecialCharacter])
+  #:transparent
+  #:type-name Special)
+
 (struct (X) atom
-  ([contents : (U Text (Macro X) (Group X))])
+  ([contents : (U Text (Macro X) (Group X) Special)])
   #:transparent
   #:type-name Atom)
 
@@ -98,6 +107,7 @@
   (define b
     (cond
      [(text? a) a]
+     [(special? a) a]
      [(macro? a) ((macro-map f) a)]
      [(group? a) ((group-map f) a)]))
   (atom b))
