@@ -1,6 +1,7 @@
-#lang typed/racket
+#lang at-exp typed/racket
 
 (require "data/extension.rkt"
+         "markup/xexpr.rkt"
          "markup/inline.rkt")
 
 (module+ test
@@ -24,7 +25,7 @@
    [(list x) (list "" x)]
    [(list* term rel reason rst)
     (list* "" term
-           rel reason
+           rel @inline%{ {reason}}
            (eq-reasoning:list rst))]))
 
 (define (eq-reasoning:fun [e : EqReasoning]) : InlineLike
@@ -45,3 +46,10 @@
                      "1 + 1"
                      "=" "definition"
                      "2"))))
+
+(define (eq-reasoning->xexprs [xs : (Listof XExprs)]) : XExprs
+  (apply tagged% 'span
+         '((style "display: grid; grid-template-columns: max-content max-content; grid-column-gap: 1em;"))
+         (map (lambda ([x : XExprs])
+                (tagged% 'span '() x))
+              xs)))
