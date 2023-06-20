@@ -6,10 +6,14 @@
          "../markup/inline.rkt"
          "../markup/xexpr.rkt"
          "../markup/splice.rkt"
-         "inline.rkt"
+         "pure-inline.rkt"
          "site-state.rkt"
          "id.rkt"
          "class/d-pad.rkt")
+
+(provide (struct-out d-pad-config) D-padConfig
+         default-d-pad-config
+         make-d-pad)
 
 (struct d-pad-config
   ([previous : PureInlineLike]

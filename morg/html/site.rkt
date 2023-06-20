@@ -11,7 +11,7 @@
          "../markup/inline.rkt"
          "../text/id.rkt"
          "../util/escape.rkt"
-         "inline.rkt"
+         "pure-inline.rkt"
          "id.rkt"
          "document.rkt"
          "config.rkt"

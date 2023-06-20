@@ -7,13 +7,17 @@
          "../data/extension.rkt"
          "../markup/xexpr.rkt"
          "../markup/string.rkt"
+         "../markup/splice.rkt"
          "site-state.rkt"
+         "d-pad.rkt"
+         "class.rkt"
          "class/inline.rkt"
          "class/id.rkt"
          "class/toc.rkt"
          "class/article.rkt"
          "class/section.rkt"
          "class/block.rkt"
+         "class/d-pad.rkt"
          "class/document.rkt")
 
 (provide Assets
@@ -46,9 +50,16 @@
 
 (define default-config:css-name "default.css")
 
-(define ((default-config:body-template [_st : SiteState] [_n : (U Node Document)])
+(define main-container-class-name (class-name "main-container"))
+
+(define ((default-config:body-template [st : SiteState] [n : (U Node Document)])
          [x : XExprs]) : XExprs
-  x)
+  (tagged% 'div
+           `((class ,main-container-class-name))
+           x
+           (when% ((make-predicate Node) n)
+             (tagged% 'nav '()
+                      (make-d-pad st n)))))
 
 (define ((default-config:head-template [_st : SiteState] [_n : (U Node Document)])
          [x : XExprs]) : XExprs
@@ -64,7 +75,7 @@
       font-family: sans-serif;
       font-size: 112.5%;
     }
-    main {
+    .@|main-container-class-name| {
       max-width: 800px;
       margin: 40px auto;
     }
@@ -98,6 +109,15 @@
     .@|document-author-list-class-name| {
       list-style-type: none;
       padding-inline-start: 0;
+    }
+    .@|d-pad-class-name| {
+      list-style-type: none;
+      display: flex;
+      justify-content: center;
+    }
+    .@|d-pad-previous-class-name|, .@|d-pad-up-class-name|, .@|d-pad-next-class-name| {
+      margin-inline: 1em;
+      display: inline;
     }
   })
 

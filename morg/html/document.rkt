@@ -7,7 +7,7 @@
          "../data/index-table.rkt"
          "../data/anchor-table.rkt"
          "state.rkt"
-         "inline.rkt"
+         "pure-inline.rkt"
          "toc.rkt"
          "section.rkt"
          "block.rkt"
