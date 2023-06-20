@@ -3,27 +3,17 @@
 (require "tex-plus.rkt"
          "../data/tex.rkt"
          "../data/splice.rkt"
+         "config.rkt"
          "../markup/tex.rkt")
 
-(provide (struct-out config) Config
-         (struct-out state) State
-         default-config
+(provide (struct-out state) State
          format-math-tex+)
-
-(struct config
-  ([levels : (Listof Symbol)])
-  #:transparent
-  #:type-name Config)
 
 (struct state
   ([config : Config]
    [level : Level])
   #:transparent
   #:type-name State)
-
-(define default-config
-  (config
-   '(+ * generic-bin generic-rel comma)))
 
 (: format-math-tex+ : (State . -> . (MathTeX+ . -> . MathTeX)))
 
