@@ -56,12 +56,13 @@
 
 (define default-config:css-name "default.css")
 
-(define main-container-class-name (class-name "default-main-container"))
-(define body-container-class-name (class-name "default-body-container"))
-(define header-class-name (class-name "default-header"))
 (define site-title-class-name (class-name "default-site-title"))
+(define main-container-class-name (class-name "default-main-container"))
 
 (define id-name class-name)
+(define main-container-id (id-name "default-main-container"))
+(define body-container-id (id-name "default-body-container"))
+(define header-id (id-name "default-header"))
 (define side-nav-id (id-name "default-side-nav"))
 (define side-button-id (id-name "default-side-button"))
 
@@ -75,14 +76,16 @@
   (define node?
     ((make-predicate Node) n))
   (tagged% 'div
-           `((class ,main-container-class-name))
-           (when% node?
-             (tagged% 'nav '()
-                      (make-breadcrumb st n)))
-           x
-           (when% node?
-             (tagged% 'nav '()
-                      (make-d-pad st n)))))
+           `((id ,main-container-id))
+           (tagged% 'div
+                    `((class ,main-container-class-name))
+                    (when% node?
+                           (tagged% 'nav '()
+                           (make-breadcrumb st n)))
+                    x
+                    (when% node?
+                      (tagged% 'nav '()
+                               (make-d-pad st n))))))
 
 (define ((default-config:body-template [st : SiteState] [n : (U Node Document)])
          [x : XExprs]) : XExprs
@@ -93,9 +96,9 @@
    [else
     (define doc (site-state-root st))
     (tagged% 'div
-             `((class ,body-container-class-name))
+             `((id ,body-container-id))
              (tagged% 'div
-                      `((class ,header-class-name))
+                      `((id ,header-id))
                       (tagged% 'button
                                `((id ,side-button-id)
                                  (onclick ,(string-tree->string
@@ -140,11 +143,11 @@
     body {
       font-family: sans-serif;
       font-size: 112.5%;
+      margin: 0;
     }
     .@|main-container-class-name| {
       max-width: 40em;
-      margin: @|header-size| auto;
-      padding-block: 1em;
+      margin-inline: auto;
     }
     .@|id-class-name| {
       color: gray;
@@ -204,22 +207,32 @@
       font-weight: bold;
       text-decoration-line: none;
       color: gray;
+      margin-inline: 1em;
     }
-    .@|header-class-name| {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      height: @|header-size|;
+    #@|body-container-id| {
+    }
+    #@|header-id| {
       z-index: 8;
       background-color: #fdfdfb;
+      position: sticky;
+      top: 0;
+      left: 0;
+      height: @|header-size|;
+      display: flex;
+      align-items: center;
+      justify-content: start;
     }
     #@|side-nav-id| {
-      position: fixed;
-      top: @|header-size|;
-      width: 100%;
-      height: calc(100% - @|header-size|);
       background-color: #fdfdfb;
       z-index: 4;
+      position: sticky;
+      top: @|header-size|;
+      left: 0;
+    }
+    #@|side-nav-id| .@|document-toc-class-name| {
+      margin-block: 0;
+    }
+    #@|main-container-id| {
     }
   })
 
