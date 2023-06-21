@@ -58,6 +58,7 @@
 
 (define site-title-class-name (class-name "default-site-title"))
 (define main-container-class-name (class-name "default-main-container"))
+(define main-container-alt-class-name (class-name "default-main-container-alt"))
 
 (define id-name class-name)
 (define main-container-id (id-name "default-main-container"))
@@ -76,9 +77,11 @@
   (define node?
     ((make-predicate Node) n))
   (tagged% 'div
-           `((id ,main-container-id))
+           (if node? `((id ,main-container-id)) '())
            (tagged% 'div
-                    `((class ,main-container-class-name))
+                    `((class ,(if node?
+                                  main-container-class-name
+                                  main-container-alt-class-name)))
                     (when% node?
                            (tagged% 'nav '()
                            (make-breadcrumb st n)))
@@ -137,6 +140,7 @@
               (href ,default-config:css-name)))))
 
 (define header-size "2em")
+(define side-nav-width "min(16em, 20%)")
 
 (define default-config:css
   @string%{
@@ -145,7 +149,7 @@
       font-size: 112.5%;
       margin: 0;
     }
-    .@|main-container-class-name| {
+    .@|main-container-class-name|, .@|main-container-alt-class-name| {
       max-width: 40em;
       margin-inline: auto;
     }
@@ -213,7 +217,7 @@
     }
     #@|header-id| {
       z-index: 8;
-      background-color: #fdfdfb;
+      background-color: white;
       position: sticky;
       top: 0;
       left: 0;
@@ -223,7 +227,7 @@
       justify-content: start;
     }
     #@|side-nav-id| {
-      background-color: #fdfdfb;
+      background-color: white;
       z-index: 4;
       position: sticky;
       top: @|header-size|;
@@ -233,6 +237,27 @@
       margin-block: 0;
     }
     #@|main-container-id| {
+      padding: 0.5em;
+    }
+    @"@"media screen and (min-width: 60em) {
+      #@|side-nav-id| {
+        display: block !important;
+        position: fixed;
+        width: @|side-nav-width|;
+        height: calc(100% - @|header-size|);
+        overflow-y: auto;
+      }
+      #@|main-container-id| {
+        position: relative;
+        left: @|side-nav-width|;
+        width: calc(100% - @|side-nav-width|);
+      }
+      .@|main-container-class-name| {
+        margin-inline: 1em;
+      }
+      #@|side-button-id| {
+        display: none;
+      }
     }
   })
 
