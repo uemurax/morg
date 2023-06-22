@@ -7,7 +7,7 @@
          "../markup/xexpr.rkt"
          "article.rkt"
          "class/section.rkt"
-         "inline.rkt"
+         "pure-inline.rkt"
          "block.rkt"
          "toc.rkt"
          "id.rkt"

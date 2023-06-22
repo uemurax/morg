@@ -6,7 +6,7 @@
          "../data/id.rkt"
          "class/article.rkt"
          "state.rkt"
-         "inline.rkt"
+         "pure-inline.rkt"
          "block.rkt"
          "id.rkt")
 

@@ -3,7 +3,7 @@
 (require "../data/section.rkt"
          "../markup/xexpr.rkt"
          "class/toc.rkt"
-         "inline.rkt"
+         "pure-inline.rkt"
          "id.rkt")
 
 (provide make-toc)
