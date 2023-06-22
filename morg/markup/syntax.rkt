@@ -9,12 +9,8 @@
 
 (define-syntax (include-part stx)
   (syntax-case stx ()
-   [(_ id)
-    (with-syntax ([part part-name]
-                  [path (let ([id-1 (syntax->datum #'id)])
-                          (if (eq? id-1 #f)
-                              ".."
-                              (symbol->string id-1)))])
+   [(_ path)
+    (with-syntax ([part part-name])
       #'(let ()
           (local-require (rename-in path [part part:local]))
           part:local))]))

@@ -2,17 +2,14 @@
 
 (require morg/markup)
 
-(require "0000.rkt"
-         "0003.rkt"
+(require "0003.rkt"
          "0005.rkt"
          "000A.rkt"
          "0009.rkt")
 
-(provide part:index)
-
-(define part:index
+(provide-part (id)
   @document[
-    #:id "index"
+    #:id id
     #:title @%{Test document}
     #:author @list[@%{Test Author}]
     #:contents @%[
@@ -23,7 +20,7 @@
     #:front @list[
       part:0005
     ]
-    part:0000
+    (include-part "0000.rkt")
     part:0003
     #:back @list[
       part:000A
@@ -49,9 +46,10 @@
     (latex:eq:config-update latex:default-config))
   (define html-cfg
     (html:eq:config-update html:default-config))
+  (define doc (include-part (submod "..")))
   (display "\nTEXT OUTPUT==============================\n")
-  (display (->text part:index))
+  (display (->text doc))
   (display "\nPDF OUTPUT==============================\n")
-  (->latex/publish #:config latex-cfg part:index out-dir)
+  (->latex/publish #:config latex-cfg doc out-dir)
   (display "\nHTML OUTPUT==============================\n")
-  (->html/publish #:config html-cfg part:index out-dir))
+  (->html/publish #:config html-cfg doc out-dir))
