@@ -21,4 +21,4 @@
 
 (module+ main
   (require morg/text)
-  (display (->text (include-part (submod "..")))))
+  (preview))
