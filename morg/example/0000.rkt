@@ -5,11 +5,9 @@
 (require "0001.rkt"
          "0002.rkt")
 
-(provide part:0000)
-
-(define part:0000
+(provide-part (id)
   @section[
-    #:id "0000"
+    #:id id
     #:title @%{Introduction}
     @paragraph{
       This is a @emph{test} document.
@@ -23,4 +21,4 @@
 
 (module+ main
   (require morg/text)
-  (display (->text part:0000)))
+  (preview))

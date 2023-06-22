@@ -7,6 +7,7 @@
          "markup/section.rkt"
          "markup/date.rkt"
          "markup/index.rkt"
+         "markup/syntax.rkt"
          "markup/splice.rkt")
 
 (provide
@@ -31,7 +32,8 @@
  list-item
  ordered-list
  unordered-list
- (all-from-out "markup/splice.rkt"))
+ (all-from-out "markup/splice.rkt"
+               "markup/syntax.rkt"))
 
 (define anchor (inst anchor% PureInlineLike))
 (define list-item (inst list-item% PureInlineLike InlineLike))

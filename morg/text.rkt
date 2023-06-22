@@ -7,13 +7,15 @@
          "data/index-table.rkt"
          "data/anchor-table.rkt"
          "markup/string.rkt"
+         "markup/syntax.rkt"
          "text/document.rkt"
          "text/section.rkt"
          "text/article.rkt"
          "text/config.rkt"
          "text/state.rkt")
 
-(provide ->text)
+(provide ->text
+         preview)
 
 (define (->text #:config [cfg : Config default-config] [doc : (U Document Section Article)]) : String
   (define x
@@ -32,3 +34,6 @@
                (make-node-table (list))))
       ((article->text st) doc)]))
   (string-tree->string x))
+
+(define-syntax-rule (preview)
+  (display (->text (include-part (submod "..")))))
