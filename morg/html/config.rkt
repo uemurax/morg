@@ -141,6 +141,7 @@
 
 (define header-size "2em")
 (define side-nav-width "min(16em, 20%)")
+(define main-padding 0.5)
 
 (define default-config:css
   @string%{
@@ -237,7 +238,7 @@
       margin-block: 0;
     }
     #@|main-container-id| {
-      padding: 0.5em;
+      padding: @(number->string main-padding)em;
     }
     @"@"media screen and (min-width: 60em) {
       #@|side-nav-id| {
@@ -250,10 +251,10 @@
       #@|main-container-id| {
         position: relative;
         left: @|side-nav-width|;
-        width: calc(100% - @|side-nav-width|);
+        width: calc(100% - @|side-nav-width| - @(number->string (* 2 main-padding))em);
       }
       .@|main-container-class-name| {
-        margin-inline: 1em;
+        margin-inline-start: 1em;
       }
       #@|side-button-id| {
         display: none;
