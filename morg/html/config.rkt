@@ -156,17 +156,17 @@
     }
     .@|id-class-name| {
       color: gray;
-      text-decoration-line: none;
+      font-family: monospace, monospace;
+    }
+    .@|code-class-name| {
+      font-family: monospace, monospace;
+      background-color: WhiteSmoke;
     }
     .@|unordered-list-class-name|, .@|ordered-list-class-name| {
       padding-inline-start: 1em;
     }
     .@|list-item-head-class-name| {
       margin-inline-end: 1em;
-    }
-    .@|dfn-class-name| {
-      font-style: normal;
-      font-weight: bold;
     }
     .@|display-class-name| {
       margin-block: 1em;
