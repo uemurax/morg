@@ -29,6 +29,7 @@
 (provide Assets
          (struct-out config) Config
          site-state-node-ref
+         config-add-css
          default-config)
 
 (define-type Assets
@@ -271,3 +272,22 @@
    default-config:head-template
    (empty-ext-hash)
    default-config:assets))
+
+(define (config-add-css [cfg : Config] 
+                        [name : String]
+                        [css : StringTreeLike]) : Config
+  (struct-copy config cfg
+   [assets
+    (let ([a (config-assets cfg)])
+      (if (hash-has-key? a name)
+          (error (format "CSS name already exists: ~a" name))
+          (hash-set a name css)))]
+   [head-template
+    (let ([t (config-head-template cfg)])
+      (lambda ([st : SiteState] [n : (U Node Document)])
+        (lambda ([x : XExprs])
+          (xexprs%
+           ((t st n) x)
+           (tagged% 'link
+                    `((rel "stylesheet")
+                      (href ,name)))))))]))
