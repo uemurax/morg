@@ -29,6 +29,7 @@
 (provide Assets
          (struct-out config) Config
          site-state-node-ref
+         config-add-css
          default-config)
 
 (define-type Assets
@@ -141,6 +142,7 @@
 
 (define header-size "2em")
 (define side-nav-width "min(16em, 20%)")
+(define main-padding 0.5)
 
 (define default-config:css
   @string%{
@@ -155,17 +157,17 @@
     }
     .@|id-class-name| {
       color: gray;
-      text-decoration-line: none;
+      font-family: monospace, monospace;
+    }
+    .@|code-class-name| {
+      font-family: monospace, monospace;
+      background-color: WhiteSmoke;
     }
     .@|unordered-list-class-name|, .@|ordered-list-class-name| {
       padding-inline-start: 1em;
     }
     .@|list-item-head-class-name| {
       margin-inline-end: 1em;
-    }
-    .@|dfn-class-name| {
-      font-style: normal;
-      font-weight: bold;
     }
     .@|display-class-name| {
       margin-block: 1em;
@@ -237,7 +239,7 @@
       margin-block: 0;
     }
     #@|main-container-id| {
-      padding: 0.5em;
+      padding: @(number->string main-padding)em;
     }
     @"@"media screen and (min-width: 60em) {
       #@|side-nav-id| {
@@ -250,10 +252,10 @@
       #@|main-container-id| {
         position: relative;
         left: @|side-nav-width|;
-        width: calc(100% - @|side-nav-width|);
+        width: calc(100% - @|side-nav-width| - @(number->string (* 2 main-padding))em);
       }
       .@|main-container-class-name| {
-        margin-inline: 1em;
+        margin-inline-start: 1em;
       }
       #@|side-button-id| {
         display: none;
@@ -270,3 +272,22 @@
    default-config:head-template
    (empty-ext-hash)
    default-config:assets))
+
+(define (config-add-css [cfg : Config] 
+                        [name : String]
+                        [css : StringTreeLike]) : Config
+  (struct-copy config cfg
+   [assets
+    (let ([a (config-assets cfg)])
+      (if (hash-has-key? a name)
+          (error (format "CSS name already exists: ~a" name))
+          (hash-set a name css)))]
+   [head-template
+    (let ([t (config-head-template cfg)])
+      (lambda ([st : SiteState] [n : (U Node Document)])
+        (lambda ([x : XExprs])
+          (xexprs%
+           ((t st n) x)
+           (tagged% 'link
+                    `((rel "stylesheet")
+                      (href ,name)))))))]))
