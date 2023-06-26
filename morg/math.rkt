@@ -15,6 +15,7 @@
              [paren%/curried paren/curried]
              [dec-degree% dec-degree]
              [binary% binary]
+             [unary% unary]
              [big-op% big-op]
              [delimiter% delimiter]
              [apply-with-parens% apply-with-parens]

@@ -14,6 +14,7 @@
          paren%/curried
          dec-degree%
          binary%
+         unary%
          monoid%
          big-op%
          delimiter%
@@ -80,6 +81,12 @@
      [else (values a b)]))
   (paren% #:level lv
           l op r))
+
+(define ((unary% #:level [lv : Symbol '?]
+                 [op : MathTeX+Like])
+         . [xs : MathTeX+Like *])
+  (paren% #:level lv
+          op (apply dec-degree% xs)))
 
 (define ((monoid% #:level [lv : Symbol '?]
                   [unit : MathTeX+Like]
