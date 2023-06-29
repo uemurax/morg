@@ -29,6 +29,7 @@
              [index% index]
              [print-index% print-index]
              [section% section])
+ make-index-type
  anchor
  list-item
  ordered-list

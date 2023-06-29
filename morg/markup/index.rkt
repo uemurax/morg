@@ -7,12 +7,16 @@
          "inline.rkt")
 
 (provide index-list->inline
+         make-index-type
          default-index-type
          index%/curried
          index%)
 
-(define default-index-type
+(define (make-index-type)
   (idx-type))
+
+(define default-index-type
+  (make-index-type))
 
 (define (index-list->inline
          #:less-than? [less-than? : (IndexItem IndexItem . -> . Boolean)
