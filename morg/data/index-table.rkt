@@ -25,13 +25,13 @@
   (Listof IndexItem))
 
 (struct index-table
-  ([contents : (HashTable Symbol IndexList)])
+  ([contents : (HashTable IndexType IndexList)])
   #:type-name IndexTable)
 
-(define (index-table-has-key? [tbl : IndexTable] [type : Symbol]) : Boolean
+(define (index-table-has-key? [tbl : IndexTable] [type : IndexType]) : Boolean
   (hash-has-key? (index-table-contents tbl) type))
 
-(define (index-table-ref [tbl : IndexTable] [type : Symbol]) : IndexList
+(define (index-table-ref [tbl : IndexTable] [type : IndexType]) : IndexList
   (hash-ref (index-table-contents tbl) type))
 
 (define empty-index-table
