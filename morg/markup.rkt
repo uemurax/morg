@@ -25,6 +25,7 @@
              [code% code]
              [dfn% dfn]
              [anchor-ref% anchor-ref]
+             [index%/curried index/curried]
              [index% index]
              [print-index% print-index]
              [section% section])
