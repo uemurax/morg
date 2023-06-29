@@ -1,6 +1,7 @@
 #lang typed/racket
 
 (require "inline.rkt"
+         "index.rkt"
          "splice.rkt")
 
 (provide (struct-out block) Block
@@ -23,6 +24,6 @@
   #:type-name Paragraph)
 
 (struct print-index
-  ([type : Symbol])
+  ([type : IndexType])
   #:transparent
   #:type-name PrintIndex)

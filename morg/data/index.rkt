@@ -3,12 +3,16 @@
 (require "inline.rkt")
 
 (provide (struct-out index) Index
+         (struct-out idx-type) IndexType
          index<?)
+
+(struct idx-type ()
+  #:type-name IndexType)
 
 (struct index
   ([key : String]
    [display : PureInline]
-   [type : Symbol])
+   [type : IndexType])
   #:transparent
   #:type-name Index)
 

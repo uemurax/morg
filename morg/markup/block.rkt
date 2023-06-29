@@ -2,6 +2,8 @@
 
 (require "../data/block.rkt"
          "../data/splice.rkt"
+         "../data/index.rkt"
+         "index.rkt"
          "inline.rkt")
 
 (provide BlockLike
@@ -29,5 +31,5 @@
 (define (paragraph% . [xs : InlineLike *]) : Paragraph
   (paragraph (apply inline% xs)))
 
-(define (print-index% [type : Symbol 'index]) : PrintIndex
+(define (print-index% [type : IndexType default-index-type]) : PrintIndex
   (print-index type))

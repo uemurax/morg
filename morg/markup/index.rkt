@@ -7,7 +7,16 @@
          "inline.rkt")
 
 (provide index-list->inline
+         make-index-type
+         default-index-type
+         index%/curried
          index%)
+
+(define (make-index-type)
+  (idx-type))
+
+(define default-index-type
+  (make-index-type))
 
 (define (index-list->inline
          #:less-than? [less-than? : (IndexItem IndexItem . -> . Boolean)
@@ -22,7 +31,12 @@
                  (index-list-sort il #:less-than? less-than?)))
   })
 
-(define (index% #:key [key : String]
-                #:type [type : Symbol 'index]
-                . [xs : PureInlineLike *]) : Index
+(define ((index%/curried #:type [type : IndexType default-index-type])
+         #:key [key : String]
+         . [xs : PureInlineLike *]) : Index
   (index key (apply pure-inline% xs) type))
+
+(define (index% #:key [key : String]
+                #:type [type : IndexType default-index-type]
+                . [xs : PureInlineLike *]) : Index
+  ((index%/curried #:type type) #:key key (apply pure-inline% xs)))
