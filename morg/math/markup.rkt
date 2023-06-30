@@ -116,9 +116,10 @@
      right))
 
 (define ((apply-with-parens% #:left [left : MathTeX+Like "("]
-                             #:right [right : MathTeX+Like ")"])
+                             #:right [right : MathTeX+Like ")"]
+                             #:level [lv : (U Symbol #f #t) #f])
          [f : MathTeX+Like] . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
-  (paren% #:level #f
+  (paren% #:level lv
           (dec-degree% f)
           (apply (delimiter% #:left left #:right right) xs)))
 
