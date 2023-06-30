@@ -178,6 +178,10 @@
       list-style-type: none;
       padding-inline-start: 1em;
     }
+    .@|toc-edge-summary-selected-class-name| {
+      background-color: LightGoldenRodYellow;
+      font-weight: bold;
+    }
     .@|article-class-name|, .@|statement-class-name|, .@|proof-class-name| {
       margin-block: 1em;
     }
