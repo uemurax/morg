@@ -99,6 +99,8 @@
    [(document? n) main]
    [else
     (define doc (site-state-root st))
+    (define tr
+      (map node-id (node-trace n)))
     (tagged% 'div
              `((id ,body-container-id))
              (tagged% 'div
@@ -129,7 +131,7 @@
              (tagged% 'nav
                       `((id ,side-nav-id)
                         (style "display: none;"))
-                      (make-document-toc (site-state-root st)))
+                      (make-document-toc (site-state-root st) tr))
              main)]))
 
 (define ((default-config:head-template [_st : SiteState] [_n : (U Node Document)])
@@ -175,6 +177,10 @@
     .@|toc-node-class-name| {
       list-style-type: none;
       padding-inline-start: 1em;
+    }
+    .@|toc-edge-summary-selected-class-name| {
+      background-color: LightGoldenRodYellow;
+      font-weight: bold;
     }
     .@|article-class-name|, .@|statement-class-name|, .@|proof-class-name| {
       margin-block: 1em;
