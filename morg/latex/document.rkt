@@ -85,8 +85,8 @@
       @(config-front-matter cfg)
       @macro%["maketitle"]
       @(h (document-contents doc))
-      @macro%["tableofcontents"]
       @(apply % (map f front))
+      @macro%["tableofcontents"]
       @(config-main-matter cfg)
       @(apply % (map f main))
       @(config-back-matter cfg)
