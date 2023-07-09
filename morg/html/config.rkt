@@ -152,6 +152,7 @@
       font-family: sans-serif;
       font-size: 112.5%;
       margin: 0;
+      background-color: White;
     }
     .@|main-container-class-name|, .@|main-container-alt-class-name| {
       max-width: 40em;
@@ -222,10 +223,11 @@
       margin-inline: 1em;
     }
     #@|body-container-id| {
+      background-color: inherit;
     }
     #@|header-id| {
       z-index: 8;
-      background-color: white;
+      background-color: inherit;
       position: sticky;
       top: 0;
       left: 0;
@@ -235,7 +237,7 @@
       justify-content: start;
     }
     #@|side-nav-id| {
-      background-color: white;
+      background-color: inherit;
       z-index: 4;
       position: sticky;
       top: @|header-size|;
