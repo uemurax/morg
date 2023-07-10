@@ -26,10 +26,14 @@
          "class/document-toc.rkt"
          "class/document.rkt")
 
+(require (for-syntax typed/racket))
+
 (provide Assets
          (struct-out config) Config
          site-state-node-ref
          config-add-css
+         provide-config
+         dynamic-require-config
          default-config)
 
 (define-type Assets
@@ -299,3 +303,22 @@
            (tagged% 'link
                     `((rel "stylesheet")
                       (href ,name)))))))]))
+
+(define-for-syntax config-export #'config)
+
+(define-syntax (config-export stx)
+  (with-syntax ([cfg config-export])
+    #''cfg))
+
+(define-syntax (provide-config stx)
+  (syntax-case stx ()
+   [(_ body ...)
+    (with-syntax ([cfg config-export])
+      #'(begin
+          (provide (rename-out [cfg:local cfg]))
+          (define cfg:local : Config
+            (let ()
+              body ...))))]))
+
+(define (dynamic-require-config [mod : Module-Path]) : Config
+  (cast (dynamic-require mod (config-export)) Config))
