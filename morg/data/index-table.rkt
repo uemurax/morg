@@ -35,10 +35,10 @@
   (hash-ref (index-table-contents tbl) type))
 
 (define empty-index-table
-  (index-table (hash)))
+  (index-table (hasheq)))
 
 (define (make-index-table [doc : Document]) : IndexTable
-  (make-index-table:document doc (index-table (hash))))
+  (make-index-table:document doc empty-index-table))
 
 (define (make-index-table:document [doc : Document] [tbl : IndexTable]) : IndexTable
   (define front (document-front doc))
