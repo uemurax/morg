@@ -38,16 +38,16 @@ jobs:
             marginnote
 
       - name: Compile example document
-        run: raco make -v _example/index.rkt _example/html-config.rkt _example/latex-config.rkt
+        run: raco make -v example~/index.rkt example~/html-config.rkt example~/latex-config.rkt
 
       - name: Build example document
-        run: raco morg --html-config _example/html-config.rkt --pdf-config _example/latex-config.rkt _example/index.rkt _site
+        run: raco morg --html-config example~/html-config.rkt --pdf-config example~/latex-config.rkt example~/index.rkt site~
 
       - name: Archive artifacts
-        run: tar -cvf _site.tar _site
+        run: tar -cvf site.tar site~
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: example
-          path: _site.tar
+          path: site.tar

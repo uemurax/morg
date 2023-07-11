@@ -7,12 +7,12 @@
          "latex.rkt"
          "html.rkt")
 
-(define (get-html-config [mod : (Option String)]) : html:Config
+(define (get-html-config [mod : (Option Module-Path)]) : html:Config
   (if mod
       (html:dynamic-require-config mod)
       html:default-config))
 
-(define (get-latex-config [mod : (Option String)]) : latex:Config
+(define (get-latex-config [mod : (Option Module-Path)]) : latex:Config
   (if mod
       (latex:dynamic-require-config mod)
       latex:default-config))
@@ -20,18 +20,18 @@
 (struct cmd-args
   ([html? : Boolean]
    [pdf? : Boolean]
-   [html-config-file : (Option String)]
-   [pdf-config-file : (Option String)]
-   [index-file : String]
+   [html-config-file : (Option Module-Path)]
+   [pdf-config-file : (Option Module-Path)]
+   [index-file : Module-Path]
    [dst-dir : String]))
 
 (module+ main
   (define args
     (let ([html? : (Parameterof Boolean) (make-parameter #f)]
           [pdf? : (Parameterof Boolean) (make-parameter #f)]
-          [html-config-file : (Parameterof (Option String))
+          [html-config-file : (Parameterof (Option Module-Path))
            (make-parameter #f)]
-          [pdf-config-file : (Parameterof (Option String))
+          [pdf-config-file : (Parameterof (Option Module-Path))
            (make-parameter #f)])
       (command-line
        #:once-each
@@ -40,20 +40,20 @@
        ["--html-config" file
                         "Config file for HTML output. Implies --html."
                         (html? #t)
-                        (html-config-file (assert file string?))]
+                        (html-config-file (string->path (assert file string?)))]
        ["--pdf" "Build PDF version."
                 (pdf? #t)]
        ["--pdf-config" file
                        "Config file for PDF output. Implies --pdf."
                        (pdf? #t)
-                       (pdf-config-file (assert file string?))]
+                       (pdf-config-file (string->path (assert file string?)))]
        #:args (index-file dst-dir)
        (cmd-args
         (html?)
         (pdf?)
         (html-config-file)
         (pdf-config-file)
-        (assert index-file string?)
+        (string->path (assert index-file string?))
         (assert dst-dir string?)))))
   (define index-file (cmd-args-index-file args))
   (define dst-dir (cmd-args-dst-dir args))
