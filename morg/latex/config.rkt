@@ -81,4 +81,4 @@
               body ...))))]))
 
 (define (dynamic-require-config [mod : Module-Path]) : Config
-  (cast (dynamic-require mod (config-export)) Config))
+  (assert (dynamic-require mod (config-export)) config?))

@@ -40,21 +40,21 @@
        ["--html-config" file
                         "Config file for HTML output. Implies --html."
                         (html? #t)
-                        (html-config-file (cast file String))]
+                        (html-config-file (assert file string?))]
        ["--pdf" "Build PDF version."
                 (pdf? #t)]
        ["--pdf-config" file
                        "Config file for PDF output. Implies --pdf."
                        (pdf? #t)
-                       (pdf-config-file (cast file String))]
+                       (pdf-config-file (assert file string?))]
        #:args (index-file dst-dir)
        (cmd-args
         (html?)
         (pdf?)
         (html-config-file)
         (pdf-config-file)
-        (cast index-file String)
-        (cast dst-dir String)))))
+        (assert index-file string?)
+        (assert dst-dir string?)))))
   (define index-file (cmd-args-index-file args))
   (define dst-dir (cmd-args-dst-dir args))
   (define html? (cmd-args-html? args))
@@ -69,8 +69,7 @@
     (displayln (format "PDF config file: ~a" pdf-config-file)))
   (displayln (format "Index file: ~a" index-file))
   (displayln (format "Destination directory: ~a" dst-dir))
-  (define doc
-    (cast (dynamic-include-part index-file) Document))
+  (define doc (assert (dynamic-include-part index-file) document?))
   (when html?
     (->html/publish #:config (get-html-config html-config-file)
                     doc dst-dir))
