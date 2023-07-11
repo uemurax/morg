@@ -47,6 +47,10 @@
                        "Config file for PDF output. Implies --pdf."
                        (pdf? #t)
                        (pdf-config-file (string->path (assert file string?)))]
+       #:usage-help
+       "Build a MOrg document."
+       "<index-file> is a module that exports a document."
+       "<dst-dir> is a destination directory."
        #:args (index-file dst-dir)
        (cmd-args
         (html?)
