@@ -1,11 +1,16 @@
-#lang racket
+#lang typed/racket
 
-(require (for-syntax racket))
+(require (for-syntax typed/racket))
 
 (provide include-part
+         dynamic-include-part
          provide-part)
 
 (define-for-syntax part-name #'part)
+
+(define-syntax (part-name stx)
+  (with-syntax ([part part-name])
+    #''part))
 
 (define-syntax (include-part stx)
   (syntax-case stx ()
@@ -14,6 +19,9 @@
       #'(let ()
           (local-require (rename-in path [part part:local]))
           part:local))]))
+
+(define (dynamic-include-part [mod : Module-Path])
+  (dynamic-require mod (part-name)))
 
 (define-for-syntax (path->id path)
   (path->string

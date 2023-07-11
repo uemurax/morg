@@ -1,0 +1,51 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+name: Build example document
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: Bogdanp/setup-racket@v1.10
+        with:
+          architecture: x64
+          distribution: full
+          variant: CS
+          version: stable
+      - name: Installing morg and its dependencies
+        run: raco pkg install --no-docs --auto --name morg
+
+      - name: Set up TeXLive for example document
+        uses: teatimeguest/setup-texlive-action@v2
+        with:
+          # Standard packages
+          packages: >-
+            scheme-basic
+            etoolbox
+            latexmk
+            luatex
+            hyperref
+            xcolor
+            tools
+            marginnote
+
+      - name: Compile example document
+        run: raco make -v example~/index.rkt example~/html-config.rkt example~/latex-config.rkt
+
+      - name: Build example document
+        run: raco morg --html-config example~/html-config.rkt --pdf-config example~/latex-config.rkt example~/index.rkt site~
+
+      - name: Archive artifacts
+        run: tar -cvf site.tar site~
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: example
+          path: site.tar
