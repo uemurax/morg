@@ -7,7 +7,6 @@
          index<?)
 
 (struct idx-type ()
-  #:transparent
   #:type-name IndexType)
 
 (struct index
