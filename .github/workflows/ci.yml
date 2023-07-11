@@ -30,29 +30,3 @@ jobs:
         run: raco setup --check-pkg-deps --unused-pkg-deps morg
       - name: Testing morg
         run: raco test -x -p morg
-
-      - name: Set up TeXLive for example document
-        uses: teatimeguest/setup-texlive-action@v2
-        with:
-          # Standard packages
-          packages: >-
-            scheme-basic
-            etoolbox
-            latexmk
-            luatex
-            hyperref
-            xcolor
-            tools
-            marginnote
-
-      - name: Build example document
-        run: raco morg --html-config _example/html-config.rkt --pdf-config _example/latex-config.rkt _example/index.rkt _site
-
-      - name: Archive artifacts
-        run: tar -cvf _site.tar _site
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: example-${{ matrix.racket-variant }}-${{ matrix.racket-version }}
-          path: _site.tar
