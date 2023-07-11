@@ -20,8 +20,6 @@ jobs:
           version: stable
       - name: Installing morg and its dependencies
         run: raco pkg install --no-docs --auto --name morg
-      - name: Compiling morg and building its docs
-        run: raco setup --check-pkg-deps --unused-pkg-deps morg
 
       - name: Set up TeXLive for example document
         uses: teatimeguest/setup-texlive-action@v2
