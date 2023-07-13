@@ -23,19 +23,33 @@
 (define (dynamic-include-part [mod : Module-Path])
   (dynamic-require mod (part-name)))
 
-(define-for-syntax (path->id path)
-  (path->string
-   (path-replace-extension
-    (file-name-from-path path)
-    "")))
+(module tools typed/racket
+  (provide path->id)
+
+  (define (path->id [path : Path-String])
+    (path->string
+     (path-replace-extension
+      (assert (file-name-from-path path) path?)
+      ""))))
+
+(require (for-syntax 'tools))
+
+(define-syntax (provide-part-0 stx)
+  (syntax-case stx ()
+   [(_ form)
+    (with-syntax ([part part-name])
+      #'(begin
+          (provide (rename-out [part:local part]))
+          (define part:local
+            form)))]))
 
 (define-syntax (provide-part stx)
   (syntax-case stx ()
     [(_ (id-var) body ...)
-     (with-syntax ([part part-name]
-                   [id (path->id (syntax-source stx))])
-       #'(begin
-           (provide (rename-out [part:local part]))
-           (define part:local
-             (let ([id-var id])
-               body ...))))]))
+     (with-syntax ([id (path->id (syntax-source stx))])
+       #'(provide-part-0
+          (let ([id-var id])
+            body ...)))]))
+
+(module* internal #f
+  (provide provide-part-0))
