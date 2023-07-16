@@ -40,5 +40,5 @@
          (provide-part-1 result)
 
          (module+ main
-           (require morg/text)
+           (require morg/text/preview)
            (preview))))))
