@@ -1,8 +1,9 @@
 #lang typed/racket
 
-(require "html/site.rkt"
-         "html/config.rkt"
-         "data/document.rkt")
+(require "config.rkt"
+         "site.rkt"
+         "../data/document.rkt"
+         "convert.rkt")
 
 (require/typed racket/file
   [make-temporary-directory (-> Path)])
@@ -10,12 +11,7 @@
 (require/typed racket/base
   [copy-file (Path Path Boolean . -> . Void)])
 
-(provide ->html
-         ->html/publish)
-
-(define (->html #:config [cfg : Config default-config]
-                [doc : Document]) : Site
-  (make-site cfg doc))
+(provide ->html/publish)
 
 (define ((write-page [dir : Path])
          [url : String] [contents : String]) : Void

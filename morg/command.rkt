@@ -5,7 +5,7 @@
          "data/document.rkt"
          "markup/syntax.rkt"
          "latex.rkt"
-         "html.rkt")
+         "html/publish.rkt")
 
 (define (get-html-config [mod : (Option Module-Path)]) : html:Config
   (if mod
