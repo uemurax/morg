@@ -11,6 +11,7 @@
 (provide
  bibliography
  bibliography/curried
+ (rename-out [bibliography/curried make-bibliography])
  (rename-out [eprint% eprint]
              [article% article]
              [thesis% thesis]
@@ -20,12 +21,12 @@
   "Bibliography item")
 
 (define ((bibliography/curried
-          #:header [header : PureInlineLike default-header])
+          . [header : PureInlineLike *])
          #:id [maybe-id : String]
          [b : BibItem])
   @x:article%[
     #:id maybe-id
-    #:header header
+    #:header (apply pure-inline% header)
     @paragraph%{
       @(format-bib-item b)
     }
@@ -35,4 +36,4 @@
          #:header [header : PureInlineLike default-header]
          #:id [maybe-id : String]
          [b : BibItem])
-  ((bibliography/curried #:header header) #:id maybe-id b))
+  ((bibliography/curried header) #:id maybe-id b))
