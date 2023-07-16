@@ -1,11 +1,9 @@
 #lang typed/racket
 
-(require "data/document.rkt"
-         "latex/document.rkt"
-         "latex/config.rkt"
-         "text/tex.rkt"
-         "data/id.rkt"
-         "markup/string.rkt")
+(require "../data/id.rkt"
+         "config.rkt"
+         "convert.rkt"
+         "../data/document.rkt")
 
 (require/typed racket/file
   [make-temporary-directory (-> Path)])
@@ -13,16 +11,7 @@
 (require/typed racket/base
   [copy-file (Path Path Boolean . -> . Void)])
 
-(provide ->latex
-         ->latex/publish)
-
-(define (->latex #:config [cfg : Config default-config]
-                 [doc : (U Document)]) : String
-  (define x
-    (cond
-     [(document? doc) ((document->latex cfg) doc)]))
-  (define y (text-tex->text x))
-  (string-tree->string y))
+(provide ->latex/publish)
 
 (define (latex->pdf/publish [dst-dir : Path] [i : Id] [s : String]) : Void
   (define cmd (find-executable-path "latexmk"))
