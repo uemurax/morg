@@ -8,10 +8,8 @@
          "splice.rkt"
          "../util/option.rkt")
 
-(provide article%/curried 
-         article%
+(provide article%
          (rename-out [article%/curried make-article])
-         proof%/curried
          (rename-out [proof%/curried make-proof])
          proof%)
 

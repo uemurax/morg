@@ -10,7 +10,6 @@
 
 (provide
  bibliography
- bibliography/curried
  (rename-out [bibliography/curried make-bibliography])
  (rename-out [eprint% eprint]
              [article% article]
