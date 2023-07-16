@@ -1,23 +1,14 @@
-#lang at-exp typed/racket
+#lang morg
 
-(require morg/markup)
-
-(provide part:0004)
-
-(define part:0004
-  @article[
-    #:id "0004"
-    #:header @%{Theorem}
+@article[
+  #:id (current-id)
+  #:header @%{Theorem}
+  @paragraph{
+    True is true.
+  }
+  #:proof @proof[
     @paragraph{
-      True is true.
+      Left as an exercise.
     }
-    #:proof @proof[
-      @paragraph{
-        Left as an exercise.
-      }
-    ]
-  ])
-
-(module+ main
-  (require morg/text)
-  (display (->text part:0004)))
+  ]
+]
