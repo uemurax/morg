@@ -1,8 +1,10 @@
 #lang morg
 
-@article[
+(require "lib/theorem.rkt"
+         "lib/proof.rkt")
+
+@theorem[
   #:id (current-id)
-  #:header @%{Theorem}
   @paragraph{
     True is true.
   }

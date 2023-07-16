@@ -1,10 +1,10 @@
 #lang morg
 
-(require (prefix-in bib: morg/bibliography))
+(require morg/bibliography)
 
-@bib:bibliography[
+@bibliography[
   #:id (current-id)
-  @bib:book[
+  @book[
     #:author @list[@%{Some One}]
     #:title @%{An introduction to something}
     #:date (date 2003)

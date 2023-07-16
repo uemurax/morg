@@ -1,11 +1,12 @@
 #lang morg
 
 (require morg/eq-reasoning
+         "lib/proposition.rkt"
+         "lib/proof.rkt"
          "math.rkt")
 
-@article[
+@proposition[
   #:id (current-id)
-  #:header "Proposition"
   @paragraph{
     @(math ("1" . = . "1"))
   }

@@ -1,8 +1,9 @@
 #lang morg
 
-@article[
+(require "lib/remark.rkt")
+
+@remark[
   #:id (current-id)
-  #:header @%{Remark}
   @paragraph{
     Here is a @code{code}.
   }

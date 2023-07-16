@@ -14,7 +14,7 @@
 (require 'parameter)
 
 (module+ test
-  (require "data/id.rkt")
+  (require "../data/id.rkt")
   (check-exn
    exn:fail?
    (lambda ()

@@ -1,8 +1,9 @@
 #lang morg
 
-@article[
+(require "lib/definition.rkt")
+
+@definition[
   #:id (current-id)
-  #:header @%{Definition}
   #:indexes @list[
     @index[#:key "thing"]{Thing}
   ]

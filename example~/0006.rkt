@@ -1,8 +1,10 @@
 #lang morg
 
-@article[
+(require "lib/proposition.rkt"
+         "lib/proof.rkt")
+
+@proposition[
   #:id (current-id)
-  #:header @%{Proposition}
   @paragraph{
     It is not true that it is true that it is not true that it is true that it is not true that it is true that false is false.
   }

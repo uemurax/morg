@@ -1,10 +1,10 @@
 #lang morg
 
-(require "math.rkt")
+(require "math.rkt"
+         "lib/fact.rkt")
 
-@article[
+@fact[
   #:id (current-id)
-  #:header @%{Fact}
   @paragraph{
     @math[
       (((@%{1} . + . @%{2})
