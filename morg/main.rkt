@@ -22,18 +22,24 @@
 
   (define (morg-read-syntax src in)
     (with-syntax ([(form ... result) (morg-read-syntax* src in (list))]
-                  [id (path->id src)])
+                  [id (path->id src)]
+                  [provide-part-1 (gensym "provide-part-1")])
       (strip-context
        #'(module ignored typed/racket
            (require morg/markup
-                    morg/language
-                    (submod morg/markup/syntax internal))
+                    morg/language)
+
+           (let ()
+             (local-require (submod morg/language parameter))
+             (current-id id))
+
            form ...
 
-           (provide-part-0
-            (parameterize ([current-id id])
-              result))
-              
+           (require (rename-in (submod morg/markup/syntax internal)
+                               [provide-part-0 provide-part-1]))
+
+           (provide-part-1 result)
+
            (module+ main
              (require morg/text)
              (preview)))))))

@@ -1,12 +1,19 @@
 #lang typed/racket
 
+(require (submod "markup/syntax.rkt" internal))
+
 (module+ test
   (require typed/rackunit))
 
-(provide current-id)
+(provide (rename-out [get-current-id current-id]))
 
-(define current-id : (Parameterof String)
-  (make-parameter "!!!Invalid id!!!"))
+(module parameter typed/racket
+  (provide current-id)
+
+  (define current-id : (Parameterof String)
+    (make-parameter "!!!Invalid id!!!")))
+
+(require 'parameter)
 
 (module+ test
   (require "data/id.rkt")
@@ -14,3 +21,6 @@
    exn:fail?
    (lambda ()
      (id (current-id)))))
+
+(define (get-current-id)
+  (current-id))
