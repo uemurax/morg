@@ -11,6 +11,7 @@
 (provide MathTeXAtom+Like
          MathTeX+Like
          math-tex+-like->math-tex+
+         (rename-out [->level make-level])
          paren%
          paren%/curried
          dec-degree%
@@ -58,9 +59,9 @@
 
 (define-type OpLevel (U Exact-Rational Level))
 
-(define (->level [x : OpLevel]) : Level
+(define (->level [x : OpLevel])
   (cond
-   [(rational? x) (make-level x)]
+   [(rational? x) (rational->level x)]
    [else x]))
 
 (define (paren%/curried #:level [lv1 : OpLevel #t]

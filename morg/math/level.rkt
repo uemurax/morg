@@ -7,7 +7,7 @@
                      syntax/parse))
 
 (provide Level
-         (rename-out [rational->level make-level])
+         rational->level
          level-dec-degree
          level-compare
          define-levels
