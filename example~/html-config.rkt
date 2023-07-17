@@ -1,6 +1,6 @@
 #lang typed/racket
 
-(require morg/html/config
+(require morg/html
          (prefix-in eq: (submod morg/eq-reasoning html-config)))
 
 (provide-config
