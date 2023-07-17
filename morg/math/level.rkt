@@ -6,7 +6,8 @@
 (provide Level
          (rename-out [rational->level make-level])
          level-dec-degree
-         level-compare)
+         level-compare
+         ComparisonResult)
 
 (struct id
   ()
