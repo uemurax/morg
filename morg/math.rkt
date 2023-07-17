@@ -1,14 +1,10 @@
 #lang typed/racket
 
 (require "math/markup.rkt"
-         "math/format.rkt"
          "math/inline.rkt"
-         "math/config.rkt"
          "markup/tex.rkt")
 
 (provide
- (struct-out config)
- default-config
  MathTeX+Like
  MathTeXAtom+Like
  (rename-out [paren% paren]
@@ -27,7 +23,7 @@
  group
  argument
  optional-argument
- make-math)
+ math)
 
 (define sub-sup (inst sub-sup% MathTeXAtom+Like MathTeX+Like))
 
