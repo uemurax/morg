@@ -3,10 +3,14 @@
 (module+ test
   (require typed/rackunit))
 
+(require (for-syntax racket
+                     syntax/parse))
+
 (provide Level
          (rename-out [rational->level make-level])
          level-dec-degree
          level-compare
+         define-levels
          ComparisonResult)
 
 (struct id
@@ -96,3 +100,20 @@
   (check-equal?
    (x1 . level-compare . x2)
    '>))
+
+(define-syntax (define-levels stx)
+  (syntax-parse stx
+   [(_ (~alt (~optional (~seq #:init init:number))
+             (~optional (~seq #:step step:number)))
+       ...
+       id:identifier ...)
+    (define n
+      (length (syntax->list #'(id ...))))
+    (define rng (range n))
+    (define x0 (syntax->datum #'(~? init 0)))
+    (define dx (syntax->datum #'(~? step 1)))
+    (with-syntax ([(value ...)
+                   (map (lambda (i) (+ x0 (* i dx))) rng)])
+      #'(begin
+          (define id : Exact-Rational value)
+          ...))]))

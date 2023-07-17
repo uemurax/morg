@@ -2,6 +2,7 @@
 
 (require "math/markup.rkt"
          "math/inline.rkt"
+         "math/level.rkt"
          "markup/tex.rkt")
 
 (provide
@@ -23,6 +24,7 @@
  group
  argument
  optional-argument
+ define-levels
  math)
 
 (define sub-sup (inst sub-sup% MathTeXAtom+Like MathTeX+Like))

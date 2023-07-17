@@ -5,11 +5,21 @@
 (provide + * =
          math)
 
+(module levels typed/racket
+  (require morg/math)
+  (provide (all-defined-out))
+  (define-levels
+   *
+   +
+   =))
+
+(require (prefix-in l: 'levels))
+
 (define +
-  (monoid #:level 0 "0" "+"))
+  (monoid #:level l:+ "0" "+"))
 
 (define *
-  (monoid #:level 1 "1" (macro "times")))
+  (monoid #:level l:* "1" (macro "times")))
 
 (define =
-  (binary #:level 2 "="))
+  (binary #:level l:= "="))
