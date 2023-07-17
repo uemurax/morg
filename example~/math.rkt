@@ -1,22 +1,15 @@
 #lang at-exp typed/racket
 
-(require morg/math
-         morg/markup/splice)
+(require morg/math)
 
 (provide + * =
          math)
 
-(define cfg
-  (struct-copy config default-config
-   [levels '(* + =)]))
-
 (define +
-  (monoid #:level '+ @%{0} @%{+}))
+  (monoid #:level 0 "0" "+"))
 
 (define *
-  (monoid #:level '* @%{1} @%{@macro["times"]}))
+  (monoid #:level 1 "1" (macro "times")))
 
 (define =
-  (binary #:level '= @%{=}))
-
-(define math (make-math cfg))
+  (binary #:level 2 "="))
