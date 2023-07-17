@@ -14,33 +14,34 @@
   #:type-name Id)
 
 (struct level
-  ([value : Nonnegative-Exact-Rational]
+  ([value : Exact-Rational]
    [id : Id]
    [degree : Nonpositive-Integer])
   #:transparent
-  #:type-name Level)
+  #:type-name Level-)
 
-(define (make-level [value : Nonnegative-Exact-Rational]
-                    [id : Id]
-                    [degree : Nonpositive-Integer]) : Level
-  (if (value . <= . 1)
-      (level value id degree)
-      (error "value must be <= 1.")))
+(define-type LevelBottom #f)
+(define-type LevelTop #t)
+(define-type Level
+  (U Level- LevelBottom LevelTop))
 
-(define (rational->level [r : Nonnegative-Exact-Rational])
-  (make-level r (id) 0))
+(define (rational->level [r : Exact-Rational])
+  (level r (id) 0))
 
 (define (level-dec-degree [x : Level])
-  (level (level-value x)
-         (level-id x)
-         (- (level-degree x) 1)))
+  (case x
+   [(#f #t) x]
+   [else
+    (level (level-value x)
+           (level-id x)
+           (- (level-degree x) 1))]))
 
 (define-type ComparisonResult
   (U '< '= '> '?))
 
-(define (level-compare
-         [x : Level]
-         [y : Level]) : ComparisonResult
+(define (level-compare-
+         [x : Level-]
+         [y : Level-]) : ComparisonResult
   (define x:v (level-value x))
   (define y:v (level-value y))
   (cond
@@ -58,6 +59,25 @@
        [(x:d . > . y:d) '>]
        [else '=])]
      [else '?])]))
+
+(define (level-compare
+         [x : Level]
+         [y : Level]) : ComparisonResult
+  (case x
+   [(#f)
+    (case y
+     [(#f) '=]
+     [else '<])]
+   [(#t)
+    (case y
+     [(#t) '=]
+     [else '>])]
+   [else
+    (case y
+     [(#f) '>]
+     [(#t) '<]
+     [else
+      (level-compare- x y)])]))
 
 (module+ test
   (define x1 (rational->level 1/2))
