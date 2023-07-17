@@ -1,36 +1,28 @@
-#lang at-exp typed/racket
+#lang morg
 
-(require morg/markup
-         "math.rkt")
+(require "math.rkt"
+         "lib/fact.rkt")
 
-(provide part:0007)
-
-(define part:0007
-  @article[
-    #:id "0007"
-    #:header @%{Fact}
-    @paragraph{
+@fact[
+  #:id (current-id)
+  @paragraph{
+    @math[
+      (((@%{1} . + . @%{2})
+        . * .
+        (@%{3} . + . @%{4}))
+       . = .
+       @%{3})
+    ].
+  }
+  @paragraph{
+    @disp{
       @math[
-        (((@%{1} . + . @%{2})
-          . * .
-          (@%{3} . + . @%{4}))
+        (((@%{1} . * . @%{2})
+          . + .
+          (@%{3} . * . @%{4}))
          . = .
-         @%{3})
+         @%{5})
       ].
     }
-    @paragraph{
-      @disp{
-        @math[
-          (((@%{1} . * . @%{2})
-            . + .
-            (@%{3} . * . @%{4}))
-           . = .
-           @%{5})
-        ].
-      }
-    }
-  ])
-
-(module+ main
-  (require morg/text)
-  (display (->text part:0007)))
+  }
+]

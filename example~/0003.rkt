@@ -1,37 +1,20 @@
-#lang at-exp typed/racket
+#lang morg
 
-(require morg/markup)
-
-(require "0004.rkt"
-         "0006.rkt"
-         "0008.rkt"
-         "000B.rkt"
-         "000C.rkt"
-         "000D.rkt"
-         "0007.rkt")
-
-(provide part:0003)
-
-(define part:0003
-  @section[
-    #:id "0003"
-    #:title @%{Test section}
-    @paragraph{
-      This is a test section. See also @ref["0002"].
-    }
-    part:0004
-    part:0006
-    part:0008
-    part:0007
-    @paragraph{
-      Please visit @href["https://example.com"]{this page}.
-      Also check out @href["https://example.com"].
-    }
-    part:000B
-    part:000C
-    part:000D
-  ])
-
-(module+ main
-  (require morg/text)
-  (display (->text part:0003)))
+@section[
+  #:id (current-id)
+  #:title @%{Test section}
+  @paragraph{
+    This is a test section. See also @ref["0002"].
+  }
+  (include-part "0004.rkt")
+  (include-part "0006.rkt")
+  (include-part "0008.rkt")
+  (include-part "0007.rkt")
+  @paragraph{
+    Please visit @href["https://example.com"]{this page}.
+    Also check out @href["https://example.com"].
+  }
+  (include-part "000B.rkt")
+  (include-part "000C.rkt")
+  (include-part "000D.rkt")
+]

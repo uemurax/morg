@@ -8,19 +8,19 @@
          "splice.rkt"
          "../util/option.rkt")
 
-(provide article%/curried 
-         article%
-         proof%/curried
+(provide article%
+         (rename-out [article%/curried make-article])
+         (rename-out [proof%/curried make-proof])
          proof%)
 
-(define ((article%/curried [header : PureInlineLike])
+(define ((article%/curried . [header : PureInlineLike *])
          #:id [maybe-id : String]
          #:title [title : (Option PureInlineLike) #f]
          #:indexes [indexes : (Listof Index) '()]
          #:proof [proof : (Option Proof) #f]
          . [contents : BlockLike *]) : Article
   (article (id maybe-id)
-           (pure-inline% header)
+           (apply pure-inline% header)
            (option-map pure-inline% title)
            indexes
            (apply block% contents)
@@ -39,11 +39,11 @@
    #:proof proof
    (apply % contents)))
 
-(define ((proof%/curried #:header [header : PureInlineLike "Proof"])
+(define ((proof%/curried . [header : PureInlineLike *])
          . [contents : BlockLike *]) : Proof
-  (proof (pure-inline% header)
+  (proof (apply pure-inline% header)
          (apply block% contents)))
 
 (define (proof% #:header [header : PureInlineLike "Proof"]
                 . [contents : BlockLike *]) : Proof
-  (apply (proof%/curried #:header header) contents))
+  (apply (proof%/curried header) contents))

@@ -1,39 +1,36 @@
-#lang racket
+#lang typed/racket
 
-(module reader racket
-  (require syntax/strip-context
-           (prefix-in at: scribble/reader)
-           (submod "markup/syntax.rkt" tools))
+(require "markup/block.rkt"
+         "markup/document.rkt"
+         "markup/inline.rkt"
+         "markup/section.rkt"
+         "markup/date.rkt"
+         "markup/index.rkt"
+         "markup/splice.rkt"
+         "markup/syntax.rkt")
 
-  (provide
-   (rename-out
-    [morg-read read]
-    [morg-read-syntax read-syntax]))
+(provide
+ (rename-out [paragraph% paragraph]
+             [document% document]
+             [ref% ref]
+             [href% href]
+             [date% date]
+             [emph% emph]
+             [display% disp]
+             [code% code]
+             [dfn% dfn]
+             [anchor-ref% anchor-ref]
+             [index% index]
+             [print-index% print-index]
+             [section% section])
+ anchor
+ list-item
+ ordered-list
+ unordered-list
+ (all-from-out "markup/splice.rkt")
+ include-part)
 
-  (define (morg-read in)
-    (syntax->datum
-     (morg-read-syntax #f in)))
-
-  (define (morg-read-syntax* src in acc)
-    (define stx (at:read-syntax src in))
-    (cond
-     [(eof-object? stx) (reverse acc)]
-     [else (morg-read-syntax* src in (list* stx acc))]))
-
-  (define (morg-read-syntax src in)
-    (with-syntax ([(form ... result) (morg-read-syntax* src in (list))]
-                  [id (path->id src)])
-      (strip-context
-       #'(module ignored typed/racket
-           (require morg/markup
-                    morg/language
-                    (submod morg/markup/syntax internal))
-           form ...
-
-           (provide-part-0
-            (parameterize ([current-id id])
-              result))
-              
-           (module+ main
-             (require morg/text)
-             (preview)))))))
+(define anchor (inst anchor% PureInlineLike))
+(define list-item (inst list-item% PureInlineLike InlineLike))
+(define ordered-list (inst ordered-list% PureInlineLike InlineLike))
+(define unordered-list (inst unordered-list% PureInlineLike InlineLike))

@@ -1,34 +1,27 @@
-#lang at-exp typed/racket
+#lang morg
 
-(require morg/markup
-         morg/eq-reasoning
+(require morg/eq-reasoning
+         "lib/proposition.rkt"
+         "lib/proof.rkt"
          "math.rkt")
 
-(provide part:000D)
-
-(define part:000D
-  @article[
-    #:id "000D"
-    #:header "Proposition"
+@proposition[
+  #:id (current-id)
+  @paragraph{
+    @(math ("1" . = . "1"))
+  }
+  #:proof @proof[
     @paragraph{
-      @(math ("1" . = . "1"))
-    }
-    #:proof @proof[
-      @paragraph{
-        This is proved as follows.
-        @disp{
-          @eq-reasoning[
-            @math{1}
-            @math{=} "Definition"
-            @math{1 + 0}
-            @math{=} "Definition"
-            @math{1}
-          ]
-        }
+      This is proved as follows.
+      @disp{
+        @eq-reasoning[
+          @math{1}
+          @math{=} "Definition"
+          @math{1 + 0}
+          @math{=} "Definition"
+          @math{1}
+        ]
       }
-    ]
-  ])
-
-(module+ main
-  (require morg/text)
-  (display (->text part:000D)))
+    }
+  ]
+]

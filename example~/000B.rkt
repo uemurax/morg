@@ -1,18 +1,10 @@
-#lang at-exp typed/racket
+#lang morg
 
-(require morg/markup)
+(require "lib/remark.rkt")
 
-(provide part:000B)
-
-(define part:000B
-  @article[
-    #:id "000B"
-    #:header @%{Remark}
-    @paragraph{
-      Here is a @code{code}.
-    }
-  ])
-
-(module+ main
-  (require morg/text)
-  (display (->text part:000B)))
+@remark[
+  #:id (current-id)
+  @paragraph{
+    Here is a @code{code}.
+  }
+]

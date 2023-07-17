@@ -4,8 +4,8 @@
          (prefix-in html: "html/config.rkt")
          "data/document.rkt"
          "markup/syntax.rkt"
-         "latex.rkt"
-         "html.rkt")
+         "latex/publish.rkt"
+         "html/publish.rkt")
 
 (define (get-html-config [mod : (Option Module-Path)]) : html:Config
   (if mod

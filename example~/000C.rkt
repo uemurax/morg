@@ -1,27 +1,20 @@
-#lang at-exp typed/racket
+#lang morg
 
-(require morg/markup)
+(require "lib/theorem.rkt"
+         "lib/proof.rkt")
 
-(provide part:000C)
-
-(define part:000C
-  @article[
-    #:id "000C"
-    #:header @%{Theorem}
-    @paragraph{
-      The following is equivalent.
-      @ordered-list[
-        @list-item[#:id "0000"]{True.}
-        @list-item[#:id "0001"]{Not false.}
-      ]
-    }
-    #:proof @proof[
-      @paragraph{
-        The implication from @anchor-ref[#:anchor "0000" #:node "000C"] to @anchor-ref[#:anchor "0001" #:node "000C"] is easy.
-      }
+@theorem[
+  #:id (current-id)
+  @paragraph{
+    The following is equivalent.
+    @ordered-list[
+      @list-item[#:id "0000"]{True.}
+      @list-item[#:id "0001"]{Not false.}
     ]
-  ])
-
-(module+ main
-  (require morg/text)
-  (display (->text part:000C)))
+  }
+  #:proof @proof[
+    @paragraph{
+      The implication from @anchor-ref[#:anchor "0000" #:node "000C"] to @anchor-ref[#:anchor "0001" #:node "000C"] is easy.
+    }
+  ]
+]
