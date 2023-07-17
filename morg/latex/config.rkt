@@ -14,6 +14,8 @@
          (struct-out package) Package
          provide-config
          dynamic-require-config
+         article-config
+         book-config
          default-config)
 
 (define-type Option
@@ -59,10 +61,29 @@
    '()
    default-config:make-section-ref
    (empty-ext-hash)
-   1
+   2
    @text-tex%{}
    @text-tex%{}
    @text-tex%{}))
+
+(define article-config default-config)
+
+(define (book-config:make-section-ref [depth : Natural] [num : String])
+  (define x
+    (if (depth . <= . 1)
+        "Chapter"
+        "Section"))
+  @text-tex%{@|x| @|num|})
+
+(define book-config
+  (struct-copy config default-config
+   [front-matter @text-tex%{@macro%{frontmatter}}]
+   [main-matter @text-tex%{@macro%{mainmatter}}]
+   [back-matter @text-tex%{@macro%{backmatter}}]
+   [section-macros '("chapter" "section" "subsection" "subsubsection" "paragraph")]
+   [section-macro-fallback "subparagraph"]
+   [make-section-ref book-config:make-section-ref]
+   [class "book"]))
 
 (define-for-syntax config-export #'config)
 

@@ -1,6 +1,6 @@
 #lang typed/racket
 
-(require morg/latex/config
+(require morg/latex
          (prefix-in eq: (submod morg/eq-reasoning latex-config)))
 
 (provide-config

@@ -8,6 +8,8 @@
  (struct-out package) Package
  provide-config
  default-config
+ article-config
+ book-config
  TextTeXLike
  (rename-out
   [text-tex% text-tex]
