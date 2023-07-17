@@ -63,11 +63,12 @@
    [(rational? x) (make-level x)]
    [else x]))
 
-(define ((paren%/curried #:level [lv : OpLevel #t]
-                         #:left [left : MathTeX+Like "("]
-                         #:right [right : MathTeX+Like ")"])
-         . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
-  (paren (->level lv) left right (splice xs)))
+(define (paren%/curried #:level [lv1 : OpLevel #t]
+                        #:left [left : MathTeX+Like "("]
+                        #:right [right : MathTeX+Like ")"])
+  (define lv (->level lv1))
+  (lambda [xs : MathTeX+Like *] : (Paren MathTeX+Like)
+    (paren lv left right (splice xs))))
 
 (define (paren% #:level [lv : OpLevel #t]
                 #:left [left : MathTeX+Like "("]
@@ -78,43 +79,47 @@
 (define (dec-degree% . [xs : MathTeX+Like *]) : MathTeX+
   (math-tex+-dec-degree (apply math-tex+% xs)))
 
-(define ((binary% #:level [lv : OpLevel]
-                  #:assoc [assoc : (U 'left 'right 'none) 'none]
-                  [op : MathTeX+Like])
-         [a : MathTeX+Like] [b : MathTeX+Like]) : (Paren MathTeX+Like)
-  (define-values (l r)
-    (case assoc
-     [(left) (values (dec-degree% a) b)]
-     [(right) (values a (dec-degree% b))]
-     [else (values a b)]))
-  (paren% #:level lv
-          l op r))
-
-(define ((unary% #:level [lv : OpLevel]
+(define (binary% #:level [lv1 : OpLevel]
+                 #:assoc [assoc : (U 'left 'right 'none) 'none]
                  [op : MathTeX+Like])
-         . [xs : MathTeX+Like *])
-  (paren% #:level lv
-          op (apply dec-degree% xs)))
+  (define lv (->level lv1))
+  (lambda ([a : MathTeX+Like] [b : MathTeX+Like]) : (Paren MathTeX+Like)
+    (define-values (l r)
+      (case assoc
+       [(left) (values (dec-degree% a) b)]
+       [(right) (values a (dec-degree% b))]
+       [else (values a b)]))
+    (paren% #:level lv
+            l op r)))
 
-(define ((monoid% #:level [lv : OpLevel]
-                  [unit : MathTeX+Like]
-                  [bin : MathTeX+Like])
-         . [xs : MathTeX+Like *]) : MathTeX+Like
-  (define n (length xs))
-  (cond
-   [(eq? n 0) unit]
-   [(eq? n 1) (list-ref xs 0)]
-   [else
-    (apply (paren%/curried #:level lv) (list-join-1 xs bin))]))
+(define (unary% #:level [lv1 : OpLevel]
+                [op : MathTeX+Like])
+  (define lv (->level lv1))
+  (lambda [xs : MathTeX+Like *]
+    (paren% #:level lv
+            op (apply dec-degree% xs))))
 
-(define ((big-op% #:level [lv : OpLevel]
-                  [op : MathTeXAtom+Like])
-         #:_ [sub : (Option MathTeX+Like) #f]
-         #:^ [sup : (Option MathTeX+Like) #f]
-         . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
-  (paren% #:level lv
-          ((inst sub-sup% MathTeXAtom+Like MathTeX+Like) op #:_ sub #:^ sup)
-          (apply dec-degree% xs)))
+(define (monoid% #:level [lv1 : OpLevel]
+                 [unit : MathTeX+Like]
+                 [bin : MathTeX+Like])
+  (define lv (->level lv1))
+  (lambda[xs : MathTeX+Like *] : MathTeX+Like
+    (define n (length xs))
+    (cond
+     [(eq? n 0) unit]
+     [(eq? n 1) (list-ref xs 0)]
+     [else
+      (apply (paren%/curried #:level lv) (list-join-1 xs bin))])))
+
+(define (big-op% #:level [lv1 : OpLevel]
+                 [op : MathTeXAtom+Like])
+  (define lv (->level lv1))
+  (lambda (#:_ [sub : (Option MathTeX+Like) #f]
+           #:^ [sup : (Option MathTeX+Like) #f]
+           . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
+    (paren% #:level lv
+            ((inst sub-sup% MathTeXAtom+Like MathTeX+Like) op #:_ sub #:^ sup)
+            (apply dec-degree% xs))))
 
 (define ((delimiter% #:left [left : MathTeX+Like]
                      #:right [right : MathTeX+Like])
@@ -123,16 +128,18 @@
      (apply (paren%/curried #:level #t #:left "" #:right "") xs)
      right))
 
-(define ((apply-with-parens% #:left [left : MathTeX+Like "("]
-                             #:right [right : MathTeX+Like ")"]
-                             #:level [lv : OpLevel])
-         [f : MathTeX+Like] . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
-  (paren% #:level lv
-          (dec-degree% f)
-          (apply (delimiter% #:left left #:right right) xs)))
+(define (apply-with-parens% #:left [left : MathTeX+Like "("]
+                            #:right [right : MathTeX+Like ")"]
+                            #:level [lv1 : OpLevel])
+  (define lv (->level lv1))
+  (lambda ([f : MathTeX+Like] . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
+    (paren% #:level lv
+            (dec-degree% f)
+            (apply (delimiter% #:left left #:right right) xs))))
 
-(define ((sup-op% #:level [lv : OpLevel]
-                  [op : MathTeX+Like])
-         . [xs : MathTeX+Like *])
-  (paren% #:level lv
-          ((inst sub-sup% MathTeXAtom+Like MathTeX+Like) (apply group% xs) #:^ op)))
+(define (sup-op% #:level [lv1 : OpLevel]
+                 [op : MathTeX+Like])
+  (define lv (->level lv1))
+  (lambda [xs : MathTeX+Like *]
+    (paren% #:level lv
+            ((inst sub-sup% MathTeXAtom+Like MathTeX+Like) (apply group% xs) #:^ op))))
