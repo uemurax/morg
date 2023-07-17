@@ -1,17 +1,16 @@
 #lang at-exp typed/racket
 
 (require "tex-plus.rkt"
+         "level.rkt"
          "../data/tex.rkt"
          "../data/splice.rkt"
-         "config.rkt"
          "../markup/tex.rkt")
 
 (provide (struct-out state) State
          format-math-tex+)
 
 (struct state
-  ([config : Config]
-   [level : Level])
+  ([level : Level])
   #:transparent
   #:type-name State)
 
@@ -19,8 +18,6 @@
 
 (define ((format-paren [st : State])
          [p : (Paren MathTeX+)]) : MathTeXLike
-  (define cfg (state-config st))
-  (define ss (config-levels cfg))
   (define cur-lv (state-level st))
   (define lv (paren-level p))
   (define st-1
@@ -28,7 +25,7 @@
      [level lv]))
   (define f (format-math-tex+ st-1))
   (define contents (f (paren-contents p)))
-  (define comp (lv . (level-compare ss) . cur-lv))
+  (define comp (lv . level-compare . cur-lv))
   (case comp
    [(<) contents]
    [else
@@ -44,10 +41,10 @@
          [s : (SubSup (Atom MathTeX+) MathTeX+)]) : (SubSup (Atom MathTeX) MathTeX)
   (define st-1
     (struct-copy state st
-     [level (level #f 0)]))
+     [level #f]))
   (define st-2
     (struct-copy state st
-     [level (level #t 0)]))
+     [level #t]))
   ((sub-sup-map (format-atom st-1) (format-math-tex+ st-2)) s))
 
 (define ((format-math-tex+ st) m)
