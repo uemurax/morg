@@ -1,6 +1,7 @@
 #lang typed/racket
 
 (require "tex-plus.rkt"
+         "level.rkt"
          "../data/tex.rkt"
          "../data/splice.rkt"
          "../util/list.rkt"
@@ -55,13 +56,13 @@
 (define (math-tex+% . [xs : MathTeX+Like *]) : MathTeX+
   (math-tex+-like->math-tex+ (splice xs)))
 
-(define ((paren%/curried #:level [lv : (U Symbol #f #t) #t]
+(define ((paren%/curried #:level [lv : Level #t]
                          #:left [left : MathTeX+Like "("]
                          #:right [right : MathTeX+Like ")"])
          . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
-  (paren (level lv 0) left right (splice xs)))
+  (paren lv left right (splice xs)))
 
-(define (paren% #:level [lv : (U Symbol #f #t) #t]
+(define (paren% #:level [lv : Level #t]
                 #:left [left : MathTeX+Like "("]
                 #:right [right : MathTeX+Like ")"]
                 . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
@@ -70,7 +71,9 @@
 (define (dec-degree% . [xs : MathTeX+Like *]) : MathTeX+
   (math-tex+-dec-degree (apply math-tex+% xs)))
 
-(define ((binary% #:level [lv : Symbol '?]
+(define-type OpLevel Exact-Rational)
+
+(define ((binary% #:level [lv : OpLevel]
                   #:assoc [assoc : (U 'left 'right 'none) 'none]
                   [op : MathTeX+Like])
          [a : MathTeX+Like] [b : MathTeX+Like]) : (Paren MathTeX+Like)
@@ -79,16 +82,16 @@
      [(left) (values (dec-degree% a) b)]
      [(right) (values a (dec-degree% b))]
      [else (values a b)]))
-  (paren% #:level lv
+  (paren% #:level (make-level lv)
           l op r))
 
-(define ((unary% #:level [lv : Symbol '?]
+(define ((unary% #:level [lv : OpLevel]
                  [op : MathTeX+Like])
          . [xs : MathTeX+Like *])
-  (paren% #:level lv
+  (paren% #:level (make-level lv)
           op (apply dec-degree% xs)))
 
-(define ((monoid% #:level [lv : Symbol '?]
+(define ((monoid% #:level [lv : OpLevel]
                   [unit : MathTeX+Like]
                   [bin : MathTeX+Like])
          . [xs : MathTeX+Like *]) : MathTeX+Like
@@ -97,14 +100,14 @@
    [(eq? n 0) unit]
    [(eq? n 1) (list-ref xs 0)]
    [else
-    (apply (paren%/curried #:level lv) (list-join-1 xs bin))]))
+    (apply (paren%/curried #:level (make-level lv)) (list-join-1 xs bin))]))
 
-(define ((big-op% #:level [lv : Symbol '?]
+(define ((big-op% #:level [lv : OpLevel]
                   [op : MathTeXAtom+Like])
          #:_ [sub : (Option MathTeX+Like) #f]
          #:^ [sup : (Option MathTeX+Like) #f]
          . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
-  (paren% #:level lv
+  (paren% #:level (make-level lv)
           ((inst sub-sup% MathTeXAtom+Like MathTeX+Like) op #:_ sub #:^ sup)
           (apply dec-degree% xs)))
 
@@ -117,14 +120,14 @@
 
 (define ((apply-with-parens% #:left [left : MathTeX+Like "("]
                              #:right [right : MathTeX+Like ")"]
-                             #:level [lv : (U Symbol #f #t) #f])
+                             #:level [lv : OpLevel])
          [f : MathTeX+Like] . [xs : MathTeX+Like *]) : (Paren MathTeX+Like)
-  (paren% #:level lv
+  (paren% #:level (make-level lv)
           (dec-degree% f)
           (apply (delimiter% #:left left #:right right) xs)))
 
-(define ((sup-op% #:level [lv : Symbol '?]
+(define ((sup-op% #:level [lv : OpLevel]
                   [op : MathTeX+Like])
          . [xs : MathTeX+Like *])
-  (paren% #:level lv
+  (paren% #:level (make-level lv)
           ((inst sub-sup% MathTeXAtom+Like MathTeX+Like) (apply group% xs) #:^ op)))
