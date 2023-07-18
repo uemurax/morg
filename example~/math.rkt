@@ -1,6 +1,7 @@
 #lang at-exp typed/racket
 
-(require morg/math)
+(require morg/math
+         (prefix-in tex: morg/math/tex))
 
 (provide + * =
          math)
@@ -19,7 +20,7 @@
   (monoid #:level l:+ "0" "+"))
 
 (define *
-  (monoid #:level l:* "1" (macro "times")))
+  (monoid #:level l:* "1" tex:times))
 
 (define =
   (binary #:level l:= "="))
