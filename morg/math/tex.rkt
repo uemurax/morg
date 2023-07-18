@@ -298,6 +298,7 @@
  ldotp
  cdotp
  colon
+ dots
  ldots
  cdots
  vdots
