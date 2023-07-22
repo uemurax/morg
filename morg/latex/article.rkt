@@ -26,7 +26,8 @@
   @text-tex%{
     @environment%["trivlist"]{
       @macro%["item" arg]
-      @((block->latex st) (proof-contents p))
+      @(strip-first-par
+        ((block->latex st) (proof-contents p)))
       @macro%["hfill"]
       @macro%["blacksquare"]
     }
@@ -60,7 +61,8 @@
     @environment%["trivlist"]{
       @macro%["item" arg]
       @(id->hypertarget id)@(id->latex/margin id)
-      @((block->latex st) (article-contents a))
+      @(strip-first-par
+        ((block->latex st) (article-contents a)))
     }
     @when%[pf]{@((proof->latex st) pf)}
   })

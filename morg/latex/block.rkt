@@ -11,15 +11,17 @@
          "state.rkt"
          "config.rkt")
 
-(provide block->latex)
+(provide block->latex
+         strip-first-par)
 
 (: block->latex : (State . -> . (Block . -> . tex:TextTeX)))
+
+(define par @macro%["par"])
 
 (define ((paragraph->latex [st : State])
           [x : Paragraph]) : tex:TextTeX
   @text-tex%{
-    @((inline->latex st) (paragraph-contents x))
-    @macro%["par"]
+    @|par|@((inline->latex st) (paragraph-contents x))
   })
 
 (define ((print-index->latex [st : State])
@@ -45,3 +47,15 @@
    [(print-index? x) ((print-index->latex st) x)]
    [(splice? x) ((splice->latex (block->latex st)) x)]
    [else (error "Unimplemented.")]))
+
+(: strip-first-par : (tex:TextTeX . -> . tex:TextTeX))
+
+(define (strip-first-par x)
+  (define c (tex:text-tex-contents x))
+  (match c
+   [(tex:atom a)
+    #:when (a . equal? . par)
+    @text-tex%{}]
+   [(splice (list* y r))
+    (apply text-tex% (strip-first-par y) r)]
+   [_ x]))
