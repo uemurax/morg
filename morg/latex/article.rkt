@@ -27,6 +27,8 @@
     @environment%["trivlist"]{
       @macro%["item" arg]
       @((block->latex st) (proof-contents p))
+      @macro%["hfill"]
+      @macro%["blacksquare"]
     }
   })
 

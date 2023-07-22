@@ -34,6 +34,7 @@ jobs:
             xcolor
             tools
             marginnote
+            amsfonts
 
       - name: Compile example document
         run: raco make -v example~/index.rkt example~/html-config.rkt example~/latex-config.rkt

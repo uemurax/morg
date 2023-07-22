@@ -69,6 +69,7 @@
     @(use-package "xcolor")
     @(use-package "multicol")
     @(use-package "marginnote")
+    @(use-package "amssymb")
     @(apply %
       (map (lambda ([p : Package])
              (use-package (package-name p)))
