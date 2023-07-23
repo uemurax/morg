@@ -4,19 +4,15 @@
          "../data/index-table.rkt"
          "../data/inline.rkt"
          "../data/article.rkt"
+         "../data/block.rkt"
          "inline.rkt")
 
 (provide index-list->inline
-         make-index-type
-         default-index-type
-         index%/curried
+         (rename-out [index%/curried make-index])
          index%)
 
 (define (make-index-type)
   (idx-type))
-
-(define default-index-type
-  (make-index-type))
 
 (define (index-list->inline
          #:less-than? [less-than? : (IndexItem IndexItem . -> . Boolean)
@@ -31,12 +27,16 @@
                  (index-list-sort il #:less-than? less-than?)))
   })
 
-(define ((index%/curried #:type [type : IndexType default-index-type])
-         #:key [key : String]
-         . [xs : PureInlineLike *]) : Index
-  (index key (apply pure-inline% xs) type))
+(define (index%/curried)
+  (define type (make-index-type))
+  (define (idx #:key [key : String]
+               . [xs : PureInlineLike *])
+    (index key (apply pure-inline% xs) type))
+  (define (prt)
+    (print-index type))
+  (values idx prt))
 
-(define (index% #:key [key : String]
-                #:type [type : IndexType default-index-type]
-                . [xs : PureInlineLike *]) : Index
-  ((index%/curried #:type type) #:key key (apply pure-inline% xs)))
+(define-values (index% print-index%) (index%/curried))
+
+(module* print #f
+  (provide print-index%))

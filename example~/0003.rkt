@@ -9,6 +9,7 @@
   (include-part "0004.rkt")
   (include-part "0006.rkt")
   (include-part "0008.rkt")
+  (include-part "000F.rkt")
   (include-part "0007.rkt")
   @paragraph{
     Please visit @href["https://example.com"]{this page}.

@@ -16,6 +16,7 @@
   (include-part "0003.rkt")
   #:back @list[
     (include-part "000A.rkt")
+    (include-part "000E.rkt")
     (include-part "0009.rkt")
   ]
 ]

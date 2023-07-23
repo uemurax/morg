@@ -2,9 +2,8 @@
 
 (require "../data/block.rkt"
          "../data/splice.rkt"
-         "../data/index.rkt"
-         "index.rkt"
-         "inline.rkt")
+         "inline.rkt"
+         (submod "index.rkt" print))
 
 (provide BlockLike
          block-like->block
@@ -30,6 +29,3 @@
 
 (define (paragraph% . [xs : InlineLike *]) : Paragraph
   (paragraph (apply inline% xs)))
-
-(define (print-index% [type : IndexType default-index-type]) : PrintIndex
-  (print-index type))
