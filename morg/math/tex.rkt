@@ -186,6 +186,7 @@
  intop
  int
  prod
+ coprod
  sum
  bigotimes
  bigoplus
