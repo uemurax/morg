@@ -15,6 +15,7 @@
    [(book? b) (format-book b)]
    [(article? b) (format-article b)]
    [(thesis? b) (format-thesis b)]
+   [(misc? b) (format-misc b)]
    [else (error "Unimplemented.")]))
 
 (define (format-author [a : (Listof Inline)]) : Inline
@@ -89,3 +90,13 @@
                    #:url (thesis-url t)
                    #:eprint (thesis-eprint t)))
   @inline%{@|author|. @emph{@|title|}. @|type|, @|inst|, @|date|.@|online|})
+
+(define (format-misc [m : Misc]) : Inline
+  (define author (format-author (misc-author m)))
+  (define title (misc-title m))
+  (define date (date->text (misc-date m)))
+  (define online
+    (format-online #:doi (misc-doi m)
+                   #:url (misc-url m)
+                   #:eprint (misc-eprint m)))
+  @inline%{@|author|. @emph{@|title|}. @|date|.@|online|})

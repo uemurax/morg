@@ -8,6 +8,8 @@
 (provide eprint%
          article%
          thesis%
+         misc%
+         arXiv%
          book%)
 
 (define (eprint% #:type [type : EPrintType 'arXiv]
@@ -62,3 +64,23 @@
           (inline% institution)
           d
           doi url ep))
+
+(define (misc% #:author [author : (Listof InlineLike)]
+               #:title [title : InlineLike]
+               #:date [d : Date]
+               #:doi [doi : (Option String) #f]
+               #:url [url : (Option String) #f]
+               #:eprint [ep : (Option EPrint) #f]) : Misc
+  (misc (map inline% author)
+        (inline% title)
+        d
+        doi url ep))
+
+(define (arXiv% #:author [author : (Listof InlineLike)]
+                #:title [title : InlineLike]
+                #:date [d : Date]
+                #:id [id : String])
+  (misc% #:author author
+         #:title title
+         #:date d
+         #:eprint (eprint% #:type 'arXiv id)))

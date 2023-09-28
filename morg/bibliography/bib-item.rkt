@@ -8,11 +8,13 @@
          (struct-out eprint) EPrint
          (struct-out article) Article
          (struct-out thesis) Thesis
+         (struct-out misc) Misc
          (struct-out book) Book)
 
 (define-type BibItem
   (U Book
      Thesis
+     Misc
      Article))
 
 (define-type EPrintType
@@ -61,3 +63,13 @@
    [eprint : (Option EPrint)])
   #:transparent
   #:type-name Thesis)
+
+(struct misc
+  ([author : (Listof Inline)]
+   [title : Inline]
+   [date : Date]
+   [doi : (Option String)]
+   [url : (Option String)]
+   [eprint : (Option EPrint)])
+  #:transparent
+  #:type-name Misc)
