@@ -14,6 +14,8 @@
  (rename-out [eprint% eprint]
              [article% article]
              [thesis% thesis]
+             [misc% misc]
+             [arXiv% arXiv]
              [book% book]))
 
 (define default-header
