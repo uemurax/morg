@@ -22,6 +22,7 @@
          delimiter%
          apply-with-parens%
          sup-op%
+         sub-op%
          math-tex+%)
 
 (define-type MathTeXAtom+Like
@@ -144,3 +145,11 @@
   (lambda [xs : MathTeX+Like *]
     (paren% #:level lv
             ((inst sub-sup% MathTeXAtom+Like MathTeX+Like) (apply group% xs) #:^ op))))
+
+(define (sub-op% #:level [lv1 : OpLevel]
+                 [op : MathTeX+Like])
+  (define lv (->level lv1))
+  (lambda [xs : MathTeX+Like *]
+    (paren% #:level lv
+            ((inst sub-sup% MathTeXAtom+Like MathTeX+Like)
+             (apply group% xs) #:_ op))))
