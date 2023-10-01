@@ -30,6 +30,14 @@
 (define-type Site
   (HashTable String String))
 
+(define og-prefix "og:")
+
+(define (og-meta [property : String]
+                 [content : StringTreeLike])
+  (tagged% 'meta
+           `((property ,(string-append og-prefix property))
+             (content ,(string-tree-like->string content)))))
+
 (define ((apply-template [cfg : Config] [st : SiteState])
          [i : Id] [x : XExprs]) : (Values String String)
   (define n (site-state-node-ref st i))
@@ -42,7 +50,11 @@
   (define html
     (car 
      (tagged% 'html '()
-              (tagged% 'head '() head)
+              (tagged% 'head
+                       `((prefix
+                          ,(format "~a https://ogp.me/ns#"
+                                   og-prefix)))
+                       head)
               (tagged% 'body '() body))))
   (values (id->url i)
           (parameterize ([xml:current-unescaped-tags xml:html-unescaped-tags]
@@ -108,19 +120,11 @@
               (href "https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css")
               (integrity "sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI")
               (crossorigin "anonymous")))
-   (tagged% 'meta
-            `((property "og:title")
-              (content ,(string-tree->string (pure-inline->text page-title)))))
-   (tagged% 'meta
-            `((property "og:site_name")
-              (content ,(string-tree->string (pure-inline->text doc-title)))))
-   (tagged% 'meta
-            `((property "og:type")
-              (content ,(if (document? n) "website" "article"))))
+   (og-meta "title" (pure-inline->text page-title))
+   (og-meta "site_name" (pure-inline->text doc-title))
+   (og-meta "type" (if (document? n) "website" "article"))
    (when% url
-          (tagged% 'meta
-                   `((property "og:url")
-                     (content ,(url:url->string url)))))
+          (og-meta "url" (url:url->string url)))
    (tagged% 'script
             '((defer "true")
               (src "https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js")
