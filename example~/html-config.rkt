@@ -4,5 +4,6 @@
          (prefix-in eq: morg/eq-reasoning/html))
 
 (provide-config
-  (define cfg default-config)
-  (eq:config-update cfg))
+ (compose-config
+  eq:config-update
+  (config-set-base-url "http://localhost")))

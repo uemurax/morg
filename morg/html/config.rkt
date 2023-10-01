@@ -14,6 +14,7 @@
          "document-toc.rkt"
          "pure-inline.rkt"
          "id.rkt"
+         (prefix-in url: typed/net/url)
          "class.rkt"
          "class/inline.rkt"
          "class/id.rkt"
@@ -32,7 +33,9 @@
          (struct-out config) Config
          site-state-node-ref
          config-add-css
+         config-set-base-url
          provide-config
+         compose-config
          dynamic-require-config
          default-config)
 
@@ -43,6 +46,7 @@
   ([body-template : (SiteState (U Node Document) . -> . (XExprs . -> . XExprs))]
    [head-template : (SiteState (U Node Document) . -> . (XExprs . -> . XExprs))]
    [render-extension : (ExtHash ((Listof XExprs) . -> . XExprs))]
+   [base-url : (Option url:url)]
    [assets : Assets])
   #:transparent
   #:type-name Config)
@@ -283,11 +287,12 @@
    default-config:body-template
    default-config:head-template
    (empty-ext-hash)
+   #f
    default-config:assets))
 
-(define (config-add-css [cfg : Config] 
-                        [name : String]
-                        [css : StringTreeLike]) : Config
+(define ((config-add-css [name : String]
+                         [css : StringTreeLike])
+         [cfg : Config]) : Config
   (struct-copy config cfg
    [assets
     (let ([a (config-assets cfg)])
@@ -304,6 +309,15 @@
                     `((rel "stylesheet")
                       (href ,name)))))))]))
 
+(define ((config-set-base-url [url : (U url:url String)])
+         [cfg : Config]) : Config
+  (define new-url
+    (cond
+      [(url:url? url) url]
+      [(string? url) (url:string->url url)]))
+  (struct-copy config cfg
+   [base-url new-url]))
+
 (define-for-syntax config-export #'config)
 
 (define-syntax (config-export stx)
@@ -319,6 +333,13 @@
           (define cfg:local : Config
             (let ()
               body ...))))]))
+
+(define (compose-config #:init [init : Config default-config]
+                        . [fs : (Config . -> . Config) *])
+  (foldl (lambda ([f : (Config . -> . Config)]
+                  [c : Config])
+           (f c))
+         init fs))
 
 (define (dynamic-require-config [mod : Module-Path]) : Config
   (assert (dynamic-require mod (config-export)) config?))

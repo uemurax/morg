@@ -15,8 +15,10 @@
 (provide
  (struct-out config) Config
  provide-config
+ compose-config
  default-config
  config-add-css
+ config-set-base-url
  (all-from-out
   "html/class/article.rkt"
   "html/class/block.rkt"
