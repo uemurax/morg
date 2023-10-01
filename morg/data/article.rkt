@@ -12,6 +12,7 @@
   ([id : Id]
    [header : PureInline]
    [title : (Option PureInline)]
+   [description : (Option PureInline)]
    [indexes : (Listof Index)]
    [contents : Block]
    [proof : (Option Proof)])

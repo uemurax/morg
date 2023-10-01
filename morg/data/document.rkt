@@ -12,6 +12,7 @@
   ([id : Id]
    [author : (Listof PureInline)]
    [title : PureInline]
+   [description : (Option PureInline)]
    [date : Date]
    [contents : Block]
    [front : (Listof Section)]

@@ -16,12 +16,14 @@
 (define ((article%/curried . [header : PureInlineLike *])
          #:id [maybe-id : String]
          #:title [title : (Option PureInlineLike) #f]
+         #:description [description : (Option PureInlineLike) #f]
          #:indexes [indexes : (Listof Index) '()]
          #:proof [proof : (Option Proof) #f]
          . [contents : BlockLike *]) : Article
   (article (id maybe-id)
            (apply pure-inline% header)
            (option-map pure-inline% title)
+           (option-map pure-inline% description)
            indexes
            (apply block% contents)
            proof))
