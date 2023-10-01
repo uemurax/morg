@@ -9,10 +9,12 @@
          (struct-out article) Article
          (struct-out thesis) Thesis
          (struct-out misc) Misc
+         (struct-out inbook) InBook
          (struct-out book) Book)
 
 (define-type BibItem
   (U Book
+     InBook
      Thesis
      Misc
      Article))
@@ -37,6 +39,22 @@
    [eprint : (Option EPrint)])
   #:transparent
   #:type-name Book)
+
+(struct inbook
+  ([author : (Listof PureInline)]
+   [title : PureInline]
+   [booktitle : PureInline]
+   [date : Date]
+   [editor : (Option (Listof PureInline))]
+   [publisher : (Option PureInline)]
+   [location : (Option PureInline)]
+   [volume : (Option PureInline)]
+   [pages : (Option PureInline)]
+   [doi : (Option String)]
+   [url : (Option String)]
+   [eprint : (Option EPrint)])
+  #:transparent
+  #:type-name InBook)
 
 (struct article
   ([author : (Listof PureInline)]

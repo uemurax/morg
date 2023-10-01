@@ -16,6 +16,7 @@
              [thesis% thesis]
              [misc% misc]
              [arXiv% arXiv]
+             [inbook% inbook]
              [book% book]))
 
 (define default-header
