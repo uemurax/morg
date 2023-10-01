@@ -5,6 +5,9 @@
 
 @theorem[
   #:id (current-id)
+  #:description @%{
+    The greatest theorem in the world.
+  }
   @paragraph{
     The following is equivalent.
     @ordered-list[

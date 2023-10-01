@@ -4,6 +4,9 @@
   #:id (current-id)
   #:title @%{Test document}
   #:author @list[@%{Test Author}]
+  #:description @%{
+    A test document.
+  }
   #:contents @%[
     @paragraph{
       Abstract: This is a document.

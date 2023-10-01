@@ -13,6 +13,7 @@
          "../markup/splice.rkt"
          "../text/id.rkt"
          "../util/escape.rkt"
+         "../util/option.rkt"
          "../text/inline.rkt"
          "pure-inline.rkt"
          "id.rkt"
@@ -109,6 +110,19 @@
       [(document? n) doc-title]
       [else
        @pure-inline%{@|page-title| -- @|doc-title|}]))
+  (define doc-description (document-description doc))
+  (define description-1
+    (cond
+      [(document? n) doc-description]
+      [(section-node? n)
+       (or (section-description (section-node-contents n))
+           doc-description)]
+      [(article-node? n)
+       (or (article-description (article-node-contents n))
+           doc-description)]))
+  (define description
+    (option-map (string-tree->string . compose . pure-inline->text)
+                description-1))
   (xexprs%
    (tagged% 'meta '((charset "UTF-8")))
    (tagged% 'meta '((name "viewport")
@@ -125,6 +139,10 @@
    (og-meta "type" (if (document? n) "website" "article"))
    (when% url
           (og-meta "url" (url:url->string url)))
+   (when% description
+          (tagged% 'meta `((name "description")
+                           (content ,description)))
+          (og-meta "description" description))
    (tagged% 'script
             '((defer "true")
               (src "https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js")
