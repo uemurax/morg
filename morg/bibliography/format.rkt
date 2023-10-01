@@ -51,7 +51,7 @@
   (define publisher-1 (book-publisher b))
   (define publisher : InlineLike
     @when%[publisher-1]{@|publisher-1|, })
-  (define address-1 (book-address b))
+  (define address-1 (book-location b))
   (define address : InlineLike
     @when%[address-1]{@|address-1|, })
   (define date (date->text (book-date b)))

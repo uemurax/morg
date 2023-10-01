@@ -20,7 +20,7 @@
                #:title [title : PureInlineLike]
                #:date [d : Date]
                #:publisher [publisher : (Option PureInlineLike) #f]
-               #:address [address : (Option PureInlineLike) #f]
+               #:location [location : (Option PureInlineLike) #f]
                #:doi [doi : (Option String) #f]
                #:url [url : (Option String) #f]
                #:eprint [ep : (Option EPrint) #f]) : Book
@@ -28,7 +28,7 @@
         (pure-inline% title)
         d
         (option-map pure-inline% publisher)
-        (option-map pure-inline% address)
+        (option-map pure-inline% location)
         doi url ep))
 
 (define (article% #:author [author : (Listof PureInlineLike)]

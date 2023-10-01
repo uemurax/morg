@@ -31,7 +31,7 @@
    [title : PureInline]
    [date : Date]
    [publisher : (Option PureInline)]
-   [address : (Option PureInline)]
+   [location : (Option PureInline)]
    [doi : (Option String)]
    [url : (Option String)]
    [eprint : (Option EPrint)])
