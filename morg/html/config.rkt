@@ -14,6 +14,7 @@
          "document-toc.rkt"
          "pure-inline.rkt"
          "id.rkt"
+         (prefix-in url: typed/net/url)
          "class.rkt"
          "class/inline.rkt"
          "class/id.rkt"
@@ -32,6 +33,7 @@
          (struct-out config) Config
          site-state-node-ref
          config-add-css
+         config-set-base-url
          provide-config
          dynamic-require-config
          default-config)
@@ -43,6 +45,7 @@
   ([body-template : (SiteState (U Node Document) . -> . (XExprs . -> . XExprs))]
    [head-template : (SiteState (U Node Document) . -> . (XExprs . -> . XExprs))]
    [render-extension : (ExtHash ((Listof XExprs) . -> . XExprs))]
+   [base-url : (Option url:url)]
    [assets : Assets])
   #:transparent
   #:type-name Config)
@@ -283,6 +286,7 @@
    default-config:body-template
    default-config:head-template
    (empty-ext-hash)
+   #f
    default-config:assets))
 
 (define (config-add-css [cfg : Config] 
@@ -303,6 +307,15 @@
            (tagged% 'link
                     `((rel "stylesheet")
                       (href ,name)))))))]))
+
+(define (config-set-base-url [cfg : Config]
+                             [url : (U url:url String)])
+  (define new-url
+    (cond
+      [(url:url? url) url]
+      [(string? url) (url:string->url url)]))
+  (struct-copy config cfg
+   [base-url new-url]))
 
 (define-for-syntax config-export #'config)
 

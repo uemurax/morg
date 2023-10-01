@@ -5,4 +5,6 @@
 
 (provide-config
   (define cfg default-config)
-  (eq:config-update cfg))
+  (config-set-base-url
+   (eq:config-update cfg)
+   "http://localhost"))

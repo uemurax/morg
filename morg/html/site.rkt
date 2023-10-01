@@ -1,6 +1,7 @@
 #lang at-exp typed/racket
 
 (require (prefix-in xml: typed/xml)
+         (prefix-in url: typed/net/url)
          "../data/document.rkt"
          "../data/node.rkt"
          "../data/id.rkt"
@@ -9,6 +10,7 @@
          "../markup/xexpr.rkt"
          "../markup/string.rkt"
          "../markup/inline.rkt"
+         "../markup/splice.rkt"
          "../text/id.rkt"
          "../util/escape.rkt"
          "../text/inline.rkt"
@@ -33,7 +35,7 @@
   (define n (site-state-node-ref st i))
   (define head
     (((config-head-template cfg) st n) 
-     (head-init st n)))
+     (head-init cfg st n)))
   (define body
     (((config-body-template cfg) st n)
      (tagged% 'main '() x)))
@@ -69,9 +71,18 @@
 (define (js-escape [x : String])
   (escape (hash "\\" "\\\\") x))
 
-(define (head-init [st : SiteState] [n : (U Node Document)]) : XExprs
+(define (head-init [cfg : Config] [st : SiteState] [n : (U Node Document)]) : XExprs
   (define doc (site-state-root st))
   (define doc-title (document-title doc))
+  (define base-url (config-base-url cfg))
+  (define url
+    (and base-url
+         (cond
+           [(document? n) base-url]
+           [else
+            (url:combine-url/relative
+             base-url
+             (id->url (node-id n)))])))
   (define page-title
     (cond
       [(document? n) doc-title]
@@ -106,6 +117,10 @@
    (tagged% 'meta
             `((property "og:type")
               (content ,(if (document? n) "website" "article"))))
+   (when% url
+          (tagged% 'meta
+                   `((property "og:url")
+                     (content ,(url:url->string url)))))
    (tagged% 'script
             '((defer "true")
               (src "https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js")
