@@ -18,7 +18,7 @@
    [(misc? b) (format-misc b)]
    [else (error "Unimplemented.")]))
 
-(define (format-author [a : (Listof Inline)]) : Inline
+(define (format-author [a : (Listof PureInline)]) : Inline
   (apply inline% (list-join-1 a " & ")))
 
 (define (format-url [s : String]) : Inline

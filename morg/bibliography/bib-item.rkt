@@ -27,11 +27,11 @@
   #:type-name EPrint)
 
 (struct book
-  ([author : (Listof Inline)]
-   [title : Inline]
+  ([author : (Listof PureInline)]
+   [title : PureInline]
    [date : Date]
-   [publisher : (Option Inline)]
-   [address : (Option Inline)]
+   [publisher : (Option PureInline)]
+   [address : (Option PureInline)]
    [doi : (Option String)]
    [url : (Option String)]
    [eprint : (Option EPrint)])
@@ -39,13 +39,13 @@
   #:type-name Book)
 
 (struct article
-  ([author : (Listof Inline)]
-   [title : Inline]
-   [journal-title : Inline]
+  ([author : (Listof PureInline)]
+   [title : PureInline]
+   [journal-title : PureInline]
    [date : Date]
-   [volume : Inline]
-   [number : (Option Inline)]
-   [pages : (Option Inline)]
+   [volume : PureInline]
+   [number : (Option PureInline)]
+   [pages : (Option PureInline)]
    [doi : (Option String)]
    [url : (Option String)]
    [eprint : (Option EPrint)])
@@ -53,10 +53,10 @@
   #:type-name Article)
 
 (struct thesis
-  ([author : (Listof Inline)]
-   [title : Inline]
-   [type : Inline]
-   [institution : Inline]
+  ([author : (Listof PureInline)]
+   [title : PureInline]
+   [type : PureInline]
+   [institution : PureInline]
    [date : Date]
    [doi : (Option String)]
    [url : (Option String)]
@@ -65,8 +65,8 @@
   #:type-name Thesis)
 
 (struct misc
-  ([author : (Listof Inline)]
-   [title : Inline]
+  ([author : (Listof PureInline)]
+   [title : PureInline]
    [date : Date]
    [doi : (Option String)]
    [url : (Option String)]
