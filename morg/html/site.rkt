@@ -11,6 +11,7 @@
          "../markup/inline.rkt"
          "../text/id.rkt"
          "../util/escape.rkt"
+         "../text/inline.rkt"
          "pure-inline.rkt"
          "id.rkt"
          "document.rkt"
@@ -71,17 +72,20 @@
 (define (head-init [st : SiteState] [n : (U Node Document)]) : XExprs
   (define doc (site-state-root st))
   (define doc-title (document-title doc))
+  (define page-title
+    (cond
+      [(document? n) doc-title]
+      [(section-node? n)
+       (section-title (section-node-contents n))]
+      [(article-node? n)
+       (define a (article-node-contents n))
+       (define t (article-title a))
+       (if t t (pure-inline% (id->text (article-id a))))]))
   (define title
     (cond
-     [(document? n) doc-title]
-     [(section-node? n)
-      @pure-inline%{@(section-title (section-node-contents n)) -- @|doc-title|}]
-     [(article-node? n)
-      (define a (article-node-contents n))
-      (define t (article-title a))
-      (define h
-        (if t t (id->text (article-id a))))
-      @pure-inline%{@|h| -- @|doc-title|}]))
+      [(document? n) doc-title]
+      [else
+       @pure-inline%{@|page-title| -- @|doc-title|}]))
   (xexprs%
    (tagged% 'meta '((charset "UTF-8")))
    (tagged% 'meta '((name "viewport")
@@ -93,6 +97,15 @@
               (href "https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css")
               (integrity "sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI")
               (crossorigin "anonymous")))
+   (tagged% 'meta
+            `((property "og:title")
+              (content ,(string-tree->string (pure-inline->text page-title)))))
+   (tagged% 'meta
+            `((property "og:site_name")
+              (content ,(string-tree->string (pure-inline->text doc-title)))))
+   (tagged% 'meta
+            `((property "og:type")
+              (content ,(if (document? n) "website" "article"))))
    (tagged% 'script
             '((defer "true")
               (src "https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js")
