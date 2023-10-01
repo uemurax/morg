@@ -35,6 +35,7 @@
          config-add-css
          config-set-base-url
          provide-config
+         compose-config
          dynamic-require-config
          default-config)
 
@@ -289,9 +290,9 @@
    #f
    default-config:assets))
 
-(define (config-add-css [cfg : Config] 
-                        [name : String]
-                        [css : StringTreeLike]) : Config
+(define ((config-add-css [name : String]
+                         [css : StringTreeLike])
+         [cfg : Config]) : Config
   (struct-copy config cfg
    [assets
     (let ([a (config-assets cfg)])
@@ -308,8 +309,8 @@
                     `((rel "stylesheet")
                       (href ,name)))))))]))
 
-(define (config-set-base-url [cfg : Config]
-                             [url : (U url:url String)])
+(define ((config-set-base-url [url : (U url:url String)])
+         [cfg : Config]) : Config
   (define new-url
     (cond
       [(url:url? url) url]
@@ -332,6 +333,13 @@
           (define cfg:local : Config
             (let ()
               body ...))))]))
+
+(define (compose-config #:init [init : Config default-config]
+                        . [fs : (Config . -> . Config) *])
+  (foldl (lambda ([f : (Config . -> . Config)]
+                  [c : Config])
+           (f c))
+         init fs))
 
 (define (dynamic-require-config [mod : Module-Path]) : Config
   (assert (dynamic-require mod (config-export)) config?))

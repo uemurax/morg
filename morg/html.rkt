@@ -15,6 +15,7 @@
 (provide
  (struct-out config) Config
  provide-config
+ compose-config
  default-config
  config-add-css
  config-set-base-url
