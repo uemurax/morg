@@ -10,6 +10,7 @@
          thesis%
          misc%
          arXiv%
+         inproceedings%
          inbook%
          book%)
 
@@ -75,6 +76,29 @@
            (option-map pure-inline% number)
            (option-map pure-inline% pages)
            doi url ep))
+
+(define (inproceedings% #:author [author : (Listof PureInlineLike)]
+                        #:title [title : PureInlineLike]
+                        #:book-title [book-title : PureInlineLike]
+                        #:date [d : Date]
+                        #:editor [editor : (Option (Listof PureInlineLike)) #f]
+                        #:publisher [publisher : (Option PureInlineLike) #f]
+                        #:location [location : (Option PureInlineLike) #f]
+                        #:pages [pages : (Option PureInlineLike) #f]
+                        #:doi [doi : (Option String) #f]
+                        #:url [url : (Option String) #f]
+                        #:eprint [ep : (Option EPrint) #f]) : InProceedings
+  (inproceedings (map pure-inline% author)
+                 (pure-inline% title)
+                 (pure-inline% book-title)
+                 d
+                 (option-map (lambda ([a : (Listof PureInlineLike)])
+                               (map pure-inline% a))
+                             editor)
+                 (option-map pure-inline% publisher)
+                 (option-map pure-inline% location)
+                 (option-map pure-inline% pages)
+                 doi url ep))
 
 (define (thesis% #:author [author : (Listof PureInlineLike)]
                  #:title [title : PureInlineLike]

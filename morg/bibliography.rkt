@@ -16,6 +16,7 @@
              [thesis% thesis]
              [misc% misc]
              [arXiv% arXiv]
+             [inproceedings% inproceedings]
              [inbook% inbook]
              [book% book]))
 

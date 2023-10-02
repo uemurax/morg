@@ -15,6 +15,7 @@
    [(book? b) (format-book b)]
    [(inbook? b) (format-inbook b)]
    [(article? b) (format-article b)]
+   [(inproceedings? b) (format-inproceedings b)]
    [(thesis? b) (format-thesis b)]
    [(misc? b) (format-misc b)]
    [else (error "Unimplemented.")]))
@@ -87,6 +88,29 @@
                    #:url (inbook-url b)
                    #:eprint (inbook-eprint b)))
   @inline%{@|author|. @|title|. In @|editor|@emph{@|booktitle|}@|volume|@|pages|. @|publisher|@|location|@|date|.@|online|})
+
+(define (format-inproceedings [b : InProceedings]) : Inline
+  (define author (format-author (inproceedings-author b)))
+  (define title (inproceedings-title b))
+  (define booktitle (inproceedings-book-title b))
+  (define date (date->text (inproceedings-date b)))
+  (define editor-1 (inproceedings-editor b))
+  (define editor : InlineLike
+    @when%[editor-1]{@(format-author editor-1) Ed. })
+  (define pages-1 (inproceedings-pages b))
+  (define pages : InlineLike
+    @when%[pages-1]{, @|pages-1|})
+  (define publisher-1 (inproceedings-publisher b))
+  (define publisher : InlineLike
+    @when%[publisher-1]{@|publisher-1|, })
+  (define location-1 (inproceedings-location b))
+  (define location : InlineLike
+    @when%[location-1]{@|location-1|, })
+  (define online
+    (format-online #:doi (inproceedings-doi b)
+                   #:url (inproceedings-url b)
+                   #:eprint (inproceedings-eprint b)))
+  @inline%{@|author|. @|title|. In @|editor|@emph{@|booktitle|}@|pages|. @|publisher|@|location|@|date|.@|online|})
 
 (define (format-article [a : Article]) : Inline
   (define author (format-author (article-author a)))
