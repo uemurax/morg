@@ -10,74 +10,124 @@
          thesis%
          misc%
          arXiv%
+         inproceedings%
+         inbook%
          book%)
 
 (define (eprint% #:type [type : EPrintType 'arXiv]
                  [id : String]) : EPrint
   (eprint type id))
 
-(define (book% #:author [author : (Listof InlineLike)]
-               #:title [title : InlineLike]
+(define (book% #:author [author : (Listof PureInlineLike)]
+               #:title [title : PureInlineLike]
                #:date [d : Date]
-               #:publisher [publisher : (Option InlineLike) #f]
-               #:address [address : (Option InlineLike) #f]
+               #:publisher [publisher : (Option PureInlineLike) #f]
+               #:location [location : (Option PureInlineLike) #f]
                #:doi [doi : (Option String) #f]
                #:url [url : (Option String) #f]
                #:eprint [ep : (Option EPrint) #f]) : Book
-  (book (map inline% author)
-        (inline% title)
+  (book (map pure-inline% author)
+        (pure-inline% title)
         d
-        (option-map inline% publisher)
-        (option-map inline% address)
+        (option-map pure-inline% publisher)
+        (option-map pure-inline% location)
         doi url ep))
 
-(define (article% #:author [author : (Listof InlineLike)]
-                  #:title [title : InlineLike]
-                  #:journal-title [journal-title : InlineLike]
+(define (inbook% #:author [author : (Listof PureInlineLike)]
+                 #:title [title : PureInlineLike]
+                 #:booktitle [booktitle : PureInlineLike]
+                 #:date [d : Date]
+                 #:editor [editor : (Option (Listof PureInlineLike)) #f]
+                 #:publisher [publisher : (Option PureInlineLike) #f]
+                 #:location [location : (Option PureInlineLike) #f]
+                 #:volume [volume : (Option PureInlineLike) #f]
+                 #:pages [pages : (Option PureInlineLike) #f]
+                 #:doi [doi : (Option String) #f]
+                 #:url [url : (Option String) #f]
+                 #:eprint [ep : (Option EPrint) #f]) : InBook
+  (inbook (map pure-inline% author)
+          (pure-inline% title)
+          (pure-inline% booktitle)
+          d
+          (option-map (lambda ([a : (Listof PureInlineLike)])
+                        (map pure-inline% a))
+                      editor)
+          (option-map pure-inline% publisher)
+          (option-map pure-inline% location)
+          (option-map pure-inline% volume)
+          (option-map pure-inline% pages)
+          doi url ep))
+
+(define (article% #:author [author : (Listof PureInlineLike)]
+                  #:title [title : PureInlineLike]
+                  #:journal-title [journal-title : PureInlineLike]
                   #:date [d : Date]
-                  #:volume [volume : InlineLike]
-                  #:number [number : (Option InlineLike) #f]
-                  #:pages [pages : (Option InlineLike) #f]
+                  #:volume [volume : PureInlineLike]
+                  #:number [number : (Option PureInlineLike) #f]
+                  #:pages [pages : (Option PureInlineLike) #f]
                   #:doi [doi : (Option String) #f]
                   #:url [url : (Option String) #f]
                   #:eprint [ep : (Option EPrint) #f]) : Article
-  (article (map inline% author)
-           (inline% title)
-           (inline% journal-title)
+  (article (map pure-inline% author)
+           (pure-inline% title)
+           (pure-inline% journal-title)
            d
-           (inline% volume)
-           (option-map inline% number)
-           (option-map inline% pages)
+           (pure-inline% volume)
+           (option-map pure-inline% number)
+           (option-map pure-inline% pages)
            doi url ep))
 
-(define (thesis% #:author [author : (Listof InlineLike)]
-                 #:title [title : InlineLike]
-                 #:type [type : InlineLike "PhD Thesis"]
-                 #:institution [institution : InlineLike]
+(define (inproceedings% #:author [author : (Listof PureInlineLike)]
+                        #:title [title : PureInlineLike]
+                        #:book-title [book-title : PureInlineLike]
+                        #:date [d : Date]
+                        #:editor [editor : (Option (Listof PureInlineLike)) #f]
+                        #:publisher [publisher : (Option PureInlineLike) #f]
+                        #:location [location : (Option PureInlineLike) #f]
+                        #:pages [pages : (Option PureInlineLike) #f]
+                        #:doi [doi : (Option String) #f]
+                        #:url [url : (Option String) #f]
+                        #:eprint [ep : (Option EPrint) #f]) : InProceedings
+  (inproceedings (map pure-inline% author)
+                 (pure-inline% title)
+                 (pure-inline% book-title)
+                 d
+                 (option-map (lambda ([a : (Listof PureInlineLike)])
+                               (map pure-inline% a))
+                             editor)
+                 (option-map pure-inline% publisher)
+                 (option-map pure-inline% location)
+                 (option-map pure-inline% pages)
+                 doi url ep))
+
+(define (thesis% #:author [author : (Listof PureInlineLike)]
+                 #:title [title : PureInlineLike]
+                 #:type [type : PureInlineLike "PhD Thesis"]
+                 #:institution [institution : PureInlineLike]
                  #:date [d : Date]
                  #:doi [doi : (Option String) #f]
                  #:url [url : (Option String) #f]
                  #:eprint [ep : (Option EPrint) #f]) : Thesis
-  (thesis (map inline% author)
-          (inline% title)
-          (inline% type)
-          (inline% institution)
+  (thesis (map pure-inline% author)
+          (pure-inline% title)
+          (pure-inline% type)
+          (pure-inline% institution)
           d
           doi url ep))
 
-(define (misc% #:author [author : (Listof InlineLike)]
-               #:title [title : InlineLike]
+(define (misc% #:author [author : (Listof PureInlineLike)]
+               #:title [title : PureInlineLike]
                #:date [d : Date]
                #:doi [doi : (Option String) #f]
                #:url [url : (Option String) #f]
                #:eprint [ep : (Option EPrint) #f]) : Misc
-  (misc (map inline% author)
-        (inline% title)
+  (misc (map pure-inline% author)
+        (pure-inline% title)
         d
         doi url ep))
 
-(define (arXiv% #:author [author : (Listof InlineLike)]
-                #:title [title : InlineLike]
+(define (arXiv% #:author [author : (Listof PureInlineLike)]
+                #:title [title : PureInlineLike]
                 #:date [d : Date]
                 #:id [id : String])
   (misc% #:author author
